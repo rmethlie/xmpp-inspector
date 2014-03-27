@@ -1,0 +1,27 @@
+
+
+BODY{
+  font-family: Tahoma;
+}
+
+.page-title{
+  font-size: 14pt;
+  font-weight: bold;
+}
+
+TEXTAREA.xml-contents{
+  border: none;
+  width: 100%;
+  height: auto;
+  resize: none;
+
+}
+
+.request{
+  border: solid black 1px;
+  padding: 15px;
+  margin-bottom: 10px;
+  background-color: #f0f0f0;
+  height: 50px;
+  width: 100%;
+}
