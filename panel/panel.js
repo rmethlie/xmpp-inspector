@@ -7,10 +7,16 @@ try{
   $body = $(document.body);
 
   function logToPage( message, error ){
+    
     $body.append( "<div class='request'><pre>" + message + "</pre></div>" );  
+    
     if( error ){
       emDevToolsBackground.postMessage({
-        error: contents
+        error: message
+      })
+    }else{
+      emDevToolsBackground.postMessage({
+        log: message
       })
     }
   }
@@ -22,19 +28,22 @@ try{
       logToPage( packet.request.url );
       if( httpBind.test( packet.request.url ) ){
 
-        logToPage( packet.request.url, true );
         
-        // packet.getContent( function(contents){
+        packet.getContent( function(contents){
 
-        //   var contents = $($.parseXML(message.packet));
-        //   contents = contents.format({method:'xml'})[0];//.replace( /</g, "&lt;" ).replace( />/g, "&gt;" );
-        //   logToPage( contents  );
-
-
-        // });
+          try{
+            $body.append( "<div>test</div>" );
+            contents = $.parseXML(contents);
+            $(contents).format({method:'xml'});//.replace( /</g, "&lt;" ).replace( />/g, "&gt;" );
+            $body.append( contents.childNodes[0] );
+            
+          }catch( eee ){
+            logToPage( eee.stack, true );
+          }
+        });
       }
     }catch( ee ){
-      logToPage( ee.stack, true )
+      logToPage( ee.stack, true );
     }
   });
 
