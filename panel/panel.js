@@ -3,12 +3,11 @@ try{
   httpBind = /http-bind/i,
   emDevToolsBackground = chrome.runtime.connect({
       name: "background"
-  }),
-  $body = $(document.body);
+  });
 
-  function logToPage( message, error ){
+  function logToPage( message, error, panelBody ){
     
-    $body.append( "<div class='request'><pre>" + message + "</pre></div>" );  
+    panelBody.append( "<div class='request'><pre>" + message + "</pre></div>" );  
     
     if( error ){
       emDevToolsBackground.postMessage({
@@ -24,8 +23,10 @@ try{
     
   chrome.devtools.network.onRequestFinished.addListener(function(packet){
     try{
-      
-      logToPage( packet.request.url );
+      var
+        body = $(document.body)[0],
+        $body = $(body);
+      logToPage( packet.request.url, null, $body );
       if( httpBind.test( packet.request.url ) ){
 
         
