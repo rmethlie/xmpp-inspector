@@ -1,3 +1,11 @@
+
+require(["config"], function() {
+  require(["jquery", "underscore", "backbone"], function(jquery, underscore, backbone) {
+      console.log("init");
+
+  });
+});
+/*
 try{
   var
   httpBind = /http-bind/i,
@@ -51,3 +59,4 @@ try{
 }catch( e ){
   logToPage( e.stack, true );
 }
+*/
