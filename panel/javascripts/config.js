@@ -2,9 +2,8 @@
 // supplementing shared properties.
 require.config({
   paths: {
-    "vendor": "vendors",
-    "underscore": "vendors/underscore/underscore",
-    "jquery": "vendors/jquery.min",
-    "backbone": "vendors/backbone/backbone"
+    "underscore": "/panel/javascripts/vendors/underscore/underscore",
+    "jquery": "/panel/javascripts/vendors/jquery.min",
+    "backbone": "/panel/javascripts/vendors/backbone/backbone"
   }
 });
