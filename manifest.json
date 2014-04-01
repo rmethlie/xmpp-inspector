@@ -8,7 +8,7 @@
   "web_accessible_resources":["*"],
   "permissions": ["activeTab"],
   "background": {
-    "scripts": ["panel/javascripts/vendors/jquery.min.js", "panel/javascripts/vendors/jquery.format.js", "background.js"],
+    "scripts": [ "background.js"],
     "persistent": false
   }
 }
