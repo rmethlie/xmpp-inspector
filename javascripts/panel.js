@@ -1,10 +1,11 @@
 
 require(["config"], function() {
-  require(["app", "baseListener"], function(app, BaseListener) {
+  require(["app", "BaseListener", "appConfig"], function(app, BaseListener, config) {
     console.log("init", app);
     
     var listener = new BaseListener();
     console.log("listener:", listener);
+    console.log("config settings loaded:", config.isConfig);
 
     try{
       var

@@ -5,6 +5,7 @@ require.config({
     "underscore": "/javascripts/bower_components/underscore/underscore",
     "jquery": "/javascripts/bower_components/jquery/dist/jquery.min",
     "backbone": "/javascripts/bower_components/backbone/backbone",
-    "baseListener": "/javascripts/models/baseListener.model"
+    "BaseListener": "/javascripts/models/baseListener.model",
+    "appConfig": "/javascripts/app.config"
   }
 });
