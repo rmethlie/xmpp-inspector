@@ -43,10 +43,10 @@ require(["config"], function() {
             packet.getContent( function(contents){
 
               try{
-                $body.append( "<div>test</div>" );
-                contents = $.parseXML(contents);
-                $(contents).format({method:'xml'});//.replace( /</g, "&lt;" ).replace( />/g, "&gt;" );
-                $body.append( contents.childNodes[0] );
+                $body.append( "<div><textarea>" + contents + "</textarea></div>" );
+                // contents = $.parseXML(contents);
+                // $(contents).format({method:'xml'});//.replace( /</g, "&lt;" ).replace( />/g, "&gt;" );
+                // $body.append( contents.childNodes[0] );
                 
               }catch( eee ){
                 logToPage( eee.stack, true );
