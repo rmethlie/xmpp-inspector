@@ -1,12 +1,12 @@
 
 require(["config"], function() {
-  require(["app", "BaseListener", "appConfig"], function(app, BaseListener, config) {
+  require(["app", "BaseListener", "appConfig", "prettyPrint"], function(app, BaseListener, config, prettyPrint) {
     console.log("init", app);
     
     var listener = new BaseListener();
     console.log("listener:", listener);
     console.log("config settings loaded:", config.isConfig);
-
+    console.log(prettyPrintOne("var x='two';"));
     try{
       var
       httpBind = /http-bind/i,
