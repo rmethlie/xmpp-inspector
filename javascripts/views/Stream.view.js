@@ -1,4 +1,4 @@
-define(['BaseView'], function(BaseView) {
+define(['BaseView', 'prettyPrint'], function(BaseView, prettyPrint) {
   "use strict";
 
   return BaseView.extend({
@@ -17,7 +17,7 @@ define(['BaseView'], function(BaseView) {
     },
 
     append: function(content){
-      // this.$el.append("<div><pre>" + content + "</pre></div>");
+      this.$el.append("<div><pre>" + content + "</pre></div>");
     }
 
   });

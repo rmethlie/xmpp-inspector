@@ -6,6 +6,7 @@ require.config({
     "jquery": "/javascripts/bower_components/jquery/dist/jquery.min",
     "backbone": "/javascripts/bower_components/backbone/backbone",
     "prettyPrint": "/javascripts/google-code-prettify/src/prettify",
+    "text": "/javascripts/bower_components/requirejs-text/text",
     "appConfig": "/javascripts/app.config",
     "BaseView": "/javascripts/views/Base.view",
     "BaseModel": "/javascripts/models/Base.model",

@@ -5,9 +5,15 @@ define(["StreamView"], function(StreamView) {
     
     el: "#xmpp-stream",
 
+    listener: null,
+
     initialize: function(options){
       console.log("[XMPPStreamView] initialize");
-      this.listenTo(options.listener, "request:finished", function(packet, contents){
+      this.listener = options.listener;
+
+      this.listenTo(this.listener, "request:finished", function(packet, contents){
+        contents = this.formatMarkUp(contents);
+        contents = prettyPrintOne(contents);
         this.append(contents);
       });
     },

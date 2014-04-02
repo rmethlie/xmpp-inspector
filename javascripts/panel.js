@@ -14,6 +14,7 @@ require(["config"], function() {
     console.log("stream:", stream);
     console.log("config settings loaded:", config.isConfig);
     console.log(prettyPrintOne("var x='two';"));
+    sniffer.listen();
     // try{
     //   var
     //   httpBind = /http-bind/i,
