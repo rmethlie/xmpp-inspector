@@ -12,14 +12,8 @@ define(["StreamView"], function(StreamView) {
       this.listener = options.listener;
 
       this.listenTo(this.listener, "request:finished", function(packet, contents){
-        contents = this.formatMarkUp(contents);
-        contents = prettyPrintOne(contents, null, false);
-        this.append(contents);
+        this.appendData(contents);
       });
-    },
-
-    start: function(){
-
     }
 
   });
