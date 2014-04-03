@@ -6,7 +6,6 @@ define(['BaseView', 'prettyPrint'], function(BaseView, prettyPrint) {
     el: "#stream",
     
     initialize: function(){
-      //todo: create a BaseModel, BaseView & BaseCollection 
       console.log("[StreamView] initialize");
     },
 
