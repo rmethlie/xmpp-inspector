@@ -7,7 +7,8 @@ require.config({
     "backbone": "/javascripts/bower_components/backbone/backbone",
     "prettyPrint": "/javascripts/google-code-prettify/src/prettify",
     "text": "/javascripts/bower_components/requirejs-text/text",
-    "appConfig": "/javascripts/app.config",
+    "CodeMirror": "/javascripts/bower_components/codemirror/lib/codemirror",
+    "appConfig": "/javascripts/app.config", 
     "BaseView": "/javascripts/views/Base.view",
     "BaseModel": "/javascripts/models/Base.model",
     "BaseListener": "/javascripts/models/BaseListener.model",
@@ -15,3 +16,13 @@ require.config({
     "XMPPStreamView": "/javascripts/views/XMPPStream.view"
   }
 });
+// require(['/javascripts/bower_components/codemirror/lib/codemirror',
+//            '/javascripts/bower_components/codemirror/mode/xml/xml'], function(CodeMirror){
+//         CodeMirror.fromTextArea(document.body, {
+//           mode: 'text/html',
+//           lineNumbers: true,
+//           matchBrackets: true,
+//           lineWrapping: true
+//         });
+
+// });
