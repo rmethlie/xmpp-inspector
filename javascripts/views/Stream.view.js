@@ -1,16 +1,33 @@
-define(['BaseView', 'prettyPrint', 'text!templates/stream-data.template.html', 'text!templates/stream-data-wrapper.template.html'], 
-  function(BaseView, prettyPrint, streamDataTemplate, streamDataWrapperTemplate) {
+define(['BaseView', 
+  'text!templates/stream-data.template.html', 
+  'text!templates/stream-data-wrapper.template.html'], 
+  function(BaseView, streamDataTemplate, streamDataWrapperTemplate) {
   "use strict";
+  
+  // var CodeMirrorModeXML = require('/javascripts/bower_components/codemirror/mode/xml/xml.js');
 
   return BaseView.extend({
     
     el: "#stream",
-
     template: _.template(streamDataTemplate),
     wrapperTemplate: _.template(streamDataWrapperTemplate),
     
-    initialize: function(){
+    listener: null,
+
+    initialize: function(options){
       console.log("[StreamView] initialize");
+
+      this.listener = options.listener;
+
+      // this.data = new CodeMirror(document.body, {
+      //   value: "function myScript(){return 100;}\n",
+      //   mode:  "javascript"
+      // });
+
+      this.listenTo(this.listener, "request:finished", function(packet, contents){
+        this.appendData(contents);
+      });
+
     },
 
     guidGen: function () {
@@ -37,12 +54,11 @@ define(['BaseView', 'prettyPrint', 'text!templates/stream-data.template.html', '
     },
 
     appendData: function(contents){
+      return;
       var targetId = this.appendRequestWrapper();
       var targetEl = this.$el.find("#" + targetId)[0];
       contents = this.formatMarkUp(contents);
-      $(targetEl).append( this.template({payload: contents}) );
-      
-      PR.prettyPrint(null, targetEl);
+      $(targetEl).append( this.template({payload: contents}) );      
     }
 
   });
