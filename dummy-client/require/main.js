@@ -1,14 +1,11 @@
 require.config({
   paths: {
-    CodeMirror: "/codemirror/lib/codemirror",
+    CodeMirror: "../codemirror/lib/codemirror",
+    MyModule: "../my-module",
   }
 });
-require(['/codemirror/mode/xml/xml.js'], function(CodeMirror) {
-    CM = require('/codemirror/lib/codemirror.js');
-    var editor = CM.fromTextArea(document.getElementById("code"), {
-        mode: "text/html",
-        lineNumbers: true
-      });
+require(['MyModule'], function(module) {
+    module();
     // var myCodeMirror = CM(document.body, {
     //       value: "function myScript(){return 100;}\n",
     //       mode:  "text/html"
