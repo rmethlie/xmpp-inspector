@@ -20,7 +20,9 @@ define(['BaseView',
     dataStreamConfig: {
       mode: "text/html",
       lineNumbers: true,
-      viewportMargin: 10, // CodeMirror render buffer size. Set explicitly so we can calculate the last visible line in stream
+      // viewportMargin is the CodeMirror render buffer size (number of non-visible lines rendered by the viewport). 
+      // Setting it explicitly so we can calculate the last visible line in stream
+      viewportMargin: 10, 
       lineWrapping: true
     }, 
 
@@ -38,7 +40,7 @@ define(['BaseView',
       });
 
     },
-    
+
     render: function(){
       this.$el.html(this.template({}));
     },
