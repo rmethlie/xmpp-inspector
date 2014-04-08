@@ -18,6 +18,20 @@ chrome.runtime.onConnect.addListener(function (port) {
         }
     };
 
+    var _this = this;
+      chrome.webRequest.onBeforeRequest.addListener(
+        function(info) {
+          console.log("Request Intercepted: " + info.requestBody);
+          port.postMessage(info);
+        },
+        // filters
+        {
+          urls: [
+            _this.get("urlPattern")
+          ],
+          types: ["xmlhttprequest"]
+        },
+        ['requestBody']);
     // Listen to messages sent from the DevTools page
     port.onMessage.addListener(extensionListener);
     port.onDisconnect.addListener(function(port) {
