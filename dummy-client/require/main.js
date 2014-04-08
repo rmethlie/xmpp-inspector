@@ -1,8 +1,7 @@
 require.config({
   paths: {
     CodeMirror: "../codemirror/lib/codemirror",
-    markupBeautifier: "../js-beautify-master/js/lib/beautify-html",
-    jsBeautifier: "../js-beautify-master/js/lib/beautify",
+    jsBeautifier: "../js-beautify-master/js/lib",
     MyModule: "../my-module"
   }
 });

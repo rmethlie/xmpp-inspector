@@ -31,7 +31,7 @@
 
   Written by Nochum Sossonko, (nsossonko@hotmail.com)
 
-  Based on code initially developed by: Einar Lielmanis, <einar@jsbeautifier.org>
+  Based on code initially developed by: Einar Lielmanis, <elfz@laacz.lv>
     http://jsbeautifier.org/
 
   Usage:
@@ -89,14 +89,13 @@
             brace_style,
             unformatted,
             preserve_newlines,
-            max_preserve_newlines,
-            indent_handlebars;
+            max_preserve_newlines;
 
         options = options || {};
 
         // backwards compatibility to 1.3.4
         if ((options.wrap_line_length === undefined || parseInt(options.wrap_line_length, 10) === 0) &&
-                (options.max_char !== undefined && parseInt(options.max_char, 10) !== 0)) {
+                (options.max_char === undefined || parseInt(options.max_char, 10) === 0)) {
             options.wrap_line_length = options.max_char;
         }
 
@@ -807,7 +806,7 @@
         return multi_parser.output.join('');
     }
 
-    if (typeof define === "function" && define.amd) {
+    if (typeof define === "function") {
         // Add support for require.js
         define(["./beautify", "./beautify-css"], function(js_beautify, css_beautify) {
             return {
@@ -819,8 +818,8 @@
     } else if (typeof exports !== "undefined") {
         // Add support for CommonJS. Just put this file somewhere on your require.paths
         // and you will be able to `var html_beautify = require("beautify").html_beautify`.
-        var js_beautify = require('./beautify').js_beautify;
-        var css_beautify = require('./beautify-css').css_beautify;
+        var js_beautify = require('./beautify.js').js_beautify;
+        var css_beautify = require('./beautify-css.js').css_beautify;
 
         exports.html_beautify = function(html_source, options) {
             return style_html(html_source, options, js_beautify, css_beautify);

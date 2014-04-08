@@ -1,13 +1,14 @@
 define(['BaseView', 
   'text!templates/stream-data.template.html', 
   'text!templates/stream-data-wrapper.template.html',
-  '/javascripts/bower_components/codemirror/mode/xml/xml.js'], 
+  '/javascripts/bower_components/codemirror/mode/xml/xml.js',
+  'beautifier/beautify-html'], 
   function(BaseView, streamDataTemplate, streamDataWrapperTemplate) {
   "use strict";
   
   // var CodeMirrorModeXML = require('/javascripts/bower_components/codemirror/mode/xml/xml.js');
 
-
+  var format = require('beautifier/beautify-html');
   return BaseView.extend({
     
     el: "#stream",
@@ -62,8 +63,9 @@ define(['BaseView',
     },
 
     appendData: function(contents){
-      this.dataStream.replaceRange(contents, {line: Infinity});
-      // todo: after inserting select new content and call this.dataStream.autoFormatRange(range.from, range.to);
+      this.dataStream.setCursor(this.dataStream.lastLine());
+      this.dataStream.execCommand('newlineAndIndent');
+      this.dataStream.replaceRange(format.html_beautify(contents), {line: Infinity});
     }
 
   });

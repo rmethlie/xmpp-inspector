@@ -1,7 +1,7 @@
-define(['../codemirror/mode/xml/xml.js', '../js-beautify-master/js/lib/beautify-html'], function(CodeMirror) {
+define(['../codemirror/mode/xml/xml.js', 'jsBeautifier/beautify-html'], function(CodeMirror) {
   "use strict";
 
-  var format = require('../js-beautify-master/js/lib/beautify-html');
+  var format = require('jsBeautifier/beautify-html');
   return function(){
     console.log('this is from my generic module');
     // var test = '&lt;html style="color: green"&gt;&lt;!-- this is a comment --&gt;&lt;head&gt;&lt;title&gt;HTML Example&lt;/title&gt;&lt;/head&gt;&lt;body&gt;The indentation tries to be &lt;em&gt;somewhat &quot;do what I mean&quot;&lt;/em&gt;... but might not match your style.  &lt;/body&gt;&lt;/html&gt;'
