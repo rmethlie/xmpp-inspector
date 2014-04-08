@@ -1,7 +1,8 @@
 require.config({
   paths: {
     CodeMirror: "../codemirror/lib/codemirror",
-    MyModule: "../my-module",
+    jsBeautifier: "../js-beautify-master/js/lib",
+    MyModule: "../my-module"
   }
 });
 require(['MyModule'], function(module) {
