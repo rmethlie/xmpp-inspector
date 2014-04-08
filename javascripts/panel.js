@@ -5,7 +5,7 @@ require.config({
     backbone: "/javascripts/bower_components/backbone/backbone",
     prettyPrint: "/javascripts/google-code-prettify/src/prettify",
     text: "/javascripts/bower_components/requirejs-text/text",
-    CodeMirror: "/javascripts/bower_components/codemirror/lib/codemirror",
+    codemirror: "bower_components/codemirror/",
     beautifier: "bower_components/js-beautify/js/lib",
     appConfig: "/javascripts/app.config", 
     BaseView: "/javascripts/views/Base.view",

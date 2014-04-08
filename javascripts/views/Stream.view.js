@@ -1,7 +1,7 @@
 define(['BaseView', 
   'text!templates/stream-data.template.html', 
   'text!templates/stream-data-wrapper.template.html',
-  '/javascripts/bower_components/codemirror/mode/xml/xml.js',
+  'codemirror/mode/xml/xml',
   'beautifier/beautify-html'], 
   function(BaseView, streamDataTemplate, streamDataWrapperTemplate) {
   "use strict";
@@ -21,7 +21,7 @@ define(['BaseView',
       console.log("[StreamView] initialize");
       
       this.render();
-      var CodeMirror = require('/javascripts/bower_components/codemirror/lib/codemirror.js');
+      var CodeMirror = require('codemirror/lib/codemirror');
 
       this.listener = options.listener;
 
