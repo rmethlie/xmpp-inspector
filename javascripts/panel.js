@@ -1,10 +1,23 @@
-
-require(["config"], function() {
-  require(["app", 
+require.config({
+  paths: {
+    underscore: "/javascripts/bower_components/underscore/underscore",
+    jquery: "/javascripts/bower_components/jquery/dist/jquery.min",
+    backbone: "/javascripts/bower_components/backbone/backbone",
+    prettyPrint: "/javascripts/google-code-prettify/src/prettify",
+    text: "/javascripts/bower_components/requirejs-text/text",
+    CodeMirror: "/javascripts/bower_components/codemirror/lib/codemirror",
+    appConfig: "/javascripts/app.config", 
+    BaseView: "/javascripts/views/Base.view",
+    BaseModel: "/javascripts/models/Base.model",
+    BaseListener: "/javascripts/models/BaseListener.model",
+    StreamView: "/javascripts/views/Stream.view",
+    XMPPStreamView: "/javascripts/views/XMPPStream.view"
+  }
+});
+require(["app", 
     "BaseListener", 
     "XMPPStreamView", 
-    "appConfig", 
-    "prettyPrint"], function(app, BaseListener, XMPPStreamView, config, prettyPrint) {
+    "appConfig"], function(app, BaseListener, XMPPStreamView, config) {
     console.log("init", app);
     
     var sniffer = new BaseListener();
@@ -13,64 +26,8 @@ require(["config"], function() {
     console.log("sniffer:", sniffer);
     console.log("stream:", stream);
     console.log("config settings loaded:", config.isConfig);
-    console.log(prettyPrintOne("var x='two';"));
     sniffer.listen();
-    // try{
-    //   var
-    //   httpBind = /http-bind/i,
-    //   emDevToolsBackground = chrome.runtime.connect({
-    //       name: "background"
-    //   });
-
-    //   function logToPage( message, error, panelBody ){
-        
-    //     $(panelBody).append( "<div class='request'><pre>" + message + "</pre></div>" );  
-        
-    //     if( error ){
-    //       emDevToolsBackground.postMessage({
-    //         error: message
-    //       })
-    //     }else{
-    //       emDevToolsBackground.postMessage({
-    //         log: message
-    //       })
-    //     }
-    //   }
-
-        
-    //   chrome.devtools.network.onRequestFinished.addListener(function(packet){
-    //     try{
-    //       var
-    //         body = $("#xmpp-inspector-panel")[0],
-    //         $body = $(body);
-
-          
-    //       if( httpBind.test( packet.request.url ) ){
-    //         logToPage( packet.request.url, null, $body );
-
-    //         packet.getContent( function(contents){
-
-    //           try{
-    //             $body.append( "<div><textarea>" + contents + "</textarea></div>" );
-    //             // contents = $.parseXML(contents);
-    //             // $(contents).format({method:'xml'});//.replace( /</g, "&lt;" ).replace( />/g, "&gt;" );
-    //             // $body.append( contents.childNodes[0] );
-                
-    //           }catch( eee ){
-    //             logToPage( eee.stack, true );
-    //           }
-    //         });
-    //       }
-    //     }catch( ee ){
-    //       logToPage( ee.stack, true );
-    //     }
-    //   });
-
-    // }catch( e ){
-    //   logToPage( e.stack, true );
-    // }
 
   });
-});
 /*
 */
