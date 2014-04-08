@@ -7,7 +7,6 @@ require.config({
     text: "/javascripts/bower_components/requirejs-text/text",
     codemirror: "bower_components/codemirror/",
     beautifier: "bower_components/js-beautify/js/lib",
-    appConfig: "/javascripts/app.config", 
     BaseView: "/javascripts/views/Base.view",
     BaseModel: "/javascripts/models/Base.model",
     BaseListener: "/javascripts/models/BaseListener.model",
@@ -17,8 +16,7 @@ require.config({
 });
 require(["app", 
     "BaseListener", 
-    "XMPPStreamView", 
-    "appConfig"], function(app, BaseListener, XMPPStreamView, config) {
+    "XMPPStreamView"], function(app, BaseListener, XMPPStreamView) {
     console.log("init", app);
     
     var sniffer = new BaseListener();
@@ -26,7 +24,6 @@ require(["app",
     var stream = new XMPPStreamView({listener: sniffer});
     console.log("sniffer:", sniffer);
     console.log("stream:", stream);
-    console.log("config settings loaded:", config.isConfig);
     sniffer.listen();
 
   });
