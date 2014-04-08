@@ -63,11 +63,7 @@ define(['BaseView',
 
     appendData: function(contents){
       this.dataStream.replaceRange(contents, {line: Infinity});
-      return;
-      var targetId = this.appendRequestWrapper();
-      var targetEl = this.$el.find("#" + targetId)[0];
-      contents = this.formatMarkUp(contents);
-      $(targetEl).append( this.template({payload: contents}) );      
+      // todo: after inserting select new content and call this.dataStream.autoFormatRange(range.from, range.to);
     }
 
   });
