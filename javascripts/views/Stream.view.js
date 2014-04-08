@@ -19,7 +19,6 @@ define(['BaseView',
 
     initialize: function(options){
       console.log("[StreamView] initialize");
-      
       this.render();
       var CodeMirror = require('codemirror/lib/codemirror');
 
@@ -63,9 +62,29 @@ define(['BaseView',
     },
 
     appendData: function(contents){
-      this.dataStream.setCursor(this.dataStream.lastLine());
+      // note: .getViewport() may include the offscreen buffered lines. this is how we test to see if we are at the end of the viewport
+      var lastViewportLine = this.dataStream.getViewport().to; 
+      var lastLineNumber = this.dataStream.lastLine();
+      var lastLineHandler = this.dataStream.getLineHandle(lastLineNumber);
+      var lastLineCharCount = lastLineHandler.text.length;
+      var cursorOptions = {scroll: false};
+      if(lastLineNumber + 1 === lastViewportLine )
+         cursorOptions = {scroll: true};
+
+      // move the cursor to the last char of the last line
+      this.dataStream.setCursor(lastLineNumber, lastLineCharCount, cursorOptions);
+      this.dataStream.execCommand('goLineEnd');
       this.dataStream.execCommand('newlineAndIndent');
+      this.dataStream.setCursor(lastLineNumber, lastLineCharCount, cursorOptions);
+      this.dataStream.execCommand('goLineEnd');
+      
+      // insert content
       this.dataStream.replaceRange(format.html_beautify(contents), {line: Infinity});
+
+
+
+      // auto scroll
+
     }
 
   });
