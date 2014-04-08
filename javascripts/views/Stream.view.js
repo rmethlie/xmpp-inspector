@@ -17,6 +17,13 @@ define(['BaseView',
     
     listener: null,
 
+    dataStreamConfig: {
+      mode: "text/html",
+      lineNumbers: true,
+      viewportMargin: 10, // CodeMirror render buffer size. Set explicitly so we can calculate the last visible line in stream
+      lineWrapping: true
+    }, 
+
     initialize: function(options){
       console.log("[StreamView] initialize");
       this.render();
@@ -24,10 +31,7 @@ define(['BaseView',
 
       this.listener = options.listener;
 
-      this.dataStream = CodeMirror.fromTextArea(document.getElementById("dataStream"), {
-        mode: "text/html",
-        lineNumbers: true
-      });
+      this.dataStream = CodeMirror.fromTextArea(document.getElementById("dataStream"), this.dataStreamConfig);
 
       this.listenTo(this.listener, "request:finished", function(packet, contents){
         this.appendData(contents);
