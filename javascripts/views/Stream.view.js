@@ -49,22 +49,6 @@ define(['BaseView',
         });
     },
 
-    // Description: Encoded mark up languages, like HTML and XML, for display on a webpage
-    formatMarkUp: function(markup){
-      return markup.replace(/</g, '&lt;')
-               .replace(/>/g, '&gt;');
-    },
-
-    appendRequestWrapper: function(){
-      var guid = this.guidGen();
-      this.$el.append(this.wrapperTemplate({guid: guid}));
-      return guid;
-    },    
-
-    appendRequestData: function(targetId, contents){
-      this.$el.append(this.template({payload: contents}));
-    },
-
     appendData: function(contents){
       // note: .getViewport() may include the offscreen buffered lines. this is how we test to see if we are at the end of the viewport
       var lastViewportLine = this.dataStream.getViewport().to; 
