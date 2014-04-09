@@ -1,18 +1,7 @@
-// todo: encapsulate listeners to be dynamically created by a devtools message. 
-//  This way we are not listening for anything the user is not looking for and the url patter can be dynamic
 
-require.config({
-  paths: {
-    underscore: "javascripts/bower_components/underscore/underscore",
-    jquery: "javascripts/bower_components/jquery/dist/jquery.min",
-    backbone: "javascripts/bower_components/backbone/backbone",
-    BaseModel: "javascripts/models/Base.model",
-    packet: "javascripts/models/Packet.model",
-    BaseListener: "javascripts/models/BaseListener.model"
-  }
-});
+require(["config"], function() {
 require(['BaseListener'], function(BaseListener) {
-
+    var BaseListener = require('BaseListener');
     var streamListener = new BaseListener();
     // streamListener.addStream();
 
@@ -36,3 +25,4 @@ require(['BaseListener'], function(BaseListener) {
     // });
 
   });
+});
