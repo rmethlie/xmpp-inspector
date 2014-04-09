@@ -12,11 +12,14 @@ define(['BaseModel'], function(BaseModel) {
 
     listen: function(){
       var _this = this;
-      chrome.runtime.onConnect.addListener(function(port) {
-        console.assert(port.name == "XMPPlongpoll");
-        port.onMessage.addListener(function(msg) {
-          console.log("Received a msg from XMPPlongpoll");
-        });
+      chrome.runtime.onMessage.addListener(
+      function(message, sender, sendResponse) {
+        // console.log(sender.tab ?
+        //             "from a content script:" + sender.tab.url :
+        //             "from the extension");
+        // if (request.greeting == "hello")
+        //   sendResponse({farewell: "goodbye"});
+        console.log("got a message", message);
       });
       // var urlPattern = new RegExp( this.get("url"), "i");
 

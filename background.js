@@ -1,4 +1,7 @@
+// todo: encapsulate listeners to be dynamically created by a devtools message. 
+//  This way we are not listening for anything the user is not looking for and the url patter can be dynamic
 
+console.log("background.js loaded");
 
 // background.js
 chrome.runtime.onConnect.addListener(function (port) {
@@ -18,32 +21,81 @@ chrome.runtime.onConnect.addListener(function (port) {
             console.error( "[XMPP-INSPECTOR]", parse( message.error ) );
         }
     };
-
-    var longpoll = chrome.runtime.connect({name: "XMPPlongpoll"});
-    // port.postMessage({joke: "Knock knock"});
-    // port.onMessage.addListener(function(msg) {
-      
-    // });
-
-    // Listen to messages sent from the DevTools page
-    // port.onMessage.addListener(extensionListener);
-    // port.onDisconnect.addListener(function(port) {
-    //     port.onMessage.removeListener(extensionListener);
-    // });
-
-    chrome.webRequest.onBeforeRequest.addListener(
-        function(info) {
-          console.log("Request Intercepted: " + info.requestBody);
-          longpoll.postMessage(info);
-        },
-        // filters
-        {
-          urls: [
-            _this.get("urlPattern")
-          ],
-          types: ["xmlhttprequest"]
-        },
-        ['requestBody']
-    );
-
 });
+
+// Get the request body
+chrome.webRequest.onBeforeRequest.addListener(
+    function(info) {
+      // requestBody only available when PUT or POST
+      // we should check for HTTP method used when determining payload to send back to devtools page
+      if(info.requestBody){
+        console.log("Request Intercepted w/ body ");
+        payload = ab2str(info.requestBody.raw[0].bytes);
+        console.log("payload:", payload);
+      }
+      
+    },
+    // filters
+    {
+      urls: ["http://green.eikonmessenger/nhttp-bind/"],
+      types: ["xmlhttprequest"]
+    },
+    ["requestBody"]
+);
+
+// get request headers (after everyone has had a chance to change them)
+chrome.webRequest.onSendHeaders.addListener(
+    function(info) {
+
+    },
+    // filters
+    {
+      urls: ["http://green.eikonmessenger/nhttp-bind/"],
+      types: ["xmlhttprequest"]
+    }, 
+    ["requestHeaders"]
+);
+
+// get response headers, http status & response
+// chrome.webRequest.onResponseStarted.addListener(
+//     function(info) {
+
+//     },
+//     // filters
+//     {
+//       urls: ["http://green.eikonmessenger/nhttp-bind/"],
+//       types: ["xmlhttprequest"]
+//     },
+//     ["HttpHeaders"]
+// );
+
+// get response headers, http status & response
+chrome.webRequest.onCompleted.addListener(
+    function(info) {
+
+    },
+    // filters
+    {
+      urls: ["http://green.eikonmessenger/nhttp-bind/"],
+      types: ["xmlhttprequest"]
+    },
+    ["responseHeaders"]
+);
+
+// borrowed from http://updates.html5rocks.com/2012/06/How-to-convert-ArrayBuffer-to-and-from-String
+// for a more robust library we can always use https://github.com/inexorabletash/text-encoding
+function ab2str(buf) {
+    // !!! using Uint8Array because we are assuming utf 8 encoded
+    // we should attempt to detect this if possible and accomodate other encodings using the library mentioned above
+   // return String.fromCharCode.apply(null, new Uint16Array(buf));
+   return String.fromCharCode.apply(null, new Uint8Array(buf));
+ }
+
+function str2ab(str) {
+   var buf = new ArrayBuffer(str.length*2); // 2 bytes for each char !!!UTF-16!!!
+   var bufView = new Uint16Array(buf); 
+   for (var i=0, strLen=str.length; i<strLen; i++) {
+     bufView[i] = str.charCodeAt(i);
+   }
+   return buf;
+ }
