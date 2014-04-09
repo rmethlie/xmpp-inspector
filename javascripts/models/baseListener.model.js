@@ -1,4 +1,4 @@
-define(['BaseModel'], function(BaseModel) {
+define(['BaseModel', 'Packet', 'NetworkRequest'], function(BaseModel, Packet, NetworkRequest) {
   "use strict";
     // borrowed from http://updates.html5rocks.com/2012/06/How-to-convert-ArrayBuffer-to-and-from-String
     // for a more robust library we can always use https://github.com/inexorabletash/text-encoding
@@ -17,6 +17,9 @@ define(['BaseModel'], function(BaseModel) {
        }
        return buf;
      }
+     
+    var packet = new Packet();
+    var request = new NetworkRequest();
   return BaseModel.extend({
     defaults:{
       url: "http-bind"
