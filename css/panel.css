@@ -2,6 +2,8 @@
 
 BODY{
   font-family: Tahoma;
+  margin: 0;
+  padding: 0;
 }
 
 .page-title{
@@ -24,4 +26,9 @@ TEXTAREA.xml-contents{
   background-color: #f0f0f0;
   height: 50px;
   width: 100%;
+}
+
+/* Codemirror "Theme" */
+.cm-s-xmpp.CodeMirror, .cm-s-xmpp.CodeMirror .CodeMirror-scroll {
+  height: 100%;
 }
