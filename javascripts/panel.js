@@ -3,7 +3,6 @@ require.config({
     underscore: "/javascripts/bower_components/underscore/underscore",
     jquery: "/javascripts/bower_components/jquery/dist/jquery.min",
     backbone: "/javascripts/bower_components/backbone/backbone",
-    prettyPrint: "/javascripts/google-code-prettify/src/prettify",
     text: "/javascripts/bower_components/requirejs-text/text",
     codemirror: "bower_components/codemirror/",
     beautifier: "bower_components/js-beautify/js/lib",
@@ -19,13 +18,8 @@ require(["app",
     "XMPPStreamView"], function(app, BaseListener, XMPPStreamView) {
     console.log("init", app);
     
-    var sniffer = new BaseListener();
 
-    var stream = new XMPPStreamView({listener: sniffer});
-    console.log("sniffer:", sniffer);
+    var stream = new XMPPStreamView();
     console.log("stream:", stream);
-    sniffer.listen();
 
   });
-/*
-*/

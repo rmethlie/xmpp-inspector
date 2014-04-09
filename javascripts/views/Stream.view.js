@@ -6,23 +6,18 @@ define(['BaseView',
   function(BaseView, streamDataTemplate, streamDataWrapperTemplate) {
   "use strict";
   
-  // var CodeMirrorModeXML = require('/javascripts/bower_components/codemirror/mode/xml/xml.js');
-
-  var format = require('beautifier/beautify-html');
   return BaseView.extend({
     
     el: "#stream",
 
-    template: _.template(streamDataTemplate),
-    
-    listener: null,
+    template: _.template(streamDataTemplate),    
 
     dataStreamConfig: {
       mode: "text/html",
       lineNumbers: true,
-      // viewportMargin is the CodeMirror render buffer size (number of non-visible lines rendered by the viewport). 
-      // Setting it explicitly so we can calculate the last visible line in stream
       viewportMargin: 10, 
+        // viewportMargin is the CodeMirror render buffer size (number of non-visible lines rendered by the viewport). 
+        // Setting it explicitly so we can calculate the last visible line in stream
       lineWrapping: true
     }, 
 
@@ -30,15 +25,20 @@ define(['BaseView',
       console.log("[StreamView] initialize");
       this.render();
       var CodeMirror = require('codemirror/lib/codemirror');
-
-      this.listener = options.listener;
-
       this.dataStream = CodeMirror.fromTextArea(document.getElementById("dataStream"), this.dataStreamConfig);
-
-      this.listenTo(this.listener, "request:finished", function(packet, contents){
-        this.appendData(contents);
+      this.addListeners();
+      chrome.runtime.sendMessage({greeting: "hello"}, function(response) {
+        console.log("response:", response);
       });
 
+    },
+
+    addListeners: function(){      
+      chrome.runtime.onMessage.addListener(
+        function(message, sender, sendResponse) {
+          console.log("got a message", message, sender);
+          sendResponse("response from background service");
+      });      
     },
 
     render: function(){
@@ -71,10 +71,6 @@ define(['BaseView',
       
       // insert content
       this.dataStream.replaceRange(format.html_beautify(contents), {line: Infinity});
-
-
-
-      // auto scroll
 
     }
 
