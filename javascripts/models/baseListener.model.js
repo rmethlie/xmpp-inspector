@@ -12,24 +12,30 @@ define(['BaseModel'], function(BaseModel) {
 
     listen: function(){
       var _this = this;
-      var urlPattern = new RegExp( this.get("url"), "i");
-
-      chrome.devtools.network.onRequestFinished.addListener(function(packet){
-        try{
-          
-          if( urlPattern.test( packet.request.url ) ){
-            packet.getContent( function(contents){
-              try{
-                _this.trigger("request:finished", packet, contents);
-              }catch( eee ){
-                console.error( eee.stack, true );
-              }
-            });
-          }
-        }catch( ee ){
-          console.error( ee.stack, true );
-        }
+      chrome.runtime.onConnect.addListener(function(port) {
+        console.assert(port.name == "XMPPlongpoll");
+        port.onMessage.addListener(function(msg) {
+          console.log("Received a msg from XMPPlongpoll");
+        });
       });
+      // var urlPattern = new RegExp( this.get("url"), "i");
+
+      // chrome.devtools.network.onRequestFinished.addListener(function(packet){
+      //   try{
+          
+      //     if( urlPattern.test( packet.request.url ) ){
+      //       packet.getContent( function(contents){
+      //         try{
+      //           _this.trigger("request:finished", packet, contents);
+      //         }catch( eee ){
+      //           console.error( eee.stack, true );
+      //         }
+      //       });
+      //     }
+      //   }catch( ee ){
+      //     console.error( ee.stack, true );
+      //   }
+      // });
     }
 
   });
