@@ -9,11 +9,12 @@ require.config({
         beautifier: "bower_components/js-beautify/js/lib",
         BaseView: "views/Base.view",
         BaseModel: "models/Base.model",
-        BaseListener: "models/BaseListener.model",
-        Packet: "models/Packet.model",
         StreamView: "views/Stream.view",
         XMPPStreamView: "views/XMPPStream.view",
         Packet: "models/Packet.model",
-        NetworkRequest: "models/NetworkRequest.model"
+        NetworkRequest: "models/NetworkRequest.model",
+        Stream: "models/Stream.model",
+        StreamListener: "models/StreamListener.model",
+        StreamListeners: "collections/StreamListeners.collection"
     }
 });
