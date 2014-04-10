@@ -6,9 +6,14 @@ define(['BaseView',
   function(BaseView, streamDataTemplate, streamDataWrapperTemplate) {
   "use strict";
   
+  var CodeMirror = require('codemirror/lib/codemirror');
   return BaseView.extend({
     
     el: "#stream",
+
+    requestSentPrefix: "",
+    
+    responseReceivedPrefix: "",
 
     template: _.template(streamDataTemplate),    
 
@@ -24,21 +29,9 @@ define(['BaseView',
     initialize: function(options){
       console.log("[StreamView] initialize");
       this.render();
-      var CodeMirror = require('codemirror/lib/codemirror');
       this.dataStream = CodeMirror.fromTextArea(document.getElementById("dataStream"), this.dataStreamConfig);
-      this.addListeners();
-      chrome.runtime.sendMessage({greeting: "hello"}, function(response) {
-        console.log("response:", response);
-      });
 
-    },
-
-    addListeners: function(){      
-      chrome.runtime.onMessage.addListener(
-        function(message, sender, sendResponse) {
-          console.log("got a message", message, sender);
-          sendResponse("response from background service");
-      });      
+      this.model.listen();
     },
 
     render: function(){
