@@ -10,6 +10,8 @@ define(['BaseModel'], function(BaseModel) {
       tabId: -1
     },
 
+    requestHandlers: {},
+
     initialize: function(){
       console.log("[StreamListener] initialize");
       this.listenToBeforeRequest();
@@ -17,11 +19,17 @@ define(['BaseModel'], function(BaseModel) {
       this.listenToCompleted();
     },
 
+    removeListeners: function(){
+      console.log("[StreamListener] removeListeners");
+      for(handler in this.requestHandlers){
+        chrome.webRequest[handler].removeListener(this.requestHandlers[handler]);
+      }
+    },
 
     listenToBeforeRequest: function(){
       // Get the request body
       var _this = this;
-      chrome.webRequest.onBeforeRequest.addListener(
+      this.requestHandlers.onBeforeRequest = chrome.webRequest.onBeforeRequest.addListener(
           function(info) {
             _this.trigger("stream:update", {tabId:_this.get("tabId"), state:"beforeRequest", payload:info});
             // _this.publish(_this.get("tabId"), "beforeRequest", info);
@@ -51,7 +59,7 @@ define(['BaseModel'], function(BaseModel) {
     listenToSendHeaders: function(){
       // get request headers (after everyone has had a chance to change them)
       var _this = this;
-      chrome.webRequest.onSendHeaders.addListener(
+      this.requestHandlers.onSendHeaders = chrome.webRequest.onSendHeaders.addListener(
           function(info) {
             // _this.publish(_this.get("tabId"), "sendHeaders", info);
 
@@ -70,7 +78,7 @@ define(['BaseModel'], function(BaseModel) {
       // get response headers, http status & response
       // chrome.webRequest.onResponseStarted.addListener()
       var _this = this;
-      chrome.webRequest.onCompleted.addListener(
+      this.requestHandlers.onCompleted = chrome.webRequest.onCompleted.addListener(
           function(info) {
             // _this.publish(_this.get("tabId"), "completed", info);
 

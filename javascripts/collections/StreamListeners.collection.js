@@ -39,11 +39,19 @@ define(['backbone', 'StreamListener'], function(Backbone, StreamListener) {
         // todo: trigger removeListener when the inspector panel is closed
         //  also try tab/window is closed
         port.onDisconnect.addListener(function(){
-          _this.ports[port.name] = null;
-          port.onMessage.removeListener(_this.messageHandlers[port.sender.tab.id]);
+          _this.onDisconnect(port);
         });
       });
 
+    },
+
+    onDisconnect: function(port){
+      console.log("[StreamListeners] onDisconnect", port);
+      port.onMessage.removeListener(this.messageHandlers[port.name]);
+      delete this.ports[port.name];
+      var streamListener = this.find({name: port.name});
+      streamListener.removeListeners();
+      this.remove(streamListener);
     },
 
     onMessage: function(message) {

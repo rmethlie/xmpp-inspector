@@ -35,7 +35,7 @@ define(['BaseView',
       this.listenTo(this.model, "request:sent", function(content){
         this.appendData(content);
       });
-      this.model.listen();
+      this.model.connect();
     },
 
     render: function(){

@@ -25,7 +25,8 @@ define(['BaseModel'], function(BaseModel) {
     defaults: {
       urls: ["*://*/*http-bind*"],
       types: ["xmlhttprequest"],
-      tabId: chrome.devtools.inspectedWindow.tabId
+      tabId: chrome.devtools.inspectedWindow.tabId,
+      name: "port:" + chrome.devtools.inspectedWindow.tabId
     },
 
     connection: false,
@@ -33,7 +34,6 @@ define(['BaseModel'], function(BaseModel) {
     initialize: function(){
       console.log("[Stream] initialize");
       this.addListeners();
-      this.connect();
     },
 
     connect: function(){
@@ -57,17 +57,8 @@ define(['BaseModel'], function(BaseModel) {
 
     },
 
-    listen: function(){
-      console.log("[Stream] listen");
-
-      // chrome.runtime.sendMessage({action: "add:listener", manifest: this.toJSON()}, function(response) {
-      //   console.log("[Stream] listen:response:", response);
-      // });
-    },
-
-
     handleBeforeRequest: function(data){
-      var content = "<content><message>Don't Panic: Got a request event but there was no Request Body.</message></content>";
+      var content = "<content><message>Don't Panic: We got a request event but there was no Request Body.</message></content>";
       if(data.requestBody){
         content = ArrayBufferToString(info.requestBody.raw[0].bytes);
         // todo: store the network requests and their states as objects on this stream
