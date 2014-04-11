@@ -21,10 +21,11 @@ define(['BaseView',
     dataStreamConfig: {
       mode: "text/html",
       lineNumbers: true,
-      viewportMargin: 10, 
+      lineWrapping: true,
+      theme: "xmpp default", // apply our modifications to the default CodeMirror theme.
+      viewportMargin: 10 
         // viewportMargin is the CodeMirror render buffer size (number of non-visible lines rendered by the viewport). 
         // Setting it explicitly so we can calculate the last visible line in stream
-      lineWrapping: true
     }, 
 
     initialize: function(options){
