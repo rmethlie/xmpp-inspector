@@ -10,47 +10,45 @@ define(['BaseModel'], function(BaseModel) {
       tabId: -1
     },
 
-    requestHandlers: {},
+    requestHandlers: {
+    },
+
+    onBeforeRequest: function(info) {
+      this.trigger("stream:update", {tabId:this.get("tabId"), state:"beforeRequest", payload:info});            
+    },
 
     initialize: function(){
       console.log("[StreamListener] initialize");
+      // bind(this.onBeforeRequest)
+      this.requestHandlers.onBeforeRequest = this.onBeforeRequest.bind(this);
       this.listenToBeforeRequest();
-      this.listenToSendHeaders();
-      this.listenToCompleted();
+      // this.listenToSendHeaders();
+      // this.listenToCompleted();
     },
 
     removeListeners: function(){
       console.log("[StreamListener] removeListeners");
-      for(handler in this.requestHandlers){
-        chrome.webRequest[handler].removeListener(this.requestHandlers[handler]);
+      var handlers = this.requestHandlers;
+      for(var handle in handlers){
+        console.log("handlers:", handlers);
+        console.log("handle:", handle);
+        console.log("handlers[handle]:", handlers[handle]);
+
+        chrome.webRequest[handle].removeListener(handlers[handle]);
       }
     },
 
     listenToBeforeRequest: function(){
       // Get the request body
       var _this = this;
-      this.requestHandlers.onBeforeRequest = chrome.webRequest.onBeforeRequest.addListener(
-          function(info) {
-            _this.trigger("stream:update", {tabId:_this.get("tabId"), state:"beforeRequest", payload:info});
-            // _this.publish(_this.get("tabId"), "beforeRequest", info);
-
-            // var payload;
-            // requestBody only available when PUT or POST
-            // we should check for HTTP method used when determining payload to send back to devtools page
-            // if(info.requestBody){
-            //   console.log("Request Intercepted w/ body ");
-            //   payload = ArrayBufferToString(info.requestBody.raw[0].bytes);
-            //   console.log("payload:", payload);
-            // }
-            
-          },
+      // this.requestHandlers.onBeforeRequest = 
+      chrome.webRequest.onBeforeRequest.addListener(
+          _this.requestHandlers.onBeforeRequest,
           // filters
           {
             urls  : _this.get("urls"),
             types : _this.get("types"),
             tabId : _this.get("tabId")
-            // urls: ["http://green.eikonmessenger/nhttp-bind/"],
-            // types: ["xmlhttprequest"]
           },
           ["requestBody"]
       );
@@ -61,8 +59,6 @@ define(['BaseModel'], function(BaseModel) {
       var _this = this;
       this.requestHandlers.onSendHeaders = chrome.webRequest.onSendHeaders.addListener(
           function(info) {
-            // _this.publish(_this.get("tabId"), "sendHeaders", info);
-
           },
           // filters
           {
@@ -80,7 +76,6 @@ define(['BaseModel'], function(BaseModel) {
       var _this = this;
       this.requestHandlers.onCompleted = chrome.webRequest.onCompleted.addListener(
           function(info) {
-            // _this.publish(_this.get("tabId"), "completed", info);
 
           },
           // filters

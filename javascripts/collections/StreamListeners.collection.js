@@ -30,7 +30,6 @@ define(['backbone', 'StreamListener'], function(Backbone, StreamListener) {
         console.log("connected", port);
         
         _this.ports[port.name] = port;
-        console.log("listening on: port:" + port.sender.tab.id);
           
         _this.messageHandlers[port.name] = port.onMessage.addListener(function(message) {
           _this.onMessage(message);
@@ -39,6 +38,7 @@ define(['backbone', 'StreamListener'], function(Backbone, StreamListener) {
         // todo: trigger removeListener when the inspector panel is closed
         //  also try tab/window is closed
         port.onDisconnect.addListener(function(){
+          console.log("[StreamListeners] chrome.onDisconnect", _this);
           _this.onDisconnect(port);
         });
       });
@@ -46,12 +46,14 @@ define(['backbone', 'StreamListener'], function(Backbone, StreamListener) {
     },
 
     onDisconnect: function(port){
-      console.log("[StreamListeners] onDisconnect", port);
-      port.onMessage.removeListener(this.messageHandlers[port.name]);
-      delete this.ports[port.name];
-      var streamListener = this.find({name: port.name});
+      // console.log("[StreamListeners] onDisconnect", port);
+      // console.log("[StreamListeners] onDisconnect this", this);
+      // console.log("[StreamListeners] onDisconnect this.messageHandlers", this.messageHandlers);
+      var streamListener = this.findWhere({name: port.name});
       streamListener.removeListeners();
       this.remove(streamListener);
+      port.onMessage.removeListener(this.messageHandlers[port.name]);
+      delete this.ports[port.name];
     },
 
     onMessage: function(message) {
