@@ -12,7 +12,7 @@ define(['BaseView',
     el: "#stream",
 
     requestSentPrefix: "",
-    
+
     responseReceivedPrefix: "",
 
     template: _.template(streamDataTemplate),    
@@ -36,6 +36,7 @@ define(['BaseView',
 
     render: function(){
       this.$el.html(this.template({}));
+      return this;
     },
 
     guidGen: function () {

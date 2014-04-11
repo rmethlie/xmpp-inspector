@@ -15,30 +15,10 @@ define(['BaseModel'], function(BaseModel) {
       this.listenToBeforeRequest();
       this.listenToSendHeaders();
       this.listenToCompleted();
-      this.connectDevTools();
     },
 
     publish: function(tabId, type, payload){
       chrome.runtime.sendMessage({tabId: tabId, type: type, data: payload}, function(response){});
-    },
-
-    connectDevTools: function(){
-      chrome.runtime.onConnect.addListener(function(devToolsConnection) {
-
-        this.devToolsConnection = devToolsConnection;
-
-        // assign the listener function to a variable so we can remove it later
-        this.devToolsListener = function(message, sender, sendResponse) {
-            
-        };
-
-        // add the listener
-        this.devToolsConnection.onMessage.addListener( this.devToolsListener);
-
-        this.devToolsConnection.onDisconnect(function() {
-             this.devToolsConnection.onMessage.removeListener(this.devToolsListener);
-        });
-      });
     },
 
     listenToBeforeRequest: function(){
@@ -46,7 +26,9 @@ define(['BaseModel'], function(BaseModel) {
       var _this = this;
       chrome.webRequest.onBeforeRequest.addListener(
           function(info) {
-            _this.publish(_this.get("tabId"), "beforeRequest", info);
+            _this.trigger("stream:update", {tabId:_this.get("tabId"), state:"beforeRequest", payload:info});
+            // _this.publish(_this.get("tabId"), "beforeRequest", info);
+
             // var payload;
             // requestBody only available when PUT or POST
             // we should check for HTTP method used when determining payload to send back to devtools page

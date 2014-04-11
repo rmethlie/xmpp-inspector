@@ -28,38 +28,39 @@ define(['BaseModel'], function(BaseModel) {
       tabId: chrome.devtools.inspectedWindow.tabId
     },
 
+    connection: false,
+
     initialize: function(){
       console.log("[Stream] initialize");
       this.addListeners();
+      this.connect();
     },
 
+    connect: function(){
+      this.connection = chrome.runtime.connect({name: "devtools"});
+      this.connection.postMessage({action: "add:listener", manifest: this.toJSON()});
+      this.connection.onMessage.addListener(function(msg) {
+        console.log("message:received", msg);
+      });
 
+    },
+    
     addListeners: function(){      
-      var _this = this;
-      // chrome.runtime.onMessage.addListener(
-      //   function(message, sender, sendResponse) {
-      //     console.log("got a message", message, sender);
-      //     _this.trigger(message.type, message.data);
-      // });      
+      console.log("[Stream] addListeners");
+      var _this = this;     
 
       this.on("beforeRequest", function(){
         this.handleBeforeRequest();
       });
 
-      this.backgroundPageConnection = chrome.runtime.connect({
-          name: "devtools-page"
-      });
-
-      this.backgroundPageConnection.onMessage.addListener(function (message) {
-          // Handle responses from the background page, if any
-          _this.trigger(message.type, message.data);
-      });
     },
 
     listen: function(){
-      chrome.runtime.sendMessage({action: "add:listener", manifest: this.toJSON()}, function(response) {
-        console.log("[Stream] listen:response:", response);
-      });
+      console.log("[Stream] listen");
+
+      // chrome.runtime.sendMessage({action: "add:listener", manifest: this.toJSON()}, function(response) {
+      //   console.log("[Stream] listen:response:", response);
+      // });
     },
 
 
