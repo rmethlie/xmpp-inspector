@@ -18,7 +18,7 @@ define(['backbone', 'StreamListener'], function(Backbone, StreamListener) {
       var _this = this;
 
       this.on("stream:update", function(data){
-        console.log("sending message on: port:"+data.tabId);
+        console.log("sending message on: port:"+data.tabId, this.ports);
 
         this.ports["port:"+data.tabId].postMessage(data);
       });
@@ -26,10 +26,10 @@ define(['backbone', 'StreamListener'], function(Backbone, StreamListener) {
       chrome.runtime.onConnect.addListener(function(port) {
         console.log("connected", port);
         
-        _this.ports["port:" + port.sender.tab.id] = port;
+        _this.ports[port.name] = port;
         console.log("listening on: port:" + port.sender.tab.id);
           
-        _this.messageHandlers[port.sender.tab.id] = port.onMessage.addListener(function(message) {
+        _this.messageHandlers[port.name] = port.onMessage.addListener(function(message) {
           _this.onMessage(message);
         });
 

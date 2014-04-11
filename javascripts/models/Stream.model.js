@@ -37,10 +37,12 @@ define(['BaseModel'], function(BaseModel) {
     },
 
     connect: function(){
-      this.connection = chrome.runtime.connect({name: "devtools"});
+      var _this = this;
+      this.connection = chrome.runtime.connect({name: "port:" + this.get("tabId") });
       this.connection.postMessage({action: "add:listener", manifest: this.toJSON()});
       this.connection.onMessage.addListener(function(msg) {
         console.log("message:received", msg);
+        _this.trigger(msg.state, msg)
       });
 
     },
@@ -49,8 +51,8 @@ define(['BaseModel'], function(BaseModel) {
       console.log("[Stream] addListeners");
       var _this = this;     
 
-      this.on("beforeRequest", function(){
-        this.handleBeforeRequest();
+      this.on("beforeRequest", function(data){
+        this.handleBeforeRequest(data);
       });
 
     },
@@ -65,12 +67,14 @@ define(['BaseModel'], function(BaseModel) {
 
 
     handleBeforeRequest: function(data){
+      var content = "<content>Don't Panic: Got a request event but there was no Request Body.</content>";
       if(data.requestBody){
         content = ArrayBufferToString(info.requestBody.raw[0].bytes);
         // todo: store the network requests and their states as objects on this stream
         //  for now just append the content to get this party started
-        this.trigger("request:sent", content);
       }
+
+      this.trigger("request:sent", content);
     }
 
 

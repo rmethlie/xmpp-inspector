@@ -17,9 +17,6 @@ define(['BaseModel'], function(BaseModel) {
       this.listenToCompleted();
     },
 
-    publish: function(tabId, type, payload){
-      chrome.runtime.sendMessage({tabId: tabId, type: type, data: payload}, function(response){});
-    },
 
     listenToBeforeRequest: function(){
       // Get the request body
@@ -56,7 +53,7 @@ define(['BaseModel'], function(BaseModel) {
       var _this = this;
       chrome.webRequest.onSendHeaders.addListener(
           function(info) {
-            _this.publish(_this.get("tabId"), "sendHeaders", info);
+            // _this.publish(_this.get("tabId"), "sendHeaders", info);
 
           },
           // filters
@@ -75,7 +72,7 @@ define(['BaseModel'], function(BaseModel) {
       var _this = this;
       chrome.webRequest.onCompleted.addListener(
           function(info) {
-            _this.publish(_this.get("tabId"), "completed", info);
+            // _this.publish(_this.get("tabId"), "completed", info);
 
           },
           // filters
