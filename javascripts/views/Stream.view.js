@@ -6,6 +6,7 @@ define(['BaseView',
   function(BaseView, streamDataTemplate, streamDataWrapperTemplate) {
   "use strict";
   
+  var format = require('beautifier/beautify-html');  
   var CodeMirror = require('codemirror/lib/codemirror');
   return BaseView.extend({
     
