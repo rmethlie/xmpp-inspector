@@ -18,9 +18,12 @@ define(['backbone', 'StreamListener'], function(Backbone, StreamListener) {
       var _this = this;
 
       this.on("stream:update", function(data){
+        var port = "port:" + data.tabId;
         console.log("sending message on: port:"+data.tabId, this.ports);
-
-        this.ports["port:"+data.tabId].postMessage(data);
+        if(this.ports[port])
+          this.ports[port].postMessage(data);
+        else
+          console.log("++++++ Tried to send a meessage to a non-existant port ++++++++");
       });
 
       chrome.runtime.onConnect.addListener(function(port) {
@@ -33,7 +36,10 @@ define(['backbone', 'StreamListener'], function(Backbone, StreamListener) {
           _this.onMessage(message);
         });
 
+        // todo: trigger removeListener when the inspector panel is closed
+        //  also try tab/window is closed
         port.onDisconnect.addListener(function(){
+          _this.ports[port.name] = null;
           port.onMessage.removeListener(_this.messageHandlers[port.sender.tab.id]);
         });
       });

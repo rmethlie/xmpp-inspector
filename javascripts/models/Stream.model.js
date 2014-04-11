@@ -67,7 +67,7 @@ define(['BaseModel'], function(BaseModel) {
 
 
     handleBeforeRequest: function(data){
-      var content = "<content>Don't Panic: Got a request event but there was no Request Body.</content>";
+      var content = "<content><message>Don't Panic: Got a request event but there was no Request Body.</message></content>";
       if(data.requestBody){
         content = ArrayBufferToString(info.requestBody.raw[0].bytes);
         // todo: store the network requests and their states as objects on this stream
