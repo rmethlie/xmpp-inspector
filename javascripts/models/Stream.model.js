@@ -11,6 +11,9 @@ define(['BaseModel'], function(BaseModel) {
       name: "port:" + chrome.devtools.inspectedWindow.tabId
     },
 
+    // todo: make configurable and tied to the web request filter
+    urlPattern: "http-bind",
+
     connection: false,
 
     initialize: function(){
@@ -35,9 +38,10 @@ define(['BaseModel'], function(BaseModel) {
     // todo: clean up listeners on close of devtools that are not in the background?
     // todo: review background.js for possible memory leaks
     // todo: clear console on refresh events and navigation?
+    // !!!: Losing content when going from external debug window to nested
     listenToRequestFinished: function(){
       var _this = this;
-      var urlPattern = new RegExp( this.get("url"), "i");
+      var urlPattern = new RegExp( this.urlPattern, "i");
 
       chrome.devtools.network.onRequestFinished.addListener(function(packet){
         try{

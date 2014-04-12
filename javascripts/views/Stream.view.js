@@ -34,10 +34,12 @@ define(['BaseView',
       this.dataStream = CodeMirror.fromTextArea(document.getElementById("dataStream"), this.dataStreamConfig);
 
       this.listenTo(this.model, "request:sent", function(content){
+        content = this.requestSentPrefix + content;
         this.appendData(content);
       });
 
       this.listenTo(this.model, "request:finished", function(packet, content){
+        content = this.responseReceivedPrefix + content;
         this.appendData(content);
       });
       this.model.connect();
