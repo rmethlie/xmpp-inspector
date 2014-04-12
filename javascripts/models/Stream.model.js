@@ -49,7 +49,6 @@ define(['BaseModel'], function(BaseModel) {
           if( urlPattern.test( packet.request.url ) ){
             packet.getContent( function(contents){
               try{
-                console.log("request:finished", packet, contents);
                 _this.trigger("request:finished", packet, contents);
               }catch( e ){
                 console.error( e.stack, true );

@@ -18,6 +18,8 @@ define(['BaseView',
 
     template: _.template(streamDataTemplate),    
 
+    atBottom: true,
+
     dataStreamConfig: {
       mode: "text/html",
       lineNumbers: true,
@@ -32,17 +34,34 @@ define(['BaseView',
       console.log("[StreamView] initialize");
       this.render();
       this.dataStream = CodeMirror.fromTextArea(document.getElementById("dataStream"), this.dataStreamConfig);
+      this.addlisteners();
+      this.model.connect();      
+    },
+
+    addlisteners: function(){
+      var _this = this;
 
       this.listenTo(this.model, "request:sent", function(content){
-        content = this.requestSentPrefix + content;
-        this.appendData(content);
+        this.appendData(content, {prefix: this.requestSentPrefix});
       });
 
       this.listenTo(this.model, "request:finished", function(packet, content){
-        content = this.responseReceivedPrefix + content;
-        this.appendData(content);
+        this.appendData(content, {prefix: this.responseReceivedPrefix});
       });
-      this.model.connect();
+
+      // update property when we are at the bottom of the editor
+      var scrollElement = this.dataStream.getScrollerElement();
+      $(scrollElement).bind('scroll', function(e) {
+          var elem = $(e.currentTarget);
+          if (elem[0].scrollHeight - elem.scrollTop() == elem.outerHeight()) {
+            console.log("bottom");
+            this.atBottom = true;
+          }else{
+            console.log("not bottom");
+            this.atBottom = false;
+          }
+      });
+
     },
 
     render: function(){
@@ -57,14 +76,21 @@ define(['BaseView',
         });
     },
 
-    appendData: function(contents){
+    isAtBottom: function(){
+      var atBottom = false;
+      
+    },
+
+    appendData: function(content, options){
+      if(!options)
+        options = {}
       // note: .getViewport() may include the offscreen buffered lines. this is how we test to see if we are at the end of the viewport
       var lastViewportLine = this.dataStream.getViewport().to; 
       var lastLineNumber = this.dataStream.lastLine();
       var lastLineHandler = this.dataStream.getLineHandle(lastLineNumber);
       var lastLineCharCount = lastLineHandler.text.length;
       var cursorOptions = {scroll: false};
-      if(lastLineNumber + 1 === lastViewportLine )
+      if(this.atBottom)
          cursorOptions = {scroll: true};
 
       // move the cursor to the last char of the last line
@@ -74,8 +100,11 @@ define(['BaseView',
       this.dataStream.setCursor(lastLineNumber, lastLineCharCount, cursorOptions);
       this.dataStream.execCommand('goLineEnd');
       
+      if(options.prefix)
+        content = options.prefix + content;
+      
       // insert content
-      this.dataStream.replaceRange(format.html_beautify(contents), {line: Infinity});
+      this.dataStream.replaceRange(format.html_beautify(content), {line: Infinity});
 
     }
 
