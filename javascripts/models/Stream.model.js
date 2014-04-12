@@ -42,12 +42,6 @@ define(['BaseModel'], function(BaseModel) {
     // todo: store the network requests and their states as objects on this stream
     //  for now just append the content to get this party started
     handleBeforeRequest: function(data){
-    //   var requestBody = data.payload.requestBody;
-    //   var content = "<content><message>Don't Panic: We got a request event but there was no Request Body.</message></content>";
-    //   if(requestBody){
-    //     content = ArrayBufferToString(requestBody.raw[0].bytes);
-        // }
-
       this.trigger("request:sent", data.requestBody);
     }
 

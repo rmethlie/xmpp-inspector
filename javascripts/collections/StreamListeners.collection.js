@@ -19,11 +19,12 @@ define(['backbone', 'StreamListener'], function(Backbone, StreamListener) {
 
       this.on("stream:update", function(data){
         var port = "port:" + data.tabId;
-        console.log("sending message on: port:"+data.tabId, this.ports);
+
         if(this.ports[port])
           this.ports[port].postMessage(data);
         else
           console.log("++++++ Tried to send a meessage to a non-existant port ++++++++");
+        
       });
 
       chrome.runtime.onConnect.addListener(function(port) {
@@ -61,7 +62,7 @@ define(['backbone', 'StreamListener'], function(Backbone, StreamListener) {
       var action = message.action
         switch(action){
           case "add:listener":
-            console.log("added");
+            console.log("add:listener");
             this.add(message.manifest);
             break;
         }    

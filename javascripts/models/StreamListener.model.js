@@ -28,8 +28,7 @@ define(['BaseModel'], function(BaseModel) {
       tabId: -1
     },
 
-    requestHandlers: {
-    },
+    requestHandlers: {},
 
     onBeforeRequest: function(info) {
       var content = "";
@@ -43,13 +42,17 @@ define(['BaseModel'], function(BaseModel) {
       this.trigger("stream:update", {tabId:this.get("tabId"), state:"beforeRequest", payload:info, requestBody: content});            
     },
 
+    onCompleted: function(info) {      
+      this.trigger("stream:update", {tabId:this.get("tabId"), state:"completed", payload:info});            
+    },
+
     initialize: function(){
       console.log("[StreamListener] initialize");
-      // bind(this.onBeforeRequest)
       this.requestHandlers.onBeforeRequest = this.onBeforeRequest.bind(this);
+      this.requestHandlers.onCompleted = this.onCompleted.bind(this);
       this.listenToBeforeRequest();
       // this.listenToSendHeaders();
-      // this.listenToCompleted();
+      this.listenToCompleted();
     },
 
     removeListeners: function(){
@@ -67,7 +70,6 @@ define(['BaseModel'], function(BaseModel) {
     listenToBeforeRequest: function(){
       // Get the request body
       var _this = this;
-      // this.requestHandlers.onBeforeRequest = 
       chrome.webRequest.onBeforeRequest.addListener(
           _this.requestHandlers.onBeforeRequest,
           // filters
@@ -101,9 +103,7 @@ define(['BaseModel'], function(BaseModel) {
       // chrome.webRequest.onResponseStarted.addListener()
       var _this = this;
       this.requestHandlers.onCompleted = chrome.webRequest.onCompleted.addListener(
-          function(info) {
-
-          },
+          _this.requestHandlers.onCompleted,
           // filters
           {
             urls  : _this.get("urls"),
