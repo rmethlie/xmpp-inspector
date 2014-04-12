@@ -8,7 +8,12 @@ app.use(express.static(__dirname + '/'));
 //app.use("/assets/cabin", express.static("/Users/paulguerra/Projects/Eikon/Chat/www/assets/cabin"));
 
 app.get('/nhttp-bind/', function(req, res) {
-  console.log(req.route.path);
+  // console.log(req.route.path);
+  res.sendfile(__dirname + '/sample.xml');
+});
+
+app.post('/nhttp-bind/', function(req, res) {
+  // console.log(req.route.path);
   res.sendfile(__dirname + '/sample.xml');
 });
 

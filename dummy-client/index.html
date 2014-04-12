@@ -22,7 +22,9 @@
     window.timer = setInterval(function(){
       $.ajax({
         url: "/nhttp-bind/",
-        type: "GET",
+        type: "POST",
+        processData: false,
+        data: "<data>This is my POST data</data>",
         success: function(){
           var timestamp = new Date().getTime();
           $("#output").html("updated: " + timestamp);
