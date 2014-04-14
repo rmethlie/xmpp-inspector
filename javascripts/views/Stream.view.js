@@ -88,7 +88,9 @@ define(['BaseView',
         scollToBottom = true;
       }
 
-      this.dataStream.replaceRange(format.html_beautify(content), {line: Infinity, ch: lastLineCharCount});
+      if(content){
+        this.dataStream.replaceRange(format.html_beautify(content), {line: Infinity, ch: lastLineCharCount});
+      }
       
       if(scollToBottom){
         this.dataStream.scrollIntoView({line: this.dataStream.lastLine(), ch: 1});
