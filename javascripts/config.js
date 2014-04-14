@@ -15,6 +15,8 @@ require.config({
         NetworkRequest: "models/NetworkRequest.model",
         Stream: "models/Stream.model",
         StreamListener: "models/StreamListener.model",
-        StreamListeners: "collections/StreamListeners.collection"
+        StreamListeners: "collections/StreamListeners.collection",
+        XMPPStreamToolbarModel: "/javascripts/models/XMPPStreamToolbar.model",
+        XMPPStreamToolbarView: "/javascripts/views/XMPPStreamToolbar.view"
     }
 });

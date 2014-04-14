@@ -43,6 +43,10 @@ define(['BaseView',
         this.appendData(content, {prefix: this.requestSentPrefix});
       });
 
+      // TOOLBAR
+      this.toolbar = options.toolbar;
+      this.toolbar.on("toolbar:command", this._handleToolbarCommand.bind(this));
+
       this.listenTo(this.model, "request:finished", function(packet, content){
         this.appendData(content, {prefix: this.responseReceivedPrefix});
       });
@@ -68,6 +72,22 @@ define(['BaseView',
       else
         return false
       
+    },
+
+    _handleToolbarCommand: function( command ){
+
+      switch( command.name ){
+
+        case "clear":
+          this.dataStream.setValue("");
+          this.dataStream.clearHistory();
+          this.dataStream.clearGutter();
+        break;
+
+        default: 
+        console.error( "[STREAM.VIEW] Unknown command: ", command );
+        break;
+      }
     },
 
     appendData: function(content, options){
