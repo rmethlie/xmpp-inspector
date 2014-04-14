@@ -5,6 +5,7 @@ define(function(require, exports, module) {
   var _ = require("underscore");
   var $ = require("jquery");
   var Backbone = require("backbone");
+  var Utils = require("lib/utils");
 
   // Alias the module for easier identification.
   var app = module.exports;
