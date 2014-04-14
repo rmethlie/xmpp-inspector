@@ -4,6 +4,12 @@
 <link rel="stylesheet" href="/codemirror/lib/codemirror.css">
 <script src="/codemirror/lib/codemirror.js"></script>
 <script src="/codemirror/mode/xml/xml.js"></script>
+<style type="text/css">
+  .CodeMirror.cm-s-default .CodeMirror-cursor {
+    background-color: #333;
+    width: 15px;
+  }
+</style>
 </head>
 <body >
   
@@ -25,6 +31,37 @@
         mode: "text/html",
         lineNumbers: true
       });
+
+    function isAtBottom(){
+      var scrollInfo = editor.getScrollInfo();
+      if(scrollInfo.clientHeight + scrollInfo.top === scrollInfo.height)
+        return true
+      else
+        return false
+      
+    };
+
+    function append(){
+      console.log(editor.getScrollInfo());
+
+      var content = $("#code").val();
+      // var lastViewportLine = editor.getViewport().to; 
+      var lastLineNumber = editor.lastLine();
+      var lastLineHandler = editor.getLineHandle(lastLineNumber);
+      var lastLineCharCount = lastLineHandler.text.length;
+      var cursorOptions = {scroll: false};
+
+      // move the cursor to the last char of the last line
+      // editor.setCursor(lastLineNumber, lastLineCharCount, cursorOptions);
+      // editor.execCommand('goLineEnd');
+      // editor.execCommand('newlineAndIndent');
+      // editor.setCursor(lastLineNumber, lastLineCharCount, cursorOptions);
+      // editor.execCommand('goLineEnd');
+      
+      
+      // insert content
+      editor.replaceRange(content, {line: Infinity, ch: lastLineCharCount});
+    }
   </script>
   
 </body>

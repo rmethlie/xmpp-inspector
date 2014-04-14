@@ -35,7 +35,7 @@ define(['BaseModel'], function(BaseModel) {
 
     },
     // Description: Listen to finished netowrk requests
-    // todo: clean up listeners on close of devtools that are not in the background?
+    // todo: clean up listeners in devtools on close that are not in the background?
     // todo: review background.js for possible memory leaks
     // todo: clear console on refresh events and navigation?
     // !!!: Losing content when going from external debug window to nested

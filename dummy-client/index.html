@@ -19,8 +19,22 @@
   <script type="text/javascript" src="jquery-1.11.0.min.js"></script>
   <script type="text/javascript">
   $(document).ready(function(){
-    window.timer = setInterval(function(){
-      $.ajax({
+    // window.timer = setInterval(function(){
+    //   $.ajax({
+    //     url: "/nhttp-bind/",
+    //     type: "POST",
+    //     processData: false,
+    //     data: "<data>This is my POST data</data>",
+    //     success: function(){
+    //       var timestamp = new Date().getTime();
+    //       $("#output").html("updated: " + timestamp);
+    //     }
+    //   });
+    // }, 5000);
+
+  });
+  function test(){
+    $.ajax({
         url: "/nhttp-bind/",
         type: "POST",
         processData: false,
@@ -30,9 +44,7 @@
           $("#output").html("updated: " + timestamp);
         }
       });
-    }, 5000);
-
-  });
+  }
   </script>
 </body>
 </html>

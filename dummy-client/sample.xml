@@ -1,1 +1,28 @@
-<stream><sample key="value">content</sample></stream>
+<stream>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+  <sample key="value">content</sample>
+</stream>
