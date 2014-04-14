@@ -30,5 +30,7 @@ TEXTAREA.xml-contents{
 
 /* Codemirror "Theme" */
 .cm-s-xmpp.CodeMirror, .cm-s-xmpp.CodeMirror .CodeMirror-scroll {
+  font-family: Menlo, monospace;
+  font-size: 11px;
   height: 100%;
 }
