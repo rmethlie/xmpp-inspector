@@ -26,9 +26,12 @@ define(['BaseModel'], function(BaseModel) {
       var _this = this;     
 
       // Description: Handle the message sent from the background page
-      //  WebRequest listener
       this.on("beforeRequest", function(data){
         this.handleBeforeRequest(data);
+      });
+
+      this.on("tab:updated:complete", function(data){
+        this.handleTabUpdated(data);
       });
 
       this.listenToRequestFinished();
@@ -75,6 +78,10 @@ define(['BaseModel'], function(BaseModel) {
     //  for now just append the content to get this party started
     handleBeforeRequest: function(data){
       this.trigger("request:sent", data.requestBody);
+    },
+
+    handleTabUpdated: function(data) {
+      this.trigger("tab:updated");
     }
 
 

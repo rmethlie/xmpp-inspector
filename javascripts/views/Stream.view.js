@@ -47,6 +47,10 @@ define(['BaseView',
         this.appendData(content, {prefix: this.responseReceivedPrefix});
       });
 
+      this.listenTo(this.model, "tab:updated", function(){
+        this.clear();
+      });
+
     },
 
     render: function(){
@@ -97,9 +101,13 @@ define(['BaseView',
       if(scollToBottom){
         this.dataStream.scrollIntoView({line: this.dataStream.lastLine(), ch: 1});
       }
+    },
 
-
-    }
+    clear: function(){      
+      this.dataStream.setValue("");
+      this.dataStream.clearHistory();
+      this.dataStream.clearGutter();
+    },
 
   });
 });

@@ -17,6 +17,7 @@ define(['backbone', 'StreamListener'], function(Backbone, StreamListener) {
     addListeners: function(){
       var _this = this;
 
+      // event triggered by stream listener models
       this.on("stream:update", function(data){
         var port = "port:" + data.tabId;
 
@@ -24,7 +25,13 @@ define(['backbone', 'StreamListener'], function(Backbone, StreamListener) {
           this.ports[port].postMessage(data);
         else
           console.log("++++++ Tried to send a meessage to a non-existant port ++++++++");
-        
+      });
+
+      this.on("tab:updated:complete", function(tabId){
+        var port = "port:" + tabId;
+
+        if(this.ports[port])
+          this.ports[port].postMessage({state: "tab:updated:complete", tab: tabId});
       });
 
       chrome.runtime.onConnect.addListener(function(port) {
@@ -42,6 +49,12 @@ define(['backbone', 'StreamListener'], function(Backbone, StreamListener) {
           console.log("[StreamListeners] chrome.onDisconnect", _this);
           _this.onDisconnect(port);
         });
+      });
+
+      chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
+        if (changeInfo.status === 'complete') {
+            _this.trigger("tab:updated:complete", tabId);
+        }
       });
 
     },
