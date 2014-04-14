@@ -66,7 +66,6 @@ define(['BaseModel'], function(BaseModel) {
       this.connection = chrome.runtime.connect({name: "port:" + this.get("tabId") });
       this.connection.postMessage({action: "add:listener", manifest: this.toJSON()});
       this.connection.onMessage.addListener(function(msg) {
-        console.log("message:received", msg);
         _this.trigger(msg.state, msg)
       });
 

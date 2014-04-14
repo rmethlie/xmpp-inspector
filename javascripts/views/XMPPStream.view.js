@@ -5,9 +5,9 @@ define(["StreamView"], function(StreamView) {
     
     el: "#xmpp-stream",
 
-    requestSentPrefix: "<!-- >>>>>>>>>>>>>> Request Sent -->",
+    requestSentPrefix: "\n<!-- >>>>>>>>>>>>>> Request Sent -->\n",
 
-    responseReceivedPrefix: "<!-- Response Received <<<<<<<<<<<<<< -->",
+    responseReceivedPrefix: "\n<!-- Response Received <<<<<<<<<<<<<< -->\n",
 
   });
 });

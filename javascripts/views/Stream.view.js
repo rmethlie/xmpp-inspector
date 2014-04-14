@@ -24,6 +24,7 @@ define(['BaseView',
       mode: "text/html",
       lineNumbers: true,
       lineWrapping: true,
+      readOnly: true,
       theme: "xmpp default", // apply our modifications to the default CodeMirror theme.
     }, 
 
@@ -78,6 +79,7 @@ define(['BaseView',
       var lastLineHandler = this.dataStream.getLineHandle(lastLineNumber);
       var lastLineCharCount = lastLineHandler.text.length;
       
+      content = format.html_beautify(content);
       if(options.prefix)
         content = options.prefix + content;
 
@@ -89,9 +91,9 @@ define(['BaseView',
       }
 
       if(content){
-        this.dataStream.replaceRange(format.html_beautify(content), {line: Infinity, ch: lastLineCharCount});
+        this.dataStream.replaceRange(content, {line: Infinity, ch: lastLineCharCount});
       }
-      
+
       if(scollToBottom){
         this.dataStream.scrollIntoView({line: this.dataStream.lastLine(), ch: 1});
       }
