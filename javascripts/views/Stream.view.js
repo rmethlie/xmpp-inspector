@@ -39,12 +39,12 @@ define(['BaseView',
     addlisteners: function(){
       var _this = this;
 
-      this.listenTo(this.model, "request:sent", function(content){
-        this.appendData(content, {prefix: this.requestSentPrefix});
+      this.listenTo(this.model, "request:sent", function(data){
+        this.appendData(data, {prefix: this.requestSentPrefix});
       });
 
-      this.listenTo(this.model, "request:finished", function(packet, content){
-        this.appendData(content, {prefix: this.responseReceivedPrefix});
+      this.listenTo(this.model, "request:finished", function(data){
+        this.appendData(data, {prefix: this.responseReceivedPrefix});
       });
 
       this.listenTo(this.model, "tab:updated", function(){
@@ -67,10 +67,10 @@ define(['BaseView',
       
     },
 
-    appendData: function(content, options){
+    appendData: function(data, options){
       if(!options)
         options = {}
-
+      var content = data.body;
       var scollToBottom = false;
       var lastLineNumber = this.dataStream.lastLine();
       var lastLineHandler = this.dataStream.getLineHandle(lastLineNumber);

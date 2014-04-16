@@ -7,14 +7,16 @@ require.config({
         text: "bower_components/requirejs-text/text",
         codemirror: "bower_components/codemirror/",
         beautifier: "bower_components/js-beautify/js/lib",
-        BaseView: "views/Base.view",
+        Utils: "lib/utils",
         BaseModel: "models/Base.model",
+        BaseView: "views/Base.view",
+        Packet: "models/Packet.model",
+        Stream: "models/Stream.model",
         StreamView: "views/Stream.view",
         XMPPStreamView: "views/XMPPStream.view",
-        Packet: "models/Packet.model",
-        NetworkRequest: "models/NetworkRequest.model",
-        Stream: "models/Stream.model",
         StreamListener: "models/StreamListener.model",
-        StreamListeners: "collections/StreamListeners.collection"
+        StreamListeners: "collections/StreamListeners.collection",
+        NetworkEvent: "models/NetworkEvent.model",
+        NetworkEvents: "collections/NetworkEvents.collection"
     }
 });

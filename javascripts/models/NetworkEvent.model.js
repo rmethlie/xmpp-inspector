@@ -6,7 +6,7 @@ define(['BaseModel'], function(BaseModel) {
   return BaseModel.extend({
 
     initialize: function(){
-      console.log("[NetworkRequest] initialize");
+      console.log("[NetworkEvent] initialize");
     }
 
   });

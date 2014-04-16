@@ -1,4 +1,4 @@
-define(['BaseModel'], function(BaseModel) {
+define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkEvents, Utils) {
   "use strict";
 
   // Description: Listen for webRequests in the background and send message to dev tools extension
@@ -15,6 +15,8 @@ define(['BaseModel'], function(BaseModel) {
     urlPattern: "http-bind",
 
     connection: false,
+
+    networkEvents: new NetworkEvents(),
 
     initialize: function(){
       console.log("[Stream] initialize");
@@ -37,6 +39,7 @@ define(['BaseModel'], function(BaseModel) {
       this.listenToRequestFinished();
 
     },
+    
     // Description: Listen to finished netowrk requests
     // todo: clean up listeners in devtools on close that are not in the background?
     // todo: review background.js for possible memory leaks
@@ -51,11 +54,9 @@ define(['BaseModel'], function(BaseModel) {
           
           if( urlPattern.test( packet.request.url ) ){
             packet.getContent( function(contents){
-              try{
-                _this.trigger("request:finished", packet, contents);
-              }catch( e ){
-                console.error( e.stack, true );
-              }
+              var guid = Utils.guidGen();
+              _this.networkEvents.add({id: guid, type:'requestFinished', data: packet, body: contents});
+              _this.trigger("request:finished", {id: guid, body: contents} );              
             });
           }
         }catch( e ){
@@ -77,7 +78,9 @@ define(['BaseModel'], function(BaseModel) {
     // todo: store the network requests and their states as objects on this stream
     //  for now just append the content to get this party started
     handleBeforeRequest: function(data){
-      this.trigger("request:sent", data.requestBody);
+      var guid = Utils.guidGen();
+      this.networkEvents.add({id: guid, type:'beforeRequest', data: data, body: data.requestBody});
+      this.trigger("request:sent", {id: guid, body: data.requestBody} );
     },
 
     handleTabUpdated: function(data) {
