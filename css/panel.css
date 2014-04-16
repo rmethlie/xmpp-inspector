@@ -141,12 +141,6 @@ TEXTAREA.xml-contents{
   height: 5.2em;
 }
 
-
-#xmpp-inspector-toolbar:hover{
-  width: 150px;
-}
-
-
 #xmpp-inspector-toolbar:hover .button{
 }
 
