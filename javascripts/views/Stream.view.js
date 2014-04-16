@@ -50,10 +50,6 @@ define(['BaseView',
         this.appendData(data, {prefix: this.responseReceivedPrefix});
       });
 
-      this.listenTo(this.model, "tab:updated", function(){
-        this.clear();
-      });
-
       this.toolbar = options.toolbar;
       this.toolbar.on("toolbar:command", this._handleToolbarCommand.bind(this));
 
@@ -72,7 +68,7 @@ define(['BaseView',
         return false;
       
     },
-    
+
     _handleToolbarCommand: function( command ){
 
       switch( command.name ){
