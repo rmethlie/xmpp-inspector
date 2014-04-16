@@ -74,9 +74,7 @@ define(['BaseView',
       switch( command.name ){
 
         case "clear":
-          this.dataStream.setValue("");
-          this.dataStream.clearHistory();
-          this.dataStream.clearGutter();
+          this.clear();
         break;
 
         default: 
