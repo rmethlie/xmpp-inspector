@@ -78,7 +78,7 @@ define(['BaseView',
         break;
 
         default: 
-        console.error( "[STREAM.VIEW] Unknown command: ", command );
+          console.error( "[STREAM.VIEW] Unknown command: ", command );
         break;
       }
     },
