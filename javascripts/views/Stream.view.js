@@ -35,11 +35,11 @@ define(['BaseView',
       console.log("[StreamView] initialize");
       this.render();
       this.dataStream = CodeMirror.fromTextArea(document.getElementById("dataStream"), this.dataStreamConfig);
-      this.addlisteners();
+      this.addlisteners(options);
       this.model.connect();      
     },
 
-    addlisteners: function(){
+    addlisteners: function(options){
       var _this = this;
 
       this.listenTo(this.model, "request:sent", function(data){
@@ -53,6 +53,9 @@ define(['BaseView',
       this.listenTo(this.model, "tab:updated", function(){
         this.clear();
       });
+
+      this.toolbar = options.toolbar;
+      this.toolbar.on("toolbar:command", this._handleToolbarCommand.bind(this));
 
     },
 
@@ -68,6 +71,22 @@ define(['BaseView',
       else
         return false;
       
+    },
+    
+    _handleToolbarCommand: function( command ){
+
+      switch( command.name ){
+
+        case "clear":
+          this.dataStream.setValue("");
+          this.dataStream.clearHistory();
+          this.dataStream.clearGutter();
+        break;
+
+        default: 
+        console.error( "[STREAM.VIEW] Unknown command: ", command );
+        break;
+      }
     },
 
     getLastLineInfo: function(){

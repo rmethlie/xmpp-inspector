@@ -17,6 +17,8 @@ require.config({
         StreamListener: "models/StreamListener.model",
         StreamListeners: "collections/StreamListeners.collection",
         NetworkEvent: "models/NetworkEvent.model",
-        NetworkEvents: "collections/NetworkEvents.collection"
+        NetworkEvents: "collections/NetworkEvents.collection",
+        XMPPStreamToolbarModel: "/javascripts/models/XMPPStreamToolbar.model",
+        XMPPStreamToolbarView: "/javascripts/views/XMPPStreamToolbar.view",
     }
 });
