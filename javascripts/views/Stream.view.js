@@ -67,14 +67,22 @@ define(['BaseView',
       
     },
 
+    getLastLineInfo: function(){
+      var lastLineNumber = this.dataStream.lastLine();
+      var handler = this.dataStream.getLineHandle(lastLineNumber)
+      return {
+        number    : lastLineNumber,
+        handler   : handler,
+        charCount : handler.text.length
+      }
+    },
+
     appendData: function(data, options){
       if(!options)
         options = {}
       var content = data.body;
       var scollToBottom = false;
-      var lastLineNumber = this.dataStream.lastLine();
-      var lastLineHandler = this.dataStream.getLineHandle(lastLineNumber);
-      var lastLineCharCount = lastLineHandler.text.length;
+      var lastLine = this.getLastLineInfo();
       
       content = format.html_beautify(content);
       if(options.prefix)
@@ -88,7 +96,7 @@ define(['BaseView',
       }
 
       if(content){
-        this.dataStream.replaceRange(content, {line: Infinity, ch: lastLineCharCount});
+        this.dataStream.replaceRange(content, {line: Infinity, ch: lastLine.charCount});
       }
 
       if(scollToBottom){
