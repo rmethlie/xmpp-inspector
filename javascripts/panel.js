@@ -2,7 +2,8 @@
 require(["config"], function() {
 require(["app",
     "Stream",
-    "XMPPStreamView"], function(app, Stream, XMPPStreamView) {
+    "XMPPStreamView",
+    "XMPPStreamToolbarView"], function(app, Stream, XMPPStreamView, XMPPStreamToolbarView) {
       // todo: clean up listeners on tab refresh and close
 
     var xmppStream = new Stream();

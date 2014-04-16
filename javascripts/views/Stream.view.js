@@ -32,11 +32,11 @@ define(['BaseView',
       console.log("[StreamView] initialize");
       this.render();
       this.dataStream = CodeMirror.fromTextArea(document.getElementById("dataStream"), this.dataStreamConfig);
-      this.addlisteners();
+      this.addlisteners(options);
       this.model.connect();      
     },
 
-    addlisteners: function(){
+    addlisteners: function(options){
       var _this = this;
 
       this.listenTo(this.model, "request:sent", function(content){
