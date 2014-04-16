@@ -61,21 +61,21 @@ define(['BaseView',
     isAtBottom: function(){
       var scrollInfo = this.dataStream.getScrollInfo();
       if(scrollInfo.clientHeight + scrollInfo.top === scrollInfo.height)
-        return true
+        return true;
       else
-        return false
+        return false;
       
     },
 
     getLastLineInfo: function(){
       var lastLineNumber = this.dataStream.lastLine();
       var handler = this.dataStream.getLineHandle(lastLineNumber);
-      
+
       return {
         number    : lastLineNumber,
         handler   : handler,
         charCount : handler.text.length
-      }
+      };
     },
 
     appendData: function(data, options){
