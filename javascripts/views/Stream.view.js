@@ -70,16 +70,13 @@ define(['BaseView',
     },
 
     _handleToolbarCommand: function( command ){
-
       switch( command.name ){
-
         case "clear":
           this.clear();
         break;
 
         default: 
           console.error( "[STREAM.VIEW] Unknown command: ", command );
-        break;
       }
     },
 
