@@ -69,7 +69,8 @@ define(['BaseView',
 
     getLastLineInfo: function(){
       var lastLineNumber = this.dataStream.lastLine();
-      var handler = this.dataStream.getLineHandle(lastLineNumber)
+      var handler = this.dataStream.getLineHandle(lastLineNumber);
+      
       return {
         number    : lastLineNumber,
         handler   : handler,
