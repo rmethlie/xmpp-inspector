@@ -28,6 +28,9 @@ define(['BaseView',
       theme: "xmpp default", // apply our modifications to the default CodeMirror theme.
     }, 
 
+    // map the line number in the data stream to the networkEvent stored in the model
+    networkEventMap: {},
+
     initialize: function(options){
       console.log("[StreamView] initialize");
       this.render();
@@ -68,7 +71,10 @@ define(['BaseView',
     },
 
     getLastLineInfo: function(){
-      var lastLineNumber = this.dataStream.lastLine();
+      // note: lastLine() return value is one less than the number displayed in the gutter, must be 0 indexed,
+      //  but the value still works for getting the line handler & content so no need to offset by one
+      //  use lineCount() to get the displayed line number
+      var lastLineNumber = this.dataStream.lastLine(); 
       var handler = this.dataStream.getLineHandle(lastLineNumber);
 
       return {
@@ -83,13 +89,9 @@ define(['BaseView',
         options = {}
       var content = data.body;
       var scollToBottom = false;
-      var lastLine = this.getLastLineInfo();
-      
-      content = format.html_beautify(content);
-      if(options.prefix)
-        content = options.prefix + content;
+      var lastLine = this.getLastLineInfo();      
 
-      content += "\n";
+      // content += "\n";
       
       // if the user is already at  the bottom of the stream scroll to the bottom after appending the new content
       if(this.isAtBottom()){
@@ -97,7 +99,15 @@ define(['BaseView',
       }
 
       if(content){
+        content = format.html_beautify(content);
+        
+        if(options.prefix){ 
+          this.dataStream.replaceRange(options.prefix, {line: Infinity, ch: lastLine.charCount});
+          lastLine = this.getLastLineInfo();
+        }
+
         this.dataStream.replaceRange(content, {line: Infinity, ch: lastLine.charCount});
+        this.networkEventMap["line:" + lastLine.number] = data.id;
       }
 
       if(scollToBottom){
