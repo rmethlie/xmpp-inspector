@@ -1,7 +1,7 @@
 
 
 BODY{
-  font-family: Tahoma;
+  font-family: Menlo, monospace;
   margin: 0;
   padding: 0;
 }
@@ -36,20 +36,25 @@ TEXTAREA.xml-contents{
 }
 
 #xmpp-stream{
-  margin-left:30px;
 }
 
 
-#xmpp-inspector-toolbar{
+.toolbar-wrapper {
+  height: 1.5em;
+  margin-top: 0;
+  position: relative;
+}
 
+.toolbar{
+  color: #666;
   position: absolute;
   top:0;
   left:0;
   bottom:0;
   width: 100%;
-  height: 1.4em;
+  height: 1.5em;
   z-index: 999;
-
+  padding-left: 10px;
   background-color: rgba(255,255,255,0.4);
   box-shadow: 1px 1px 2px #a0a0a0;
 
@@ -64,85 +69,39 @@ TEXTAREA.xml-contents{
 
 
 #xmpp-inspector-toolbar .button{
+  display: inline-block;
   font-size: 8pt;
   border-bottom: solid #f0f0f0 1px;
-  padding: 5px 0 5px 5px;
+  padding: 7px 0 5px 5px;
   overflow: hidden;
   white-space: nowrap;
   height: 1.2em;
   line-height: 1.2em;
   background-color: rgba(255,255,255,0.85);
+
   -webkit-transition-property: background-color, color, height;
   -webkit-transition-duration: 0.15s;
 }
 
 #xmpp-inspector-toolbar .button .icon{
-  background: rgba(218, 116, 67, 0.29) url( /images/icons.png ) 0 0 no-repeat;
-  display: inline-block;
-  height: 18px;
-  width: 18px;
-  border-radius: 9px;
-  margin-right: 5px;
-  position: relative;
-  top: -2px;
-  left: 2px;
 
-  -webkit-transition-property: background-color;
+  -webkit-transition-property: color;
   -webkit-transition-duration: 0.30s;
 }
 
 #xmpp-inspector-toolbar .button .label{
   display: inline-block;
-  position: relative;
-  top: -7px;
-
-}
-
-#xmpp-inspector-toolbar .button.reload .icon{
-  background-position: -238px -22px;
-}
-
-#xmpp-inspector-toolbar .button.clear .icon{
-  background-position: -166px -94px;
-}
-
-#xmpp-inspector-toolbar .button.options .icon{
-  background-position: -430px 2px;
 }
 
 #xmpp-inspector-toolbar .button:hover{
-
-  background-color: rgba(255,255,255,0.95);
+  color: rgba( 0, 0, 0, 0.95);
 }
 
 
 #xmpp-inspector-toolbar .button:hover .icon{
-  background-color: rgba(218, 116, 67, 0.85)
+  color: rgba( 0, 0, 0, 0.85)
 }
 
-/* Accordian stuff */
-#xmpp-inspector-toolbar .button DIV:nth-of-type(3){
-  margin-top: 4px;
-}
-
-#xmpp-inspector-toolbar .button.accordian{
-}
-
-
-#xmpp-inspector-toolbar:hover .button.accordian[data-rows="1"]{
-  height: 2.8em;
-}
-
-#xmpp-inspector-toolbar:hover .button.accordian[data-rows="2"]{
-  height: 4em;
-}
-
-#xmpp-inspector-toolbar:hover .button.accordian[data-rows="3"]{
-  height: 5.2em;
-}
-
-#xmpp-inspector-toolbar:hover .button{
-}
 
 
 
