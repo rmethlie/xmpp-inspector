@@ -35,13 +35,17 @@ TEXTAREA.xml-contents{
   height: 100%;
 }
 
+.cm-s-xmpp.CodeMirror .cm-comment {
+  color: #afafaf;
+  font-weight: bold;
+  font-style: italic;
+}
+
 #xmpp-stream{
   margin-left:30px;
 }
 
-
 #xmpp-inspector-toolbar{
-
   position: absolute;
   top:0;
   left:0;
@@ -51,14 +55,11 @@ TEXTAREA.xml-contents{
 
   background-color: rgba(255,255,255,0.4);
   box-shadow: 1px 1px 2px #a0a0a0;
-
   cursor: pointer;
-
   overflow: hidden;
 
   -webkit-transition-property: width;
   -webkit-transition-duration: 0.15s;
-
 }
 
 
