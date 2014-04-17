@@ -15,19 +15,12 @@ TEXTAREA.xml-contents{
 
 }
 
-.page-title{
-  font-size: 14pt;
-  font-weight: bold;
+#xmpp-stream{
+  position: absolute;
+  top: 1.5em;
+  bottom: 0;
 }
 
-.request{
-  border: solid black 1px;
-  padding: 15px;
-  margin-bottom: 10px;
-  background-color: #f0f0f0;
-  height: 50px;
-  width: 100%;
-}
 
 /* Codemirror "Theme" */
 .cm-s-xmpp.CodeMirror {
@@ -35,10 +28,6 @@ TEXTAREA.xml-contents{
   font-size: 11px;
   height: 100%;
 }
-
-#xmpp-stream{
-}
-
 
 .toolbar-wrapper {
   height: 1.5em;

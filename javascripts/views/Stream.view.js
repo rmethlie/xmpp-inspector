@@ -1,12 +1,12 @@
-define(['BaseView', 
-  'text!templates/stream-data.template.html', 
+define(['BaseView',
+  'text!templates/stream-data.template.html',
   'text!templates/stream-data-wrapper.template.html',
   'codemirror/mode/xml/xml',
-  'beautifier/beautify-html'], 
+  'beautifier/beautify-html'],
   function(BaseView, streamDataTemplate, streamDataWrapperTemplate) {
   "use strict";
   
-  var format = require('beautifier/beautify-html');  
+  var format = require('beautifier/beautify-html');
   var CodeMirror = require('codemirror/lib/codemirror');
   return BaseView.extend({
     
@@ -16,7 +16,7 @@ define(['BaseView',
 
     responseReceivedPrefix: "",
 
-    template: _.template(streamDataTemplate),    
+    template: _.template(streamDataTemplate),
 
     atBottom: true,
 
@@ -26,7 +26,7 @@ define(['BaseView',
       lineWrapping: true,
       readOnly: true,
       theme: "xmpp default", // apply our modifications to the default CodeMirror theme.
-    }, 
+    },
 
     // map the line number in the data stream to the networkEvent stored in the model
     networkEventMap: {},
@@ -36,7 +36,7 @@ define(['BaseView',
       this.render();
       this.dataStream = CodeMirror.fromTextArea(document.getElementById("dataStream"), this.dataStreamConfig);
       this.addlisteners(options);
-      this.model.connect();      
+      this.model.connect();
     },
 
     addlisteners: function(options){
@@ -75,7 +75,7 @@ define(['BaseView',
           this.clear();
         break;
 
-        default: 
+        default:
           console.error( "[STREAM.VIEW] Unknown command: ", command );
       }
     },
@@ -84,7 +84,7 @@ define(['BaseView',
       // note: lastLine() return value is one less than the number displayed in the gutter, must be 0 indexed,
       //  but the value still works for getting the line handler & content so no need to offset by one
       //  use lineCount() to get the displayed line number
-      var lastLineNumber = this.dataStream.lastLine(); 
+      var lastLineNumber = this.dataStream.lastLine();
       var handler = this.dataStream.getLineHandle(lastLineNumber);
 
       return {
