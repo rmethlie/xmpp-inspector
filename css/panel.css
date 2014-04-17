@@ -6,10 +6,6 @@ BODY{
   padding: 0;
 }
 
-.page-title{
-  font-size: 14pt;
-  font-weight: bold;
-}
 
 TEXTAREA.xml-contents{
   border: none;
@@ -17,6 +13,11 @@ TEXTAREA.xml-contents{
   height: auto;
   resize: none;
 
+}
+
+.page-title{
+  font-size: 14pt;
+  font-weight: bold;
 }
 
 .request{
@@ -29,7 +30,7 @@ TEXTAREA.xml-contents{
 }
 
 /* Codemirror "Theme" */
-.cm-s-xmpp.CodeMirror, .cm-s-xmpp.CodeMirror .CodeMirror-scroll {
+.cm-s-xmpp.CodeMirror {
   font-family: Menlo, monospace;
   font-size: 11px;
   height: 100%;
@@ -46,6 +47,7 @@ TEXTAREA.xml-contents{
 }
 
 .toolbar{
+  border-bottom: solid 1px #ddd;
   color: #666;
   position: fixed;
   top:0;
@@ -56,7 +58,7 @@ TEXTAREA.xml-contents{
   z-index: 999;
   padding-left: 10px;
   background-color: rgba(255,255,255,0.4);
-  box-shadow: 1px 1px 2px #a0a0a0;
+  /*box-shadow: 1px 1px 2px #a0a0a0;*/
 
   cursor: pointer;
 
@@ -84,12 +86,13 @@ TEXTAREA.xml-contents{
 }
 
 #xmpp-inspector-toolbar .button .icon{
-
+  margin-right: 5px;
   -webkit-transition-property: color;
   -webkit-transition-duration: 0.30s;
 }
 
 #xmpp-inspector-toolbar .button .label{
+  margin-right: 10px;
   display: inline-block;
 }
 
