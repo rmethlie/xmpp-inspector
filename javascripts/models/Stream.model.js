@@ -14,10 +14,7 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
 
     // todo: make configurable and tied to the web request filter
     urlPattern: "",
-<<<<<<< HEAD
     networkRequestPattern: "",
-=======
->>>>>>> 41c04590a500e66a50edece56f60dd4f5464feb2
 
     // Description: accept URL parameters for web request listener as descirbed in 
     //  https://developer.chrome.com/extensions/match_patterns 
@@ -29,11 +26,7 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
       var pattern = scheme + "://" + host + "/" + path;
 
       this.get("urls").push(params.scheme + "://" + params.host + "/" + params.path);
-<<<<<<< HEAD
       this.networkRequestPattern = pattern;
-=======
-      this.urlPattern = pattern;
->>>>>>> 41c04590a500e66a50edece56f60dd4f5464feb2
     },
 
     // todo: Add unit testing
