@@ -5,14 +5,35 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
   return BaseModel.extend({
 
     defaults: {
-      urls: ["*://*/*http-bind*"],
+      // urls: ["*://*/*http-bind*"],
+      urls: [],
       types: ["xmlhttprequest"],
       tabId: chrome.devtools.inspectedWindow.tabId,
       name: "port:" + chrome.devtools.inspectedWindow.tabId
     },
 
     // todo: make configurable and tied to the web request filter
-    urlPattern: "http-bind",
+    urlPattern: "",
+
+    // Description: accept URL parameters for web request listener as descirbed in 
+    //  https://developer.chrome.com/extensions/match_patterns 
+    //  and generate a pattern testable for regex for network request event
+    setPattern: function(params){
+      var scheme  = params.scheme.replace("*", ".*");
+      var host    = params.host.replace("*", ".*");
+      var path    = params.path.replace("*", ".*").replace("/", "\/");
+      var pattern = scheme + "://" + host + "/" + path;
+
+      this.get("urls").push(params.scheme + "://" + params.host + "/" + params.path);
+      this.urlPattern = pattern;
+    },
+
+    // todo: Unit testing
+    // testPattern: function(url){
+    //   var p = this.setPattern({scheme: "http*", host: "*g*", path: "*http-bind*"});
+    //   var urlPattern = new RegExp( p, "i");
+    //   return urlPattern.test( url );
+    // },
 
     connection: false,
 
@@ -20,12 +41,13 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
 
     initialize: function(){
       console.log("[Stream] initialize");
+      this.setPattern({scheme: "http", host: "*", path: "*http-bind*"});
       this.addListeners();
     },
     
-    addListeners: function(){      
+    addListeners: function(){
       console.log("[Stream] addListeners");
-      var _this = this;     
+      var _this = this;
 
       // Description: Handle the message sent from the background page
       this.on("beforeRequest", function(data){
@@ -56,21 +78,21 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
             packet.getContent( function(contents){
               var guid = Utils.guidGen();
               _this.networkEvents.add({id: guid, type:'requestFinished', data: packet, body: contents});
-              _this.trigger("request:finished", {id: guid, body: contents} );              
+              _this.trigger("request:finished", {id: guid, body: contents} );
             });
           }
         }catch( e ){
           console.error( e.stack, true );
         }
       });
-    }, 
+    },
 
     connect: function(){
       var _this = this;
       this.connection = chrome.runtime.connect({name: "port:" + this.get("tabId") });
       this.connection.postMessage({action: "add:listener", manifest: this.toJSON()});
       this.connection.onMessage.addListener(function(msg) {
-        _this.trigger(msg.state, msg)
+        _this.trigger(msg.state, msg);
       });
 
     },
