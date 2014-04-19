@@ -15,19 +15,20 @@ TEXTAREA.xml-contents{
 
 }
 
-#xmpp-stream{
-  position: absolute;
-  top: 1.5em;
-  bottom: 0;
-}
-
 
 /* Codemirror "Theme" */
 .cm-s-xmpp.CodeMirror {
   font-family: Menlo, monospace;
   font-size: 11px;
-  height: 100%;
+  height: auto;
 }
+
+.cm-s-xmpp.CodeMirror .CodeMirror-scroll {
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+
+
 
 .toolbar-wrapper {
   height: 1.5em;

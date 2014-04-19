@@ -25,6 +25,7 @@ define(['BaseView',
       lineNumbers: true,
       lineWrapping: true,
       readOnly: true,
+      viewportMargin: Infinity,
       theme: "xmpp default", // apply our modifications to the default CodeMirror theme.
     },
 
