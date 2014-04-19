@@ -28,7 +28,7 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
       this.urlPattern = pattern;
     },
 
-    // todo: Unit testing
+    // todo: Add unit testing
     // testPattern: function(url){
     //   var p = this.setPattern({scheme: "http*", host: "*g*", path: "*http-bind*"});
     //   var urlPattern = new RegExp( p, "i");
