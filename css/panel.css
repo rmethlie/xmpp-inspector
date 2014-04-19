@@ -61,6 +61,11 @@ TEXTAREA.xml-contents{
   -webkit-transition-duration: 0.15s;
 }
 
+.toolbar .pattern form {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+}
 
 #xmpp-inspector-toolbar .button{
   display: inline-block;

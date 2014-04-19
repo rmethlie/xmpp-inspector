@@ -1,14 +1,17 @@
-define(["BaseView","XMPPStreamToolbarModel"], function(BaseView, XMPPStreamToolbarModel) {
+define(["BaseView",
+  "XMPPStreamToolbarModel",
+  'text!templates/toolbar.template.html'], function(BaseView, XMPPStreamToolbarModel, toolbarTemplate) {
   "use strict";
 
   return BaseView.extend({
 
     model: new XMPPStreamToolbarModel(),
-    
-    el: "#xmpp-inspector-toolbar",
+
+    el: ".toolbar-wrapper",
+
+    template: _.template(toolbarTemplate),
 
     events: {
-      "click .button"         : "onClick",
       "click .button.reload"  : "reload",
       "click .button.clear"   : "clear",
       "click .button.options" : "options"
@@ -16,10 +19,11 @@ define(["BaseView","XMPPStreamToolbarModel"], function(BaseView, XMPPStreamToolb
 
     initialize: function(){
       console.info( "[TOOLBAR] Initialized.");
+      this.render();
     },
 
-    onClick: function(){
-      // console.info( "[TOOLBAR] Button click.");
+    render: function(){
+      this.$el.html(this.template({}));
     },
 
     reload: function(){
@@ -35,10 +39,9 @@ define(["BaseView","XMPPStreamToolbarModel"], function(BaseView, XMPPStreamToolb
     },
 
     options: function($event){
-      var 
-      $button = this.$el.find(".button.options");
+      var  $button = this.$el.find(".button.options");
       $button.toggleClass( "accordian" );
     }
 
-  })
+  });
 });

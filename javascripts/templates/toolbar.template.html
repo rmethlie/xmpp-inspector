@@ -1,0 +1,39 @@
+	<div class="toolbar" id="xmpp-inspector-toolbar">
+      <div class="button reload" data-button-id="reload">            
+        <div class="label"><i class="fa fa-refresh icon"></i>Reload</div>
+      </div>
+      <div class="button clear" data-button-id="clear">            
+        <div class="label"><i class="fa fa-eraser icon"></i>Clear</div>
+      </div>
+      <div class="button filter" data-button-id="filter">
+        <div class="label"><i class="fa fa-filter icon"></i>Filter</div>
+      </div>
+
+      <div class="button url-pattern" data-button-id="url-pattern">
+        <div class="label"><i class="fa fa-link icon"></i>URL: 
+          <span class="pattern">
+            http://*/*http-bind*
+            <form>
+              <select class="scheme">
+                <option value="*">&lt;all&gt;</option>
+                <option value="http">http</option>
+                <option value="https">https</option>
+                <option value="file">file</option>
+                <option value="ftp">ftp</option>
+                <option value="chrome-extension">chrome-extension</option>
+              </select>
+              ://
+              <input class="host" type="text" value="*"/>
+              /
+              <input class="path" type="text" value="*http-bind*"/>
+            </form>
+          </span>
+        </div>
+      </div>
+      
+      <!-- 
+      <div class="button options" data-button-id="options">
+        <div class="label"><i class="fa fa-gear icon"></i>Options...</div>
+      </div>
+       -->
+    </div>
