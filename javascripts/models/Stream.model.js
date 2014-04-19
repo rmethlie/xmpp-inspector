@@ -14,6 +14,7 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
 
     // todo: make configurable and tied to the web request filter
     urlPattern: "",
+    networkRequestPattern: "",
 
     // Description: accept URL parameters for web request listener as descirbed in 
     //  https://developer.chrome.com/extensions/match_patterns 
@@ -25,7 +26,7 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
       var pattern = scheme + "://" + host + "/" + path;
 
       this.get("urls").push(params.scheme + "://" + params.host + "/" + params.path);
-      this.urlPattern = pattern;
+      this.networkRequestPattern = pattern;
     },
 
     // todo: Add unit testing
@@ -69,7 +70,7 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
     // !!!: Losing content when going from external debug window to nested
     listenToRequestFinished: function(){
       var _this = this;
-      var urlPattern = new RegExp( this.urlPattern, "i");
+      var urlPattern = new RegExp( this.networkRequestPattern, "i");
 
       chrome.devtools.network.onRequestFinished.addListener(function(packet){
         try{
