@@ -1,15 +1,11 @@
 
 
 BODY{
-  font-family: Tahoma;
+  font-family: Menlo, monospace;
   margin: 0;
   padding: 0;
 }
 
-.page-title{
-  font-size: 14pt;
-  font-weight: bold;
-}
 
 TEXTAREA.xml-contents{
   border: none;
@@ -19,20 +15,12 @@ TEXTAREA.xml-contents{
 
 }
 
-.request{
-  border: solid black 1px;
-  padding: 15px;
-  margin-bottom: 10px;
-  background-color: #f0f0f0;
-  height: 50px;
-  width: 100%;
-}
 
 /* Codemirror "Theme" */
-.cm-s-xmpp.CodeMirror, .cm-s-xmpp.CodeMirror .CodeMirror-scroll {
+.cm-s-xmpp.CodeMirror {
   font-family: Menlo, monospace;
   font-size: 11px;
-  height: 100%;
+  height: auto;
 }
 
 .cm-s-xmpp.CodeMirror .cm-comment {
@@ -41,20 +29,31 @@ TEXTAREA.xml-contents{
   font-style: italic;
 }
 
-#xmpp-stream{
-  margin-left:30px;
+.cm-s-xmpp.CodeMirror .CodeMirror-scroll {
+  overflow-y: hidden;
+  overflow-x: auto;
 }
 
-#xmpp-inspector-toolbar{
-  position: absolute;
+.toolbar-wrapper {
+  height: 1.5em;
+  margin-top: 0;
+  position: relative;
+}
+
+.toolbar{
+  border-bottom: solid 1px #ddd;
+  color: #666;
+  position: fixed;
   top:0;
   left:0;
   bottom:0;
-  width: 30px;
+  width: 100%;
+  height: 1.5em;
   z-index: 999;
-
+  padding-left: 10px;
   background-color: rgba(255,255,255,0.4);
-  box-shadow: 1px 1px 2px #a0a0a0;
+  /*box-shadow: 1px 1px 2px #a0a0a0;*/
+
   cursor: pointer;
   overflow: hidden;
 
@@ -64,91 +63,40 @@ TEXTAREA.xml-contents{
 
 
 #xmpp-inspector-toolbar .button{
+  display: inline-block;
   font-size: 8pt;
   border-bottom: solid #f0f0f0 1px;
-  padding: 5px 0 5px 5px;
+  padding: 7px 0 5px 5px;
   overflow: hidden;
   white-space: nowrap;
   height: 1.2em;
   line-height: 1.2em;
   background-color: rgba(255,255,255,0.85);
+
   -webkit-transition-property: background-color, color, height;
   -webkit-transition-duration: 0.15s;
 }
 
 #xmpp-inspector-toolbar .button .icon{
-  background: rgba(218, 116, 67, 0.29) url( /images/icons.png ) 0 0 no-repeat;
-  display: inline-block;
-  height: 18px;
-  width: 18px;
-  border-radius: 9px;
   margin-right: 5px;
-  position: relative;
-  top: -2px;
-  left: 2px;
-
-  -webkit-transition-property: background-color;
+  -webkit-transition-property: color;
   -webkit-transition-duration: 0.30s;
 }
 
 #xmpp-inspector-toolbar .button .label{
+  margin-right: 10px;
   display: inline-block;
-  position: relative;
-  top: -7px;
-
-}
-
-#xmpp-inspector-toolbar .button.reload .icon{
-  background-position: -238px -22px;
-}
-
-#xmpp-inspector-toolbar .button.clear .icon{
-  background-position: -166px -94px;
-}
-
-#xmpp-inspector-toolbar .button.options .icon{
-  background-position: -430px 2px;
 }
 
 #xmpp-inspector-toolbar .button:hover{
-
-  background-color: rgba(255,255,255,0.95);
+  color: rgba( 0, 0, 0, 0.95);
 }
 
 
 #xmpp-inspector-toolbar .button:hover .icon{
-  background-color: rgba(218, 116, 67, 0.85)
+  color: rgba( 0, 0, 0, 0.85)
 }
 
-/* Accordian stuff */
-#xmpp-inspector-toolbar .button DIV:nth-of-type(3){
-  margin-top: 4px;
-}
-
-#xmpp-inspector-toolbar .button.accordian{
-}
-
-
-#xmpp-inspector-toolbar:hover .button.accordian[data-rows="1"]{
-  height: 2.8em;
-}
-
-#xmpp-inspector-toolbar:hover .button.accordian[data-rows="2"]{
-  height: 4em;
-}
-
-#xmpp-inspector-toolbar:hover .button.accordian[data-rows="3"]{
-  height: 5.2em;
-}
-
-
-#xmpp-inspector-toolbar:hover{
-  width: 150px;
-}
-
-
-#xmpp-inspector-toolbar:hover .button{
-}
 
 
 

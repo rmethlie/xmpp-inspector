@@ -1,28 +1,29 @@
 <html>
   <head>
     <link href="css/panel.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="javascripts/bower_components/font-awesome/css/font-awesome.css">
     <link href="javascripts/bower_components/codemirror/lib/codemirror.css" type="text/css" rel="stylesheet" />
     <script data-main="javascripts/panel" src="javascripts/bower_components/requirejs/require.js"></script>
   </head>
   <body>
-    <div id="xmpp-inspector-panel">
-      <div id="xmpp-inspector-toolbar">
-        <div class="button reload" data-button-id="reload">
-          <div class="icon"></div>
-          <div class="label">Reload</div>
-        </div>
-        <div class="button clear" data-button-id="clear">
-          <div class="icon"></div>
-          <div class="label">Clear</div>
-        </div>
-        <div class="button options" data-button-id="options" data-rows="2">
-          <div class="icon"></div>
-          <div class="label">Options...</div>
-          <div>Row 1</div>
-          <div>Row 2</div>
+
+      <div class="toolbar-wrapper">
+        <div class="toolbar" id="xmpp-inspector-toolbar">
+          <div class="button reload" data-button-id="reload">            
+            <div class="label"><i class="fa fa-refresh icon"></i>Reload</div>
+          </div>
+          <div class="button clear" data-button-id="clear">            
+            <div class="label"><i class="fa fa-eraser icon"></i>Clear</div>
+          </div>
+          <div class="button filter" data-button-id="filter">
+            <div class="label"><i class="fa fa-filter icon"></i>Filter</div>
+          </div>
+          <div class="button options" data-button-id="options">
+            <div class="label"><i class="fa fa-gear icon"></i>Options...</div>
+          </div>
         </div>
       </div>
+      
       <div id="xmpp-stream"></div>
-    </div>
   </body>
 </html>

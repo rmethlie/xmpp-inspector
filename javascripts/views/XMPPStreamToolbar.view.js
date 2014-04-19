@@ -4,15 +4,16 @@ define(["BaseView","XMPPStreamToolbarModel"], function(BaseView, XMPPStreamToolb
   return BaseView.extend({
 
     model: new XMPPStreamToolbarModel(),
+    
     el: "#xmpp-inspector-toolbar",
-    events: {
 
+    events: {
       "click .button"         : "onClick",
       "click .button.reload"  : "reload",
       "click .button.clear"   : "clear",
       "click .button.options" : "options"
-
     },
+
     initialize: function(){
       console.info( "[TOOLBAR] Initialized.");
     },
