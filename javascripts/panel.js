@@ -15,8 +15,3 @@ require(["app",
 
   });
 });
-
-var
-reload = function(){
-    document.location.reload();
-}

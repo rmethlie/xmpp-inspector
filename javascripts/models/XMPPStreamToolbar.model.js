@@ -10,6 +10,6 @@ define(['BaseModel'], function(BaseModel) {
 
     }
 
-  })
+  });
 
-})
+});
