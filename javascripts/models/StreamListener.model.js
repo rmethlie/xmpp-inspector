@@ -21,11 +21,11 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
       //  for details.
       if(info.requestBody)
         content = Utils.ArrayBufferToString(info.requestBody.raw[0].bytes);
-      this.trigger("stream:update", {tabId:this.get("tabId"), state:"beforeRequest", payload:info, requestBody: content});            
+      this.trigger("stream:update", {tabId:this.get("tabId"), state:"beforeRequest", payload:info, requestBody: content});
     },
 
     onCompleted: function(info) {      
-      this.trigger("stream:update", {tabId:this.get("tabId"), state:"completed", payload:info});            
+      this.trigger("stream:update", {tabId:this.get("tabId"), state:"completed", payload:info});
     },
 
     initialize: function(){

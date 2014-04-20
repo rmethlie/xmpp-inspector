@@ -72,13 +72,13 @@ define(['backbone', 'StreamListener'], function(Backbone, StreamListener) {
 
     onMessage: function(message) {
       console.log("[StreamListeners] onMessage")   ;
-      var action = message.action
+      var action = message.action;
         switch(action){
           case "add:listener":
             console.log("add:listener");
             this.add(message.manifest);
             break;
-        }    
+        }
     }
 
 
