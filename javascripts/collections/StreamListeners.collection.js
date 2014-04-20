@@ -67,6 +67,7 @@ define(['backbone', 'StreamListener'], function(Backbone, StreamListener) {
       streamListener.removeListeners();
       this.remove(streamListener);
       port.onMessage.removeListener(this.messageHandlers[port.name]);
+      this.ports[port.name] = null;
       delete this.ports[port.name];
     },
 
