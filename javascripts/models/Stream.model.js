@@ -4,17 +4,10 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
   // Description: Listen for webRequests in the background and send message to dev tools extension
   return BaseModel.extend({
 
-    defaults: {
-      // urls: ["*://*/*http-bind*"],
-      urls: [],
-      types: ["xmlhttprequest"],
-      tabId: chrome.devtools.inspectedWindow.tabId,
-      name: "port:" + chrome.devtools.inspectedWindow.tabId
-    },
-
-    // todo: make configurable and tied to the web request filter
-    urlPattern: "",
     networkRequestPattern: "",
+    webRequestURLFilter: [],
+    tabId: chrome.devtools.inspectedWindow.tabId,
+    backgroundConnectionName: "port:" + chrome.devtools.inspectedWindow.tabId,
 
     // Description: accept URL parameters for web request listener as descirbed in 
     //  https://developer.chrome.com/extensions/match_patterns 
@@ -25,7 +18,8 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
       var path    = params.path.replace("*", ".*").replace("/", "\/");
       var pattern = scheme + "://" + host + "/" + path;
 
-      this.get("urls").push(params.scheme + "://" + params.host + "/" + params.path);
+      // this.get("urls").push(params.scheme + "://" + params.host + "/" + params.path);
+      this.webRequestURLFilter =  [params.scheme + "://" + params.host + "/" + params.path];
       this.networkRequestPattern = pattern;
     },
 
@@ -79,6 +73,7 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
             packet.getContent( function(contents){
               var guid = Utils.guidGen();
               _this.networkEvents.add({id: guid, type:'requestFinished', data: packet, body: contents});
+              console.log(_this.attributes);
               _this.trigger("request:finished", {id: guid, body: contents} );
             });
           }
@@ -90,8 +85,9 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
 
     connect: function(){
       var _this = this;
-      this.connection = chrome.runtime.connect({name: "port:" + this.get("tabId") });
-      this.connection.postMessage({action: "add:listener", manifest: this.toJSON()});
+      var requestManifest = this.webRequestManifest();
+      this.connection = chrome.runtime.connect({name: requestManifest.name });
+      this.connection.postMessage({action: "add:listener", manifest: requestManifest});
       this.connection.onMessage.addListener(function(msg) {
         _this.trigger(msg.state, msg);
       });
@@ -108,7 +104,16 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
 
     handleTabUpdated: function(data) {
       this.trigger("tab:updated");
-    }
+    },
+
+    webRequestManifest: function(){
+      return {
+        urls  : this.webRequestURLFilter,
+        types : ["xmlhttprequest"],
+        tabId : this.tabId,
+        name  : this.backgroundConnectionName
+      };
+    },
 
 
   });
