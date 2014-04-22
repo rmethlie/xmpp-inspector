@@ -4,11 +4,13 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
   // Description: Listen for webRequests in the background and send message to dev tools extension
   return BaseModel.extend({
 
-    networkRequestPattern: "",
-    webRequestURLFilter: [],
-    tabId: chrome.devtools.inspectedWindow.tabId,
-    backgroundConnectionName: "port:" + chrome.devtools.inspectedWindow.tabId,
-
+    defaults :{
+      urlParams: {},
+      networkRequestPattern: "",
+      webRequestURLFilter: [],
+      tabId: chrome.devtools.inspectedWindow.tabId,
+      backgroundConnectionName: "port:" + chrome.devtools.inspectedWindow.tabId,
+    },
     // Description: accept URL parameters for web request listener as descirbed in 
     //  https://developer.chrome.com/extensions/match_patterns 
     //  and generate a pattern testable for regex for network request event
@@ -19,8 +21,9 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
       var pattern = scheme + "://" + host + "/" + path;
 
       // this.get("urls").push(params.scheme + "://" + params.host + "/" + params.path);
-      this.webRequestURLFilter =  [params.scheme + "://" + params.host + "/" + params.path];
-      this.networkRequestPattern = pattern;
+      this.set("webRequestURLFilter", [params.scheme + "://" + params.host + "/" + params.path]);
+      this.set("networkRequestPattern", pattern);
+      this.set("urlParams", params);
     },
 
     // todo: Add unit testing
@@ -34,9 +37,9 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
 
     networkEvents: new NetworkEvents(),
 
-    initialize: function(){
+    initialize: function(options){
       console.log("[Stream] initialize");
-      this.setPattern({scheme: "http", host: "*", path: "*http-bind*"});
+      this.setPattern(options.urlParams);
       this.addListeners();
     },
     
@@ -64,7 +67,7 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
     // !!!: Losing content when going from external debug window to nested
     listenToRequestFinished: function(){
       var _this = this;
-      var urlPattern = new RegExp( this.networkRequestPattern, "i");
+      var urlPattern = new RegExp( this.get("networkRequestPattern"), "i");
 
       chrome.devtools.network.onRequestFinished.addListener(function(packet){
         try{
@@ -108,10 +111,10 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
 
     webRequestManifest: function(){
       return {
-        urls  : this.webRequestURLFilter,
+        urls  : this.get("webRequestURLFilter"),
         types : ["xmlhttprequest"],
-        tabId : this.tabId,
-        name  : this.backgroundConnectionName
+        tabId : this.get("tabId"),
+        name  : this.get("backgroundConnectionName")
       };
     },
 
