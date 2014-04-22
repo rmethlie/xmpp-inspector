@@ -86,7 +86,6 @@ define(['BaseView',
       var scollToBottom = false;
       var lastLine = this.getLastLineInfo();      
 
-      // content += "\n";
       
       // if the user is already at  the bottom of the stream scroll to the bottom after appending the new content
       if(this.isAtBottom()){
