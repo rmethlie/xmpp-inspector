@@ -19,6 +19,8 @@ define(["BaseView",
       this.render();
       this.renderToolbar();
       this.renderStream();
+
+      this.toolbar.model.on("toolbar:command", this._handleToolbarCommand.bind(this));
     },
 
     render: function(){
@@ -34,6 +36,17 @@ define(["BaseView",
         model: new Stream(),
         toolbar: this.toolbar.model
       });
+    },
+
+    _handleToolbarCommand: function( command ){
+      switch( command.name ){
+        case "clear":
+          this.stream.clear();
+        break;
+
+        default:
+          console.error( "[STREAM.VIEW] Unknown command: ", command );
+      }
     },
 
   });
