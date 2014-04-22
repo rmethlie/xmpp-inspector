@@ -5,7 +5,7 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
   return BaseModel.extend({
 
     defaults :{
-      urlParams: {},
+      filter: {},
       networkRequestPattern: "",
       webRequestURLFilter: [],
       tabId: chrome.devtools.inspectedWindow.tabId,
@@ -23,7 +23,7 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
       // this.get("urls").push(params.scheme + "://" + params.host + "/" + params.path);
       this.set("webRequestURLFilter", [params.scheme + "://" + params.host + "/" + params.path]);
       this.set("networkRequestPattern", pattern);
-      this.set("urlParams", params);
+      this.set("filter", params);
     },
 
     // todo: Add unit testing
@@ -39,7 +39,7 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
 
     initialize: function(options){
       console.log("[Stream] initialize");
-      this.setPattern(options.urlParams);
+      this.setPattern(options.filter);
       this.addListeners();
     },
     

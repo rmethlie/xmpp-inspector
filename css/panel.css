@@ -15,6 +15,9 @@ TEXTAREA.xml-contents{
 
 }
 
+.hidden {
+  display: none !important;
+}
 
 /* Codemirror "Theme" */
 .cm-s-xmpp.CodeMirror {

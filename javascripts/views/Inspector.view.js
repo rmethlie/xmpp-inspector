@@ -17,10 +17,10 @@ define(["BaseView",
 
     initialize: function(){
       var streamOptions = {
-        urlParams : {scheme: "http", host: "*", path: "*http-bind*"}
+        filter : {scheme: "https", host: "*", path: "*http-bind*"}
       };
       this.render();
-      this.renderToolbar();
+      this.renderToolbar({filter: streamOptions.filter});
       this.renderStream(streamOptions);
       this.addListeners();
     },
@@ -29,8 +29,8 @@ define(["BaseView",
       this.$el.html(this.template({}));
     },
 
-    renderToolbar: function(){
-      this.toolbar = new XMPPStreamToolbarView();
+    renderToolbar: function(options){
+      this.toolbar = new XMPPStreamToolbarView(options);
     },
 
     renderStream: function(options){
@@ -41,10 +41,6 @@ define(["BaseView",
 
     addListeners: function(){
       this.listenTo(this.toolbar.model, "toolbar:command", this._handleToolbarCommand);
-      this.listenTo(this.stream.model, "change:urlParams", function(){
-        console.log("change:urlParams");
-      })
-
     },
 
     _handleToolbarCommand: function( command ){

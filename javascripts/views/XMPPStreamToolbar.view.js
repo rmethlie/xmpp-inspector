@@ -14,16 +14,21 @@ define(["BaseView",
     events: {
       "click .button.reload"  : "reload",
       "click .button.clear"   : "clear",
-      "click .button.options" : "options"
+      "click .button.options" : "options",
+      "click .url-pattern .output" : "editUrlPattern",
+      "click .url-pattern [type='submit']" : "updateUrlPattern",
     },
 
-    initialize: function(){
+    initialize: function(options){
       console.info( "[TOOLBAR] Initialized.");
-      this.render();
+      
+      this.render(options);
     },
 
-    render: function(){
-      this.$el.html(this.template({}));
+    render: function(options){
+      this.$el.html(this.template({
+        filter: options.filter
+      }));
     },
 
     reload: function(){
@@ -38,10 +43,32 @@ define(["BaseView",
       });
     },
 
-    options: function($event){
+    options: function(e){
       var  $button = this.$el.find(".button.options");
       $button.toggleClass( "accordian" );
+    },
+
+    editUrlPattern: function(){
+      this.toggleUrlInput();
+    },
+    
+    updateUrlPattern: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      var pattern = {
+        scheme  : this.$el.find("form .scheme").val(),
+        host    : this.$el.find("form .host").val(),
+        path    : this.$el.find("form .path").val(),
+      }
+      this.toggleUrlInput();
+    },
+
+    toggleUrlInput: function(){
+      console.log("toggling");
+      this.$el.find(".output, form").toggleClass("hidden");
+      // this.$el.find("form").toggleClass("hidden");
     }
+    
 
   });
 });
