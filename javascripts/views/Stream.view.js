@@ -18,8 +18,6 @@ define(['BaseView',
 
     template: _.template(streamDataTemplate),
 
-    atBottom: true,
-
     dataStreamConfig: {
       mode: "text/html",
       lineNumbers: true,
