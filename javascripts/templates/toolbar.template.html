@@ -15,11 +15,11 @@
             <span class="output">http://*/*http-bind*</span>
             <form class="hidden">
               <select class="scheme">
-                <option <% if(filter.scheme === "*") {%>"selected "<%} %> value="*">&lt;all&gt;</option>
-                <option <% if(filter.scheme === "http") {%>"selected "<%} %> value="http">http</option>
-                <option <% if(filter.scheme === "https") {%>"selected "<%} %> value="https">https</option>
-                <option <% if(filter.scheme === "file") {%>"selected "<%} %> value="file">file</option>
-                <option <% if(filter.scheme === "ftp") {%>"selected "<%} %> value="ftp">ftp</option>
+                <option <% if(filter.scheme === "*") {%>selected <%} %> value="*">&lt;all&gt;</option>
+                <option <% if(filter.scheme === "http") {%>selected <%} %> value="http">http</option>
+                <option <% if(filter.scheme === "https") {%>selected <%} %> value="https">https</option>
+                <option <% if(filter.scheme === "file") {%>selected <%} %> value="file">file</option>
+                <option <% if(filter.scheme === "ftp") {%>selected <%} %> value="ftp">ftp</option>
                 <option <% if(filter.scheme === "chrome-extension") {%>"selected "<%} %> value="chrome-extension">chrome-extension</option>
               </select>
               ://
