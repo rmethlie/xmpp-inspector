@@ -8,78 +8,222 @@
   body{
     margin:0;
     padding: 0;
-  }
-  .CodeMirror.cm-s-default .CodeMirror-cursor {
-    background-color: #333;
-    width: 15px;
+    
   }
 
+  /* Codemirror "Theme" */
+  .cm-s-default.CodeMirror {
+    font-family: Menlo, monospace;
+    font-size: 11px;
+    height: auto;
+  }
 
-/* Codemirror "Theme" */
-.cm-s-default.CodeMirror {
-  font-family: Menlo, monospace;
-  font-size: 11px;
-  height: auto;
-}
+  .cm-s-default.CodeMirror .CodeMirror-scroll {
+    /*overflow-y: hidden;
+    overflow-x: auto;*/
+  }
 
-.cm-s-default.CodeMirror .CodeMirror-scroll {
-  overflow-y: hidden;
-  overflow-x: auto;
-}
-
+  .code-wrapper {
+    /*position: relative;*/
+  }
+  .code-wrapper {
+    /*
+    position: absolute;
+    */
+    position: absolute;
+    top: 24px;
+    bottom: 0;
+    width: 100%;
+  }
 </style>
 </head>
 <body >
-  
-  <form><textarea id="code" name="code">
-&lt;html style="color: green"&gt;
-  &lt;!-- this is a comment --&gt;
-  &lt;head&gt;
-    &lt;title&gt;HTML Example&lt;/title&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    The indentation tries to be &lt;em&gt;somewhat &amp;quot;do what
-    I mean&amp;quot;&lt;/em&gt;... but might not match your style.
-  &lt;/body&gt;
-&lt;/html&gt;
-</textarea></form>
+  <div class='code-wrapper'>
+      <form>
+        <textarea id="code" name="code">
+          &lt;html style="color: green"&gt;
+            &lt;!-- this is a comment --&gt;
+            &lt;head&gt;
+              &lt;title&gt;HTML Example&lt;/title&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+              The indentation tries to be &lt;em&gt;somewhat &amp;quot;do what
+              I mean&amp;quot;&lt;/em&gt;... but might not match your style.
+            &lt;/body&gt;
+          &lt;/html&gt;
+
+          &lt;html style="color: green"&gt;
+            &lt;!-- this is a comment --&gt;
+            &lt;head&gt;
+              &lt;title&gt;HTML Example&lt;/title&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+              The indentation tries to be &lt;em&gt;somewhat &amp;quot;do what
+              I mean&amp;quot;&lt;/em&gt;... but might not match your style.
+            &lt;/body&gt;
+          &lt;/html&gt;
+
+          &lt;html style="color: green"&gt;
+            &lt;!-- this is a comment --&gt;
+            &lt;head&gt;
+              &lt;title&gt;HTML Example&lt;/title&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+              The indentation tries to be &lt;em&gt;somewhat &amp;quot;do what
+              I mean&amp;quot;&lt;/em&gt;... but might not match your style.
+            &lt;/body&gt;
+          &lt;/html&gt;
+
+          &lt;html style="color: green"&gt;
+            &lt;!-- this is a comment --&gt;
+            &lt;head&gt;
+              &lt;title&gt;HTML Example&lt;/title&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+              The indentation tries to be &lt;em&gt;somewhat &amp;quot;do what
+              I mean&amp;quot;&lt;/em&gt;... but might not match your style.
+            &lt;/body&gt;
+          &lt;/html&gt;
+
+          &lt;html style="color: green"&gt;
+            &lt;!-- this is a comment --&gt;
+            &lt;head&gt;
+              &lt;title&gt;HTML Example&lt;/title&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+              The indentation tries to be &lt;em&gt;somewhat &amp;quot;do what
+              I mean&amp;quot;&lt;/em&gt;... but might not match your style.
+            &lt;/body&gt;
+          &lt;/html&gt;
+
+          &lt;html style="color: green"&gt;
+            &lt;!-- this is a comment --&gt;
+            &lt;head&gt;
+              &lt;title&gt;HTML Example&lt;/title&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+              The indentation tries to be &lt;em&gt;somewhat &amp;quot;do what
+              I mean&amp;quot;&lt;/em&gt;... but might not match your style.
+            &lt;/body&gt;
+          &lt;/html&gt;
+
+          &lt;html style="color: green"&gt;
+            &lt;!-- this is a comment --&gt;
+            &lt;head&gt;
+              &lt;title&gt;HTML Example&lt;/title&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+              The indentation tries to be &lt;em&gt;somewhat &amp;quot;do what
+              I mean&amp;quot;&lt;/em&gt;... but might not match your style.
+            &lt;/body&gt;
+          &lt;/html&gt;
+
+          &lt;html style="color: green"&gt;
+            &lt;!-- this is a comment --&gt;
+            &lt;head&gt;
+              &lt;title&gt;HTML Example&lt;/title&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+              The indentation tries to be &lt;em&gt;somewhat &amp;quot;do what
+              I mean&amp;quot;&lt;/em&gt;... but might not match your style.
+            &lt;/body&gt;
+          &lt;/html&gt;
+
+          &lt;html style="color: green"&gt;
+            &lt;!-- this is a comment --&gt;
+            &lt;head&gt;
+              &lt;title&gt;HTML Example&lt;/title&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+              The indentation tries to be &lt;em&gt;somewhat &amp;quot;do what
+              I mean&amp;quot;&lt;/em&gt;... but might not match your style.
+            &lt;/body&gt;
+          &lt;/html&gt;
+
+          &lt;html style="color: green"&gt;
+            &lt;!-- this is a comment --&gt;
+            &lt;head&gt;
+              &lt;title&gt;HTML Example&lt;/title&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+              The indentation tries to be &lt;em&gt;somewhat &amp;quot;do what
+              I mean&amp;quot;&lt;/em&gt;... but might not match your style.
+            &lt;/body&gt;
+          &lt;/html&gt;
+          &lt;html style="color: green"&gt;
+            &lt;!-- this is a comment --&gt;
+            &lt;head&gt;
+              &lt;title&gt;HTML Example&lt;/title&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+              The indentation tries to be &lt;em&gt;somewhat &amp;quot;do what
+              I mean&amp;quot;&lt;/em&gt;... but might not match your style.
+            &lt;/body&gt;
+          &lt;/html&gt;
+          &lt;html style="color: green"&gt;
+            &lt;!-- this is a comment --&gt;
+            &lt;head&gt;
+              &lt;title&gt;HTML Example&lt;/title&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+              The indentation tries to be &lt;em&gt;somewhat &amp;quot;do what
+              I mean&amp;quot;&lt;/em&gt;... but might not match your style.
+            &lt;/body&gt;
+          &lt;/html&gt;
+          &lt;html style="color: green"&gt;
+            &lt;!-- this is a comment --&gt;
+            &lt;head&gt;
+              &lt;title&gt;HTML Example&lt;/title&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+              The indentation tries to be &lt;em&gt;somewhat &amp;quot;do what
+              I mean&amp;quot;&lt;/em&gt;... but might not match your style.
+            &lt;/body&gt;
+          &lt;/html&gt;
+          &lt;html style="color: green"&gt;
+            &lt;!-- this is a comment --&gt;
+            &lt;head&gt;
+              &lt;title&gt;HTML Example&lt;/title&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+              The indentation tries to be &lt;em&gt;somewhat &amp;quot;do what
+              I mean&amp;quot;&lt;/em&gt;... but might not match your style.
+            &lt;/body&gt;
+          &lt;/html&gt;
+          &lt;html style="color: green"&gt;
+            &lt;!-- this is a comment --&gt;
+            &lt;head&gt;
+              &lt;title&gt;HTML Example&lt;/title&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+              The indentation tries to be &lt;em&gt;somewhat &amp;quot;do what
+              I mean&amp;quot;&lt;/em&gt;... but might not match your style.
+            &lt;/body&gt;
+          &lt;/html&gt;
+        </textarea>
+      </form>
+  </div>
   <script type="text/javascript" src="jquery-1.11.0.min.js"></script>
   <script type="text/javascript">
     editor = CodeMirror.fromTextArea(document.getElementById("code"), {
         mode: "text/html",
-        lineNumbers: true
+        lineNumbers: true,
+        viewportMargin: Infinity
       });
 
-    function isAtBottom(){
-      var scrollInfo = editor.getScrollInfo();
-      if(scrollInfo.clientHeight + scrollInfo.top === scrollInfo.height)
-        return true
-      else
-        return false
-      
-    };
-
     function append(){
-      console.log(editor.getScrollInfo());
+        console.log(editor.getScrollInfo());
 
-      var content = $("#code").val();
-      // var lastViewportLine = editor.getViewport().to; 
-      var lastLineNumber = editor.lastLine();
-      var lastLineHandler = editor.getLineHandle(lastLineNumber);
-      var lastLineCharCount = lastLineHandler.text.length;
-      var cursorOptions = {scroll: false};
-
-      // move the cursor to the last char of the last line
-      // editor.setCursor(lastLineNumber, lastLineCharCount, cursorOptions);
-      // editor.execCommand('goLineEnd');
-      // editor.execCommand('newlineAndIndent');
-      // editor.setCursor(lastLineNumber, lastLineCharCount, cursorOptions);
-      // editor.execCommand('goLineEnd');
-      
-      
-      // insert content
-      editor.replaceRange(content, {line: Infinity, ch: lastLineCharCount});
-    }
+        var content = $("#code").val();
+        // var lastViewportLine = editor.getViewport().to; 
+        var lastLineNumber = editor.lastLine();
+        var lastLineHandler = editor.getLineHandle(lastLineNumber);
+        var lastLineCharCount = lastLineHandler.text.length;
+        var cursorOptions = {scroll: false};
+        
+        // insert content
+        editor.replaceRange(content, {line: Infinity, ch: lastLineCharCount});
+      }
   </script>
   
 </body>

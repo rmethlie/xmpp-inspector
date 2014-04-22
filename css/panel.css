@@ -29,8 +29,8 @@ TEXTAREA.xml-contents{
 }
 
 .cm-s-xmpp.CodeMirror .CodeMirror-scroll {
-  overflow-y: hidden;
-  overflow-x: auto;
+  /*overflow-y: hidden;
+  overflow-x: auto;*/
 }
 
 .toolbar-wrapper {
