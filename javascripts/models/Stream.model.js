@@ -5,25 +5,40 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
   return BaseModel.extend({
 
     defaults :{
-      filter: {},
       networkRequestPattern: "",
       webRequestURLFilter: [],
       tabId: chrome.devtools.inspectedWindow.tabId,
       backgroundConnectionName: "port:" + chrome.devtools.inspectedWindow.tabId,
     },
+
     // Description: accept URL parameters for web request listener as descirbed in 
     //  https://developer.chrome.com/extensions/match_patterns 
-    //  and generate a pattern testable for regex for network request event
+    //  and generate a pattern testable as regex for network request event
     setPattern: function(params){
-      var scheme  = params.scheme.replace("*", ".*");
-      var host    = params.host.replace("*", ".*");
-      var path    = params.path.replace("*", ".*").replace("/", "\/");
-      var pattern = scheme + "://" + host + "/" + path;
+      this.set("webRequestURLFilter", this._setWebRequestFilter(params));
+      this.set("networkRequestPattern", this._setNetworkRequestPattern(params));
+    },
 
-      // this.get("urls").push(params.scheme + "://" + params.host + "/" + params.path);
-      this.set("webRequestURLFilter", [params.scheme + "://" + params.host + "/" + params.path]);
-      this.set("networkRequestPattern", pattern);
-      this.set("filter", params);
+    _setWebRequestFilter: function(params){
+      return [ params.scheme + "://" + params.host +  "/" + params.path ];
+    },
+
+    _setNetworkRequestPattern: function(params){
+
+      var scheme = params.scheme.replace(/\*+/g, ".*");
+      
+      var host = params.host.replace(/\*+/g, ".*");
+      if(host.length === 0)
+        host = ".*";
+
+      var path = params.path.replace(/\*+/g, ".*").replace(/\//g, "\/");
+      
+      var pattern = scheme + ":\/\/" + host;
+      if(path.length > 0)
+        pattern += "\/" + path;
+
+      return pattern;
+
     },
 
     // todo: Add unit testing
@@ -67,16 +82,14 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
     // !!!: Losing content when going from external debug window to nested
     listenToRequestFinished: function(){
       var _this = this;
-      var urlPattern = new RegExp( this.get("networkRequestPattern"), "i");
 
       chrome.devtools.network.onRequestFinished.addListener(function(packet){
         try{
-          
+          var urlPattern = new RegExp( _this.get("networkRequestPattern"), "ig");
           if( urlPattern.test( packet.request.url ) ){
             packet.getContent( function(contents){
               var guid = Utils.guidGen();
               _this.networkEvents.add({id: guid, type:'requestFinished', data: packet, body: contents});
-              console.log(_this.attributes);
               _this.trigger("request:finished", {id: guid, body: contents} );
             });
           }
@@ -118,6 +131,11 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
       };
     },
 
+    updateFilter: function(pattern){
+      console.log("updateFilter", pattern);
+      this.setPattern(pattern);
+      this.connection.postMessage({action: "filter:update", pattern: pattern});
+    },
 
   });
 });

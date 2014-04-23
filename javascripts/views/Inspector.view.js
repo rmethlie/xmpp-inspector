@@ -17,7 +17,7 @@ define(["BaseView",
 
     initialize: function(){
       var streamOptions = {
-        filter : {scheme: "https", host: "*", path: "*http-bind*"}
+        filter : {scheme: "http", host: "*", path: "*http-bind*"}
       };
       this.render();
       this.renderToolbar({filter: streamOptions.filter});
@@ -47,6 +47,9 @@ define(["BaseView",
       switch( command.name ){
         case "clear":
           this.stream.clear();
+        break;
+        case "url-pattern-update":
+          this.stream.model.updateFilter(command.pattern);
         break;
 
         default:
