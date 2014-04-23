@@ -18,8 +18,6 @@ define(['BaseView',
 
     template: _.template(streamDataTemplate),
 
-    atBottom: true,
-
     dataStreamConfig: {
       mode: "text/html",
       lineNumbers: true,
@@ -51,9 +49,6 @@ define(['BaseView',
         this.appendData(data, {prefix: this.responseReceivedPrefix});
       });
 
-      this.toolbar = options.toolbar;
-      this.toolbar.on("toolbar:command", this._handleToolbarCommand.bind(this));
-
     },
 
     render: function(){
@@ -68,17 +63,6 @@ define(['BaseView',
       else
         return false;
       
-    },
-
-    _handleToolbarCommand: function( command ){
-      switch( command.name ){
-        case "clear":
-          this.clear();
-        break;
-
-        default:
-          console.error( "[STREAM.VIEW] Unknown command: ", command );
-      }
     },
 
     getLastLineInfo: function(){
@@ -102,7 +86,6 @@ define(['BaseView',
       var scollToBottom = false;
       var lastLine = this.getLastLineInfo();      
 
-      // content += "\n";
       
       // if the user is already at  the bottom of the stream scroll to the bottom after appending the new content
       if(this.isAtBottom()){

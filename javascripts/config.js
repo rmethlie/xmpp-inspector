@@ -20,5 +20,6 @@ require.config({
         NetworkEvents: "collections/NetworkEvents.collection",
         XMPPStreamToolbarModel: "/javascripts/models/XMPPStreamToolbar.model",
         XMPPStreamToolbarView: "/javascripts/views/XMPPStreamToolbar.view",
+        InspectorView: "/javascripts/views/Inspector.view",
     }
 });
