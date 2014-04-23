@@ -86,7 +86,6 @@ define(['BaseView',
       var scollToBottom = false;
       var lastLine = this.getLastLineInfo();      
 
-      
       // if the user is already at  the bottom of the stream scroll to the bottom after appending the new content
       if(this.isAtBottom()){
         scollToBottom = true;
@@ -96,6 +95,11 @@ define(['BaseView',
         content = format.html_beautify(content);
         
         if(options.prefix){ 
+          if(lastLine.number > 0)
+            options.prefix = "\n\n" + options.prefix + "\n";
+          else
+            options.prefix = options.prefix + "\n";
+
           this.dataStream.replaceRange(options.prefix, {line: Infinity, ch: lastLine.charCount});
           lastLine = this.getLastLineInfo();
         }
