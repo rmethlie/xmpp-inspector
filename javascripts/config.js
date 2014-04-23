@@ -18,8 +18,8 @@ require.config({
         StreamListeners: "collections/StreamListeners.collection",
         NetworkEvent: "models/NetworkEvent.model",
         NetworkEvents: "collections/NetworkEvents.collection",
-        XMPPStreamToolbarModel: "/javascripts/models/XMPPStreamToolbar.model",
-        XMPPStreamToolbarView: "/javascripts/views/XMPPStreamToolbar.view",
+        StreamToolbarModel: "/javascripts/models/StreamToolbar.model",
+        StreamToolbarView: "/javascripts/views/StreamToolbar.view",
         InspectorView: "/javascripts/views/Inspector.view",
     }
 });

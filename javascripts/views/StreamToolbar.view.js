@@ -1,11 +1,11 @@
 define(["BaseView",
-  "XMPPStreamToolbarModel",
-  'text!templates/toolbar.template.html'], function(BaseView, XMPPStreamToolbarModel, toolbarTemplate) {
+  "StreamToolbarModel",
+  'text!templates/toolbar.template.html'], function(BaseView, StreamToolbarModel, toolbarTemplate) {
   "use strict";
 
   return BaseView.extend({
 
-    model: new XMPPStreamToolbarModel(),
+    model: new StreamToolbarModel(),
 
     el: ".toolbar-wrapper",
 
