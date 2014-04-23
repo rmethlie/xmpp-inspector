@@ -2,6 +2,7 @@
 
 BODY{
   font-family: Menlo, monospace;
+  font-size: 11px;
   margin: 0;
   padding: 0;
 }
@@ -37,29 +38,30 @@ TEXTAREA.xml-contents{
 }
 
 .toolbar-wrapper {
-  height: 1.5em;
+  min-height: 2em;
   margin-top: 0;
   position: relative;
 }
 
 .toolbar{
+  background-color: #fff;
   border-bottom: solid 1px #ddd;
   color: #666;
+  height: 2em;
   position: fixed;
   top:0;
   left:0;
   bottom:0;
   width: 100%;
-  height: 1.5em;
   z-index: 999;
+}
+.toolbar .main-bar {
   padding-left: 10px;
-  background-color: rgba(255,255,255,1);
-  overflow: hidden;
-
-  -webkit-transition-property: width;
-  -webkit-transition-duration: 0.15s;
 }
 
+.toolbar .sub-bar {
+  display: block;
+}
 .toolbar .button {
   cursor: pointer;
 }
@@ -70,29 +72,19 @@ TEXTAREA.xml-contents{
 
 .toolbar .pattern form {
   display: inline-block;
-  position: absolute;
+  position: fixed;
   top: 0;
 }
 
 #xmpp-inspector-toolbar .button{
   display: inline-block;
   font-size: 8pt;
-  border-bottom: solid #f0f0f0 1px;
   padding: 7px 0 5px 5px;
-  overflow: hidden;
   white-space: nowrap;
-  height: 1.2em;
-  line-height: 1.2em;
-  background-color: rgba(255,255,255,0.85);
-
-  -webkit-transition-property: background-color, color, height;
-  -webkit-transition-duration: 0.15s;
 }
 
 #xmpp-inspector-toolbar .button .icon{
   margin-right: 5px;
-  -webkit-transition-property: color;
-  -webkit-transition-duration: 0.30s;
 }
 
 #xmpp-inspector-toolbar .button .label{

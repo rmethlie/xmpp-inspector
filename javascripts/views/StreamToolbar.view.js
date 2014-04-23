@@ -15,6 +15,7 @@ define(["BaseView",
       "click .button.reload"  : "reload",
       "click .button.clear"   : "clear",
       "click .button.options" : "options",
+      "click .button.show-sub-bar" : "showSubbar",
       "click .url-pattern .output" : "toggleUrlInput",
       "click .url-pattern [type='submit']" : "updateUrlParams",
     },
@@ -45,6 +46,10 @@ define(["BaseView",
     options: function(e){
       var  $button = this.$el.find(".button.options");
       $button.toggleClass("accordian");
+    },
+
+    showSubbar: function(){
+      this.$el.find(".sub-bar").toggleClass("hidden");
     },
 
     updateUrlParams: function(e){
