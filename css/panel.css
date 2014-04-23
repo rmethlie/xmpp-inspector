@@ -54,13 +54,18 @@ TEXTAREA.xml-contents{
   z-index: 999;
   padding-left: 10px;
   background-color: rgba(255,255,255,1);
-  /*box-shadow: 1px 1px 2px #a0a0a0;*/
-
-  cursor: pointer;
   overflow: hidden;
 
   -webkit-transition-property: width;
   -webkit-transition-duration: 0.15s;
+}
+
+.toolbar .button {
+  cursor: pointer;
+}
+
+.toolbar .url-pattern .output:hover{
+  color: #006;
 }
 
 .toolbar .pattern form {
