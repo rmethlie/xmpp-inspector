@@ -17,7 +17,7 @@ define(["BaseView",
       "click .button.options" : "options",
       "click .button.show-sub-bar" : "showSubbar",
       "click .url-pattern .output" : "toggleUrlInput",
-      "click .url-pattern [type='submit']" : "updateUrlParams",
+      "click .update-url-pattern  [type='submit']" : "updateUrlPattern",
     },
 
     initialize: function(options){
@@ -52,7 +52,7 @@ define(["BaseView",
       this.$el.find(".sub-bar").toggleClass("hidden");
     },
 
-    updateUrlParams: function(e){
+    updateUrlPattern: function(e){
       e.preventDefault();
       e.stopPropagation();
       var urlParams = this.scrubPattern({

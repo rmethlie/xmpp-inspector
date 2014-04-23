@@ -19,6 +19,17 @@ TEXTAREA.xml-contents{
 .hidden {
   display: none !important;
 }
+.clearfix:before,
+.clearfix:after {
+  content:"";
+  display:table;
+}
+.clearfix:after {
+  clear:both;
+}
+.clearfix {
+  zoom:1; /* For IE 6/7 (trigger hasLayout) */
+}
 
 /* Codemirror "Theme" */
 .cm-s-xmpp.CodeMirror {
@@ -54,9 +65,12 @@ TEXTAREA.xml-contents{
   bottom:0;
   width: 100%;
   z-index: 999;
+  overflow-x: hidden;
 }
 .toolbar .main-bar {
   padding-left: 10px;
+  /*overflow: hidden;*/
+  text-overflow: ellipsis;
 }
 
 .toolbar .sub-bar {
@@ -70,14 +84,14 @@ TEXTAREA.xml-contents{
   color: #006;
 }
 
-.toolbar .pattern form {
-  display: inline-block;
-  position: fixed;
-  top: 0;
+
+.toolbar form.update-url-pattern {
+  display: block;
+  float: left;
 }
 
 #xmpp-inspector-toolbar .button{
-  display: inline-block;
+  float: left;
   font-size: 8pt;
   padding: 7px 0 5px 5px;
   white-space: nowrap;
