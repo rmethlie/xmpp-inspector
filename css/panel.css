@@ -36,6 +36,7 @@ TEXTAREA.xml-contents{
   position: absolute;
   top: 2em;
   bottom: 0;
+  width: 100%;
 }
 
 #xmpp-stream.toolbar-expanded {
