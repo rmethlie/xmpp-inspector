@@ -1,0 +1,44 @@
+<div class="toolbar" id="xmpp-inspector-toolbar">
+  <div class="main-bar clearfix">
+    <div class="button clear" data-button-id="clear">            
+      <i class="fa fa-eraser icon"></i><div class="label">Clear</div>
+    </div>
+
+    <div class="button url-pattern" data-button-id="url-pattern">
+      <i class="fa fa-link icon"></i><div class="label">URL: 
+        <span class="pattern">
+          <span class="output"><%= filter.scheme %>://<%= filter.host %>/<%= filter.path %></span>
+        </span>
+      </div>
+    </div>
+    <!-- <div class="form-wrapper"> -->
+      <form class="update-url-pattern hidden">
+        <select class="scheme">
+          <option <% if(filter.scheme === "*") {%>selected <%} %> value="*">&lt;all&gt;</option>
+          <option <% if(filter.scheme === "http") {%>selected <%} %> value="http">http</option>
+          <option <% if(filter.scheme === "https") {%>selected <%} %> value="https">https</option>
+          <option <% if(filter.scheme === "file") {%>selected <%} %> value="file">file</option>
+          <option <% if(filter.scheme === "ftp") {%>selected <%} %> value="ftp">ftp</option>
+          <option <% if(filter.scheme === "chrome-extension") {%>selected <%} %> value="chrome-extension">chrome-extension</option>
+        </select>
+        ://
+        <input class="host" type="text" value="<%= filter.host %>"/>
+        /
+        <input class="path" type="text" value="<%= filter.path %>"/>
+        <button type="submit">Go</button>
+      </form>
+    <!-- </div> -->
+    
+    <div class="button filter show-sub-bar" data-button-id="filter">
+      <i class="fa fa-filter icon"></i><div class="label">Filter</div>
+    </div>
+
+  </div>
+  
+  <div class="sub-bar hidden">
+    <div class="button">            
+      Hi I am the sub bar
+    </div>
+  </div>
+  
+</div>
