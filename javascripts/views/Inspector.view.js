@@ -51,6 +51,9 @@ define(["BaseView",
         case "url-pattern-update":
           this.stream.model.updateFilter(command.pattern);
         break;
+        case "toggle-subbar":
+          this.stream.toggleForSubbar();
+        break;
 
         default:
           console.error( "[STREAM.VIEW] Unknown command: ", command );

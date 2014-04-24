@@ -15,8 +15,9 @@ define(["BaseView",
       "click .button.reload"  : "reload",
       "click .button.clear"   : "clear",
       "click .button.options" : "options",
+      "click .button.show-sub-bar" : "toggleSubbar",
       "click .url-pattern .output" : "toggleUrlInput",
-      "click .url-pattern [type='submit']" : "updateUrlParams",
+      "click .update-url-pattern  [type='submit']" : "updateUrlPattern",
     },
 
     initialize: function(options){
@@ -47,14 +48,20 @@ define(["BaseView",
       $button.toggleClass("accordian");
     },
 
-    updateUrlParams: function(e){
+    toggleSubbar: function(){
+      this.$el.find(".sub-bar").toggleClass("hidden");
+      this.model.trigger("toolbar:command", {
+        name: "toggle-subbar"
+      });
+    },
+
+    updateUrlPattern: function(e){
       e.preventDefault();
       e.stopPropagation();
       var urlParams = this.scrubPattern({
         scheme  : this.$el.find("form .scheme").val(),
         host    : this.$el.find("form .host").val(),
-        path    : this.$el.find("form .path").val()
-        
+        path    : this.$el.find("form .path").val()        
       });
 
       this.$el.find(".url-pattern .output").html(urlParams.scheme + "://" + urlParams.host +"/" + urlParams.path);
