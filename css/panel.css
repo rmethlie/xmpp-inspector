@@ -19,6 +19,7 @@ TEXTAREA.xml-contents{
 .hidden {
   display: none !important;
 }
+
 .clearfix:before,
 .clearfix:after {
   content:"";
@@ -29,6 +30,16 @@ TEXTAREA.xml-contents{
 }
 .clearfix {
   zoom:1; /* For IE 6/7 (trigger hasLayout) */
+}
+
+#xmpp-stream {
+  position: absolute;
+  top: 2em;
+  bottom: 0;
+}
+
+#xmpp-stream.toolbar-expanded {
+  top: 4em;
 }
 
 /* Codemirror "Theme" */
@@ -44,40 +55,44 @@ TEXTAREA.xml-contents{
 }
 
 .cm-s-xmpp.CodeMirror .CodeMirror-scroll {
-  /*overflow-y: hidden;
-  overflow-x: auto;*/
+  /*
+  overflow-y: hidden;
+  overflow-x: auto;
+  */
 }
 
 .toolbar-wrapper {
-  min-height: 2em;
-  margin-top: 0;
   position: relative;
 }
 
-.toolbar{
+.toolbar {
+  display: table;
+  overflow: hidden;
   background-color: #fff;
   border-bottom: solid 1px #ddd;
   color: #666;
-  height: 2em;
   position: fixed;
   top:0;
   left:0;
-  bottom:0;
   width: 100%;
   z-index: 999;
-  overflow-x: hidden;
-}
-.toolbar .main-bar {
-  padding-left: 10px;
-  /*overflow: hidden;*/
-  text-overflow: ellipsis;
 }
 
-.toolbar .sub-bar {
-  display: block;
+
+.toolbar .main-bar, .toolbar .sub-bar {
+  display: table-row;
+  float: left;
+  clear:both;
+  overflow: hidden;
+  height: 2em;
 }
-.toolbar .button {
+
+.toolbar .button, .toolbar form {
+  display: table-cell;
+  height: 2em;
+  overflow: hidden;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .toolbar .url-pattern .output:hover{
@@ -85,34 +100,28 @@ TEXTAREA.xml-contents{
 }
 
 
-.toolbar form.update-url-pattern {
-  display: block;
-  float: left;
-}
-
-#xmpp-inspector-toolbar .button{
-  float: left;
+.toolbar .button{
   font-size: 8pt;
   padding: 7px 0 5px 5px;
   white-space: nowrap;
 }
 
-#xmpp-inspector-toolbar .button .icon{
+.toolbar .button .icon{
   margin-right: 5px;
 }
 
-#xmpp-inspector-toolbar .button .label{
+.toolbar .button .label{
   margin-right: 10px;
   display: inline-block;
 }
 
-#xmpp-inspector-toolbar .button:hover{
+.toolbar .button:hover{
   color: rgba( 0, 0, 0, 0.95);
 }
 
 
-#xmpp-inspector-toolbar .button:hover .icon{
-  color: rgba( 0, 0, 0, 0.85)
+.toolbar .button:hover .icon{
+  color: rgba( 0, 0, 0, 0.95)
 }
 
 
