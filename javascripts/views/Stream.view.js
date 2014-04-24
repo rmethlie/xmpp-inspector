@@ -119,5 +119,9 @@ define(['BaseView',
       this.dataStream.clearGutter();
     },
 
+    toggleForSubbar: function(){
+      this.$el.toggleClass("toolbar-expanded");
+    }
+
   });
 });
