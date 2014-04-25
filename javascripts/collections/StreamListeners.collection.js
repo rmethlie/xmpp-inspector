@@ -1,7 +1,7 @@
-define(['backbone', 'StreamListener'], function(Backbone, StreamListener) {
+define(['BaseCollection', 'StreamListener'], function(BaseCollection, StreamListener) {
   "use strict";
      
-  return Backbone.Collection.extend({
+  return BaseCollection.extend({
     
     model: StreamListener,
     

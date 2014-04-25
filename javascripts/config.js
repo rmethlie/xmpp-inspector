@@ -10,6 +10,7 @@ require.config({
         Utils: "lib/utils",
         BaseModel: "models/Base.model",
         BaseView: "views/Base.view",
+        BaseCollection: "collections/Base.collection",
         Packet: "models/Packet.model",
         Stream: "models/Stream.model",
         StreamView: "views/Stream.view",
