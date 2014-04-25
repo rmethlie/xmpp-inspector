@@ -18,10 +18,10 @@ define(["BaseView",
 
     initialize: function(){
       var streamOptions = {
-        filter : {scheme: "http", host: "*", path: "*http-bind*"}
+        pattern : {scheme: "http", host: "*", path: "*http-bind*"}
       };
       this.render();
-      this.renderToolbar({filter: streamOptions.filter});
+      this.renderToolbar({pattern: streamOptions.pattern});
       this.renderStream(streamOptions);
       this.addListeners();
     },

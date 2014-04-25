@@ -27,7 +27,7 @@ define(["BaseView",
 
     render: function(options){
       this.$el.html(this.template({
-        filter: this.scrubPattern(options.filter)
+        pattern: this.scrubPattern(options.pattern)
       }));
     },
 
