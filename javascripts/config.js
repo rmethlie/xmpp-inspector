@@ -16,6 +16,7 @@ require.config({
         StreamView: "views/Stream.view",
         Filter: "models/Filter.model",
         FilterView: "views/Filter.view",
+        Filters: "collections/Filters.collection",
         XMPPStreamView: "views/XMPPStream.view",
         StreamListener: "models/StreamListener.model",
         StreamListeners: "collections/StreamListeners.collection",
