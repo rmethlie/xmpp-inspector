@@ -4,11 +4,37 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
   // Description: Listen for webRequests in the background and send message to dev tools extension
   return BaseModel.extend({
 
+    connection: false,
+    networkEvents: new NetworkEvents(),
+
     defaults :{
       networkRequestPattern: "",
       webRequestURLFilter: [],
       tabId: chrome.devtools.inspectedWindow.tabId,
       backgroundConnectionName: "port:" + chrome.devtools.inspectedWindow.tabId,
+    },
+
+    initialize: function(options){
+      console.log("[Stream] initialize");
+      this.setPattern(options.filter);
+      this.addListeners();
+    },
+    
+    addListeners: function(){
+      console.log("[Stream] addListeners");
+      var _this = this;
+
+      // Description: Handle the message sent from the background page
+      this.on("beforeRequest", function(data){
+        this.handleBeforeRequest(data);
+      });
+
+      this.on("tab:updated:complete", function(data){
+        this.handleTabUpdated(data);
+      });
+
+      this.listenToRequestFinished();
+
     },
 
     // Description: accept URL parameters for web request listener as descirbed in 
@@ -38,40 +64,6 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
         pattern += "\/" + path;
 
       return pattern;
-
-    },
-
-    // todo: Add unit testing
-    // testPattern: function(url){
-    //   var p = this.setPattern({scheme: "http*", host: "*g*", path: "*http-bind*"});
-    //   var urlPattern = new RegExp( p, "i");
-    //   return urlPattern.test( url );
-    // },
-
-    connection: false,
-
-    networkEvents: new NetworkEvents(),
-
-    initialize: function(options){
-      console.log("[Stream] initialize");
-      this.setPattern(options.filter);
-      this.addListeners();
-    },
-    
-    addListeners: function(){
-      console.log("[Stream] addListeners");
-      var _this = this;
-
-      // Description: Handle the message sent from the background page
-      this.on("beforeRequest", function(data){
-        this.handleBeforeRequest(data);
-      });
-
-      this.on("tab:updated:complete", function(data){
-        this.handleTabUpdated(data);
-      });
-
-      this.listenToRequestFinished();
 
     },
     
