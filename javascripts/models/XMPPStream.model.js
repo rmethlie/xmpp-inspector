@@ -5,6 +5,7 @@ define(['Stream'], function(Stream) {
 
     initialize: function(options){
       console.log("[XMPPStream] initialize");
+      this.constructor.prototype.__proto__.initialize.apply(this, options);
     },    
 
   });
