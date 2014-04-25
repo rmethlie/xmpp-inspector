@@ -1,10 +1,8 @@
-define(['BaseCollection', 'Filter'], function(BaseCollection, Filter) {
+define(['BaseCollection'], function(BaseCollection) {
   "use strict";
      
   return BaseCollection.extend({
     
-    model: Filter,
-
     initialize: function(){
 
     },

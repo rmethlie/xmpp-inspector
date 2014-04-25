@@ -1,11 +1,14 @@
-define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkEvents, Utils) {
+define(['BaseModel', 'NetworkEvents', 'Filters', 'lib/utils'], function(BaseModel, NetworkEvents, Filters, Utils) {
   "use strict";
 
   // Description: Listen for webRequests in the background and send message to dev tools extension
   return BaseModel.extend({
 
     connection: false,
+    
     networkEvents: new NetworkEvents(),
+    
+    filters: new Filters(),
 
     defaults :{
       networkRequestPattern: "",

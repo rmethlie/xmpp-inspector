@@ -1,4 +1,14 @@
-define(['Stream'], function(Stream) {
+define(['Stream',
+  'FilterIQ',
+  'FilterPresence',
+  'FilterMessage',
+  'FilterRoster',
+  ], function(
+    Stream,
+    FilterIQ,
+    FilterPresence,
+    FilterMessage,
+    FilterRoster ) {
   "use strict";
 
   return Stream.extend({
@@ -6,6 +16,11 @@ define(['Stream'], function(Stream) {
     initialize: function(options){
       console.log("[XMPPStream] initialize");
       this.constructor.prototype.__proto__.initialize.apply(this, options);
+
+    },
+
+    addFilters: function(){
+
     },    
 
   });
