@@ -16,7 +16,11 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
 
     initialize: function(options){
       console.log("[Stream] initialize");
-      this.setPattern(options.filter);
+      if(!options)
+        options = {};
+      
+      if(options.filter)
+        this.setPattern(options.filter);
       this.addListeners();
     },
     
