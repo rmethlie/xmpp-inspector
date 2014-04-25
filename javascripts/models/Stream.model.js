@@ -22,8 +22,9 @@ define(['BaseModel', 'NetworkEvents', 'Filters', 'lib/utils'], function(BaseMode
       if(!options)
         options = {};
       
-      if(options.filter)
-        this.setPattern(options.filter);
+      if(options.pattern)
+        this.setPattern(options.pattern);
+      
       this.addListeners();
     },
     
