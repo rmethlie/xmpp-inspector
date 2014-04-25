@@ -99,12 +99,9 @@ define(['BaseView',
             options.prefix = "\n\n" + options.prefix + "\n";
           else
             options.prefix = options.prefix + "\n";
-
-          this.dataStream.replaceRange(options.prefix, {line: Infinity, ch: lastLine.charCount});
-          lastLine = this.getLastLineInfo();
         }
 
-        this.dataStream.replaceRange(content, {line: Infinity, ch: lastLine.charCount});
+        this.dataStream.replaceRange(options.prefix + content, {line: Infinity, ch: lastLine.charCount});
         this.networkEventMap["line:" + lastLine.number] = data.id;
       }
 
