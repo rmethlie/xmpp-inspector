@@ -13,6 +13,7 @@ define(["BaseView",
 
     events: {
       "click .button.reload"  : "reload",
+      "click .button.copy"   : "copy",
       "click .button.clear"   : "clear",
       "click .button.options" : "options",
       "click .button.show-sub-bar" : "toggleSubbar",
@@ -39,6 +40,13 @@ define(["BaseView",
       // clear stream list
       this.model.trigger("toolbar:command", {
         name: "clear",
+        data: {}
+      });
+    },
+
+    copy: function(){
+      this.model.trigger("toolbar:command", {
+        name: "copy",
         data: {}
       });
     },

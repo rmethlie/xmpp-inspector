@@ -48,6 +48,9 @@ define(["BaseView",
         case "clear":
           this.stream.clear();
         break;
+        case "copy":
+          this.stream.copy();
+        break;
         case "url-pattern-update":
           this.stream.model.updateFilter(command.pattern);
         break;
