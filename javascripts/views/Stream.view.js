@@ -119,6 +119,19 @@ define(['BaseView',
       this.dataStream.clearGutter();
     },
 
+    copy: function() {
+      var stream = this.dataStream;
+      var content = "";
+
+      content = stream.getSelection();
+      
+      if(content.length === 0){
+        content = stream.getValue();
+      }
+
+      this.model.connection.postMessage({action: "copy:text", text: content});
+    },
+
     toggleForSubbar: function(){
       this.$el.toggleClass("toolbar-expanded");
     }

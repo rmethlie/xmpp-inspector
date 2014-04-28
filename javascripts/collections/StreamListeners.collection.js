@@ -1,6 +1,6 @@
-define(['backbone', 'StreamListener'], function(Backbone, StreamListener) {
+define(['backbone', 'StreamListener', 'lib/utils'], function(Backbone, StreamListener, Utils) {
   "use strict";
-     
+
   return Backbone.Collection.extend({
     
     model: StreamListener,
@@ -78,6 +78,10 @@ define(['backbone', 'StreamListener'], function(Backbone, StreamListener) {
           case "add:listener":
             console.log("add:listener");
             this.add(message.manifest);
+            break;
+          case "copy:text":
+            console.log("copy:text");
+            Utils.copyText(message.text);
             break;
         }
     }
