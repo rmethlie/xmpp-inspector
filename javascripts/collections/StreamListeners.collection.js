@@ -1,13 +1,6 @@
-define(['backbone', 'StreamListener'], function(Backbone, StreamListener) {
+define(['backbone', 'StreamListener', 'lib/utils'], function(Backbone, StreamListener, Utils) {
   "use strict";
-     
-  function copyText(text) {
-      var copyFrom = $('#clipboard-proxy');
-      copyFrom.text(text);
-      copyFrom.select();
-      document.execCommand('copy', true);
-  };
-  
+
   return Backbone.Collection.extend({
     
     model: StreamListener,
@@ -88,7 +81,7 @@ define(['backbone', 'StreamListener'], function(Backbone, StreamListener) {
             break;
           case "copy:text":
             console.log("copy:text");
-            copyText(message.text);
+            Utils.copyText(message.text);
             break;
         }
     }

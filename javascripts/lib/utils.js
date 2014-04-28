@@ -27,7 +27,14 @@ define([], function() {
          bufView[i] = str.charCodeAt(i);
        }
        return buf;
-     }
+     },
+
+    copyText: function(text) {
+      var copyFrom = $('#clipboard-proxy');
+      copyFrom.text(text);
+      copyFrom.select();
+      document.execCommand('copy', true);
+    }
 
   }
 });
