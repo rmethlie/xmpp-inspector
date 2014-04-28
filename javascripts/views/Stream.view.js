@@ -126,8 +126,7 @@ define(['BaseView',
       content = stream.getSelection();
       
       if(content.length === 0){
-        stream.execCommand("selectAll");
-        content = stream.getSelection();
+        content = stream.getValue();
       }
 
       this.model.connection.postMessage({action: "copy:text", text: content});
