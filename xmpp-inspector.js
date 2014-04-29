@@ -1,6 +1,6 @@
 
 chrome.devtools.panels.create(
-  "XMPP Inspector",
+  "XMPP",
   null,
   "panel.html",
   function(panel){
