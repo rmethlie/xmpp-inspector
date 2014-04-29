@@ -17,7 +17,7 @@ define(["BaseView",
       "click .button.clear"   : "clear",
       "click .button.options" : "options",
       "click .button.show-sub-bar" : "toggleSubbar",
-      "click .url-pattern .output" : "toggleUrlInput",
+      "click .url-pattern .label" : "toggleUrlInput",
       "click .update-url-pattern  [type='submit']" : "updateUrlPattern",
     },
 
