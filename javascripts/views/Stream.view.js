@@ -85,6 +85,7 @@ define(['BaseView',
       var content = data.body;
       var scollToBottom = false;
       var lastLine = this.getLastLineInfo();      
+      var prefix = options.prefix;
 
       // if the user is already at  the bottom of the stream scroll to the bottom after appending the new content
       if(this.isAtBottom()){
@@ -94,15 +95,22 @@ define(['BaseView',
       if(content){
         content = format.html_beautify(content);
         
-        if(options.prefix){ 
+        if(prefix){ 
           if(lastLine.number > 0)
-            options.prefix = "\n\n" + options.prefix + "\n";
+            prefix = "\n\n" + prefix + "\n";
           else
-            options.prefix = options.prefix + "\n";
+            prefix = prefix + "\n";
         }
 
-        this.dataStream.replaceRange(options.prefix + content, {line: Infinity, ch: lastLine.charCount});
+        this.dataStream.replaceRange(prefix + content, {line: Infinity, ch: lastLine.charCount});
         this.networkEventMap["line:" + lastLine.number] = data.id;
+        
+        this._getLineCount(prefix);
+        this._getLineCount(content);
+
+        if(this.model.filters.length > 0){
+          this.addFilterClasses({prefix: prefix, content: content});
+        }
       }
 
       if(scollToBottom){
@@ -118,6 +126,24 @@ define(['BaseView',
 
     toggleForSubbar: function(){
       this.$el.toggleClass("toolbar-expanded");
+    },
+
+    addFilterClasses: function(options) {
+      var prefix = options.prefix;
+      var content = options.content;
+
+
+    },
+
+    _getLineCount: function(text) {
+      var count = 0;
+      if(text.length > 0)
+        count = 1;
+      var match  = text.match(/\n/g);
+      if(match)
+        count = match.length;
+      console.log(text, "has", count, "lines" );
+      return count;
     }
 
   });
