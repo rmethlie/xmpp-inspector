@@ -17,7 +17,7 @@ define(["BaseView",
 
     initialize: function(){
       var streamOptions = {
-        filter : {scheme: "https", host: "*", path: "*http-bind*"}
+        filter : {scheme: "http", host: "*", path: "*http-bind*"}
       };
       this.render();
       this.renderToolbar({filter: streamOptions.filter});
