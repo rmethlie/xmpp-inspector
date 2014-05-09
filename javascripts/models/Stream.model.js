@@ -75,10 +75,9 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
 
     },
     
-    // Description: Listen to finished netowrk requests
+    // Description: Listen to finished network requests
     // todo: clean up listeners in devtools on close that are not in the background?
     // todo: review background.js for possible memory leaks
-    // todo: clear console on refresh events and navigation?
     // !!!: Losing content when going from external debug window to nested
     listenToRequestFinished: function(){
       var _this = this;
