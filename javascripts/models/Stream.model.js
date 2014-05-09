@@ -15,6 +15,7 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
     //  https://developer.chrome.com/extensions/match_patterns 
     //  and generate a pattern testable as regex for network request event
     setPattern: function(params){
+      this.set("urlParams", params);
       this.set("webRequestURLFilter", this._setWebRequestFilter(params));
       this.set("networkRequestPattern", this._setNetworkRequestPattern(params));
     },
@@ -70,6 +71,17 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
       this.on("tab:updated:complete", function(data){
         this.handleTabUpdated(data);
       });
+      
+      this.on("connected", function(data){
+        // match the protocol to the one being used on the browser
+        var protocol = data.tab.url.match(/(https*)/gi)[0];
+        this.setPattern(
+          {
+            scheme  : protocol,
+            host    : this.get("urlParams").host,
+            path    : this.get("urlParams").path
+          });
+      });
 
       this.listenToRequestFinished();
 
@@ -101,7 +113,7 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
     connect: function(){
       var _this = this;
       var requestManifest = this.webRequestManifest();
-      this.connection = chrome.runtime.connect({name: requestManifest.name });
+      this.connection = chrome.runtime.connect({name: requestManifest.name});
       this.connection.postMessage({action: "add:listener", manifest: requestManifest});
       this.connection.onMessage.addListener(function(msg) {
         _this.trigger(msg.state, msg);

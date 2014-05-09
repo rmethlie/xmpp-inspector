@@ -38,7 +38,8 @@ define(['backbone', 'StreamListener', 'lib/utils'], function(Backbone, StreamLis
         console.log("connected", port);
         
         _this.ports[port.name] = port;
-          
+        
+        // handle incoming messages from devtools panel 
         _this.messageHandlers[port.name] = port.onMessage.addListener(function(message) {
           _this.onMessage(message);
         });
@@ -49,6 +50,13 @@ define(['backbone', 'StreamListener', 'lib/utils'], function(Backbone, StreamLis
           console.log("[StreamListeners] chrome.onDisconnect", _this);
           _this.onDisconnect(port);
         });
+
+        // once we are connected let devtools know and provide info
+        var tabId = parseInt(port.name.replace("port:", ""));
+        chrome.tabs.get(tabId, function(tab){
+          _this.ports[port.name].postMessage({state: "connected", tab: tab});
+        });
+
       });
 
       chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
