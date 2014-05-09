@@ -74,7 +74,7 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
       
       this.on("connected", function(data){
         // match the protocol to the one being used on the browser
-        var protocol = data.tab.url.match(/(https*)/gi)[0];
+        var protocol = data.tab.url.match((/(https{0,1})(?=\:)/gi)[0];
         this.setPattern(
           {
             scheme  : protocol,
