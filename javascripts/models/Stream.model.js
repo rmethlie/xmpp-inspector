@@ -9,6 +9,7 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
       webRequestURLFilter: [],
       tabId: chrome.devtools.inspectedWindow.tabId,
       backgroundConnectionName: "port:" + chrome.devtools.inspectedWindow.tabId,
+      urlParams: {}
     },
 
     // Description: accept URL parameters for web request listener as descirbed in 
@@ -55,7 +56,6 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
 
     initialize: function(options){
       console.log("[Stream] initialize");
-      this.setPattern(options.filter);
       this.addListeners();
     },
     
@@ -78,9 +78,12 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
         this.setPattern(
           {
             scheme  : protocol,
-            host    : this.get("urlParams").host,
-            path    : this.get("urlParams").path
+            host    : "*",
+            path    : "*http-bind*"
           });
+
+        this.connection.postMessage({action: "add:listener", manifest: this.webRequestManifest()});
+        this.trigger("ready", this);
       });
 
       this.listenToRequestFinished();
@@ -114,7 +117,6 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
       var _this = this;
       var requestManifest = this.webRequestManifest();
       this.connection = chrome.runtime.connect({name: requestManifest.name});
-      this.connection.postMessage({action: "add:listener", manifest: requestManifest});
       this.connection.onMessage.addListener(function(msg) {
         _this.trigger(msg.state, msg);
       });

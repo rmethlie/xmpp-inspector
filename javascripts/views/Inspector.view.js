@@ -16,13 +16,11 @@ define(["BaseView",
     template: _.template(inspectorTemplate),
 
     initialize: function(){
-      var streamOptions = {
-        filter : {scheme: "http", host: "*", path: "*http-bind*"}
-      };
-      this.render();
-      this.renderToolbar({filter: streamOptions.filter});
-      this.renderStream(streamOptions);
-      this.addListeners();
+      this.stream = new Stream();
+      this.listenTo(this.stream, "ready", function(stream){
+        this._onStreamReady(stream);
+      });
+      this.stream.connect();
     },
 
     render: function(){
@@ -33,9 +31,9 @@ define(["BaseView",
       this.toolbar = new StreamToolbarView(options);
     },
 
-    renderStream: function(options){
+    renderStream: function(stream){
       this.stream = new XMPPStreamView({
-        model: new Stream(options),
+        model: stream,
       });
     },
 
@@ -61,6 +59,16 @@ define(["BaseView",
         default:
           console.error( "[STREAM.VIEW] Unknown command: ", command );
       }
+    },
+
+    _onStreamReady: function(stream){
+      var streamOptions = {
+        filter : stream.get("urlParams")
+      };
+      this.render();
+      this.renderToolbar({filter: streamOptions.filter});
+      this.renderStream(stream);
+      this.addListeners();
     },
 
   });
