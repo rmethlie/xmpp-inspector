@@ -21,5 +21,8 @@ require.config({
         StreamToolbarModel: "/javascripts/models/StreamToolbar.model",
         StreamToolbarView: "/javascripts/views/StreamToolbar.view",
         InspectorView: "/javascripts/views/Inspector.view",
+        Panels: "collections/Panels.collection",
+        Panel: "models/Panel.model",
+        BackgroundPage: "models/BackgroundPage.model"
     }
 });

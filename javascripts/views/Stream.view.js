@@ -35,7 +35,7 @@ define(['BaseView',
       this.render();
       this.dataStream = CodeMirror.fromTextArea(document.getElementById("dataStream"), this.dataStreamConfig);
       this.addlisteners(options);
-      this.model.connect();
+      // this.model.connect();
     },
 
     addlisteners: function(options){

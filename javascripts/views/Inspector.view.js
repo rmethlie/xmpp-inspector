@@ -35,7 +35,7 @@ define(["BaseView",
 
     renderStream: function(options){
       this.stream = new XMPPStreamView({
-        model: new Stream(options),
+        model: new Stream(options)
       });
     },
 

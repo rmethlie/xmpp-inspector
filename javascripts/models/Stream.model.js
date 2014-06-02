@@ -1,6 +1,8 @@
-define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkEvents, Utils) {
+define(['BaseModel', 'NetworkEvents', 'lib/utils', 'models/BackgroundPage.model'], function(BaseModel, NetworkEvents, Utils, BackgroundPage) {
   "use strict";
 
+  var
+  Background = null;
   // Description: Listen for webRequests in the background and send message to dev tools extension
   return BaseModel.extend({
 
@@ -48,19 +50,21 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
     //   return urlPattern.test( url );
     // },
 
-    connection: false,
 
     networkEvents: new NetworkEvents(),
 
     initialize: function(options){
       console.log("[Stream] initialize");
+      Background = new BackgroundPage(); 
       this.setPattern(options.filter);
       this.addListeners();
     },
     
     addListeners: function(){
       console.log("[Stream] addListeners");
-      var _this = this;
+
+
+      Background.initManifest(this.webRequestManifest());
 
       // Description: Handle the message sent from the background page
       this.on("beforeRequest", function(data){
@@ -70,6 +74,26 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
       this.on("tab:updated:complete", function(data){
         this.handleTabUpdated(data);
       });
+
+
+      // Background events
+      Background.on({
+        
+        // STATE
+        "state:update": function(update){
+          
+          this.trigger(update.state, update);
+
+        }.bind(this),
+
+        // STREAM
+        "stream:update": function( update ){
+
+        }.bind(this)
+      })
+
+
+
 
       this.listenToRequestFinished();
 
@@ -99,17 +123,6 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
       });
     },
 
-    connect: function(){
-      var _this = this;
-      var requestManifest = this.webRequestManifest();
-      this.connection = chrome.runtime.connect({name: requestManifest.name });
-      this.connection.postMessage({action: "add:listener", manifest: requestManifest});
-      this.connection.onMessage.addListener(function(msg) {
-        _this.trigger(msg.state, msg);
-      });
-
-    },
-
     // todo: store the network requests and their states as objects on this stream
     //  for now just append the content to get this party started
     handleBeforeRequest: function(data){
@@ -134,8 +147,10 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
     updateFilter: function(pattern){
       console.log("updateFilter", pattern);
       this.setPattern(pattern);
-      this.connection.postMessage({action: "filter:update", pattern: pattern});
-    },
+      Background.send("filter:update", {
+        pattern: pattern
+      });
+    }
 
   });
 });

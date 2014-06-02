@@ -1,10 +1,11 @@
-define(['backbone', 'StreamListener', 'lib/utils'], function(Backbone, StreamListener, Utils) {
+define(['backbone', 'StreamListener', 'Panels', 'Panel', 'lib/utils'], function(Backbone, StreamListener, Panels, Panel, Utils) {
   "use strict";
+
 
   return Backbone.Collection.extend({
     
     model: StreamListener,
-    
+
     ports: [],
 
     messageHandlers: [],
@@ -15,41 +16,19 @@ define(['backbone', 'StreamListener', 'lib/utils'], function(Backbone, StreamLis
     },
 
     addListeners: function(){
-      var _this = this;
-
+      
       // event triggered by stream listener models
       this.on("stream:update", function(data){
-        var port = "port:" + data.tabId;
-
-        if(this.ports[port])
-          this.ports[port].postMessage(data);
-        else
-          console.log("++++++ Tried to send a meessage to a non-existant port ++++++++");
+        this.sendMessageToTab( data.tabId, "stream:update", data );
       });
 
       this.on("tab:updated:complete", function(tabId){
-        var port = "port:" + tabId;
-
-        if(this.ports[port])
-          this.ports[port].postMessage({state: "tab:updated:complete", tab: tabId});
-      });
-
-      chrome.runtime.onConnect.addListener(function(port) {
-        console.log("connected", port);
-        
-        _this.ports[port.name] = port;
-          
-        _this.messageHandlers[port.name] = port.onMessage.addListener(function(message) {
-          _this.onMessage(message);
-        });
-
-        // todo: trigger removeListener when the inspector panel is closed
-        //  also try tab/window is closed
-        port.onDisconnect.addListener(function(){
-          console.log("[StreamListeners] chrome.onDisconnect", _this);
-          _this.onDisconnect(port);
+        this.sendMessageToTab( tabId, "state:update", {
+          state: "tab:updated:complete", tab: tabId
         });
       });
+
+      chrome.runtime.onConnect.addListener(Panels.add.bind(Panels));
 
       chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
         if (changeInfo.status === 'complete') {
@@ -57,6 +36,33 @@ define(['backbone', 'StreamListener', 'lib/utils'], function(Backbone, StreamLis
         }
       });
 
+    },
+
+    sendMessageToTab: function( port, action, message ){
+
+      // does the message have the required meta info?
+      if( typeof action === "undefined" ){
+        console.error( "++++++ Call to 'sendMessageToTab' missing 'action' argument. +++++++")
+        return;
+      }
+
+      // is it an ID we should retrieve a mapping for, or an actual port?
+      port = 
+        typeof port === "string" ? 
+          // its a string, so we need to find port by ID
+          this.ports["port:"+port] :
+          // its an object, so does it have a 'postMessage' method?
+          typeof port.postMessage === "function" ? 
+            port : 
+            // seems invalid :(
+            null;
+      
+      // send the message, if there's a port...
+      if(port){
+        port.postMessage(message);
+      }else{
+        console.error("++++++ Tried to send a meessage to a non-existant port ++++++++");
+      }
     },
 
     onDisconnect: function(port){
@@ -79,9 +85,16 @@ define(['backbone', 'StreamListener', 'lib/utils'], function(Backbone, StreamLis
             console.log("add:listener");
             this.add(message.manifest);
             break;
+
           case "copy:text":
             console.log("copy:text");
             Utils.copyText(message.text);
+            break;
+
+          case "preferences:sync":
+            if( message.preferences ){
+              console.info( "preference:sync for ", message );
+            }
             break;
         }
     }
