@@ -11,15 +11,18 @@ require.config({
         BaseModel: "models/Base.model",
         BaseView: "views/Base.view",
         Packet: "models/Packet.model",
-        Stream: "models/Stream.model",
-        StreamView: "views/Stream.view",
+        ResponseListener: "models/ResponseListener.model",
+        ResponseListenerView: "views/ResponseListener.view",
         XMPPStreamView: "views/XMPPStream.view",
-        StreamListener: "models/StreamListener.model",
-        StreamListeners: "collections/StreamListeners.collection",
+        RequestListener: "models/RequestListener.model",
+        RequestListeners: "collections/RequestListeners.collection",
         NetworkEvent: "models/NetworkEvent.model",
         NetworkEvents: "collections/NetworkEvents.collection",
         StreamToolbarModel: "/javascripts/models/StreamToolbar.model",
         StreamToolbarView: "/javascripts/views/StreamToolbar.view",
         InspectorView: "/javascripts/views/Inspector.view",
+        Panels: "collections/Panels.collection",
+        Panel: "models/Panel.model",
+        BackgroundPage: "models/BackgroundPage.model"
     }
 });

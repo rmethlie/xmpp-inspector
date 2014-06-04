@@ -1,8 +1,8 @@
 define(["BaseView",
-  "Stream",
+  "ResponseListener",
   "XMPPStreamView",
   "StreamToolbarView",
-  'text!templates/inspector.template.html',], function(BaseView, Stream, XMPPStreamView, StreamToolbarView, inspectorTemplate) {
+  'text!templates/inspector.template.html',], function(BaseView, ResponseListener, XMPPStreamView, StreamToolbarView, inspectorTemplate) {
   "use strict";
 
   return BaseView.extend({
@@ -16,31 +16,40 @@ define(["BaseView",
     template: _.template(inspectorTemplate),
 
     initialize: function(){
-      var streamOptions = {
-        filter : {scheme: "https", host: "*", path: "*http-bind*"}
-      };
       this.render();
-      this.renderToolbar({filter: streamOptions.filter});
-      this.renderStream(streamOptions);
       this.addListeners();
     },
 
     render: function(){
       this.$el.html(this.template({}));
+      this.renderStream();
+      this.stream.model.on("change:scheme change:host change:path", this.renderToolbar.bind(this) );
+      this.renderToolbar(this.stream.model.defaults)
     },
 
     renderToolbar: function(options){
+      if( this.toolbar ){
+        // sync
+        this.toolbar.model.set(options);
+        return;
+      }
+
       this.toolbar = new StreamToolbarView(options);
+      this.toolbar.model.on("change",function(data){
+        this.stream.model.sendToBackground( data.changed );
+        this.stream.model.set(data.changed,{silent:true});
+      }.bind(this));
+
+      this.toolbar.model.on( "toolbar:command", this._handleToolbarCommand.bind(this) );
     },
 
-    renderStream: function(options){
+    renderStream: function(){
       this.stream = new XMPPStreamView({
-        model: new Stream(options),
+        model: new ResponseListener()
       });
     },
 
     addListeners: function(){
-      this.listenTo(this.toolbar.model, "toolbar:command", this._handleToolbarCommand);
     },
 
     _handleToolbarCommand: function( command ){

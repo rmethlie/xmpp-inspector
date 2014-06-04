@@ -1,6 +1,6 @@
 
 require(["config"], function() {
-  require(['StreamListeners'], function(StreamListeners) {
-      var streamListeners = new StreamListeners();
-    });
+  require(['RequestListeners'], function(RequestListeners) {
+      var requestListeners = new RequestListeners();
+  });
 });

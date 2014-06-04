@@ -41,21 +41,14 @@ define(['BaseView',
     addlisteners: function(options){
       var _this = this;
 
-      this.listenTo(this.model, "request:sent", function(data){
-        var prefix = this.requestSentPrefix;
-        if (typeof(prefix) == "function") {
-          prefix = prefix(data);
-        }
-        this.appendData(data, {prefix: prefix});
-      });
+      this.model.on( "request:sent", function(data){
+        this.appendData(data, {prefix: this.requestSentPrefix});
+      }.bind(this));
 
-      this.listenTo(this.model, "request:finished", function(data){
-        var prefix = this.responseReceivedPrefix;
-        if (typeof(prefix) == "function") {
-          prefix = prefix(data);
-        }
-        this.appendData(data, {prefix: prefix});
-      });
+      this.model.on("request:finished", function(data){
+        console.info( "[rquest finished]", data );
+        this.appendData(data, {prefix: this.responseReceivedPrefix});
+      }.bind(this));
 
     },
 
@@ -137,7 +130,7 @@ define(['BaseView',
         content = stream.getValue();
       }
 
-      this.model.connection.postMessage({action: "copy:text", text: content});
+      this.model.connection.postMessage({event: "copy:text", data: content});
     },
 
     toggleForSubbar: function(){
