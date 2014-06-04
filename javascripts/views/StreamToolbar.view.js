@@ -21,14 +21,15 @@ define(["BaseView",
       "click .update-url-pattern  [type='submit']" : "updateUrlPattern",
     },
 
-    initialize: function(options){
+    initialize: function(defaults){
       console.info( "[TOOLBAR] Initialized.");      
-      this.render(options);
+      this.render(defaults);
     },
 
-    render: function(options){
+    render: function(defaults){
+      defaults = defaults || this.model.attributes;
       this.$el.html(this.template({
-        filter: this.scrubPattern(options.filter)
+        filter: this.scrubPattern(defaults)
       }));
     },
 
@@ -67,13 +68,13 @@ define(["BaseView",
       e.preventDefault();
       e.stopPropagation();
       var urlParams = this.scrubPattern({
-        scheme  : this.$el.find("form .scheme").val(),
-        host    : this.$el.find("form .host").val(),
-        path    : this.$el.find("form .path").val()        
+        scheme  : this.$el.find("form .scheme").val() || this.model.get("scheme"),
+        host    : this.$el.find("form .host").val() || this.model.get("host"),
+        path    : this.$el.find("form .path").val() || this.model.get("path")        
       });
 
       this.$el.find(".url-pattern .output").html(urlParams.scheme + "://" + urlParams.host +"/" + urlParams.path);
-      this.model.trigger("toolbar:command", {name: "url-pattern-update", pattern: urlParams});
+      this.model.set(urlParams);
 
       this.toggleUrlInput();
     },
