@@ -16,7 +16,6 @@ define(["BaseView",
     template: _.template(inspectorTemplate),
 
     initialize: function(){
-
       this.render();
       this.addListeners();
     },

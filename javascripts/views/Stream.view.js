@@ -42,11 +42,19 @@ define(['BaseView',
       var _this = this;
 
       this.listenTo(this.model, "request:sent", function(data){
-        this.appendData(data, {prefix: this.requestSentPrefix});
+        var prefix = this.requestSentPrefix;
+        if (typeof(prefix) == "function") {
+          prefix = prefix(data);
+        }
+        this.appendData(data, {prefix: prefix});
       });
 
       this.listenTo(this.model, "request:finished", function(data){
-        this.appendData(data, {prefix: this.responseReceivedPrefix});
+        var prefix = this.responseReceivedPrefix;
+        if (typeof(prefix) == "function") {
+          prefix = prefix(data);
+        }
+        this.appendData(data, {prefix: prefix});
       });
 
     },
