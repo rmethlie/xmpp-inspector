@@ -89,7 +89,7 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
     },
 
     addListeners: function(){
-
+      console.log("[StreamListener] addListeners");
       this.listenToBeforeRequest();
       //this.listenToSendHeaders();
       this.listenToCompleted();
