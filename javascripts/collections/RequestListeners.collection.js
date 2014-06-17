@@ -9,21 +9,13 @@ define(['backbone', 'RequestListener', 'lib/utils'], function(Backbone, RequestL
     initialize: function(){
       console.log("[RequestListeners] initialize");
       this.addListeners();
-
-      this.on("add", function(listener){
-        console.log("added a TAB listener", this.models);
-      });
-      this.on("remove", function(listener){
-        console.log("removed a TAB listener", this.models);
-      });
     },
 
     addListeners: function(){
 
       // todo: trigger removeListener when the tab/window is closed
-      this.on("disconnect", function(panel){
-        this._handleDisconnect(panel);
-      });
+      // this.on("disconnect", function(panel){
+      // });
       
       // listen for panel connections
       chrome.runtime.onConnect.addListener(function(port) {
@@ -33,8 +25,8 @@ define(['backbone', 'RequestListener', 'lib/utils'], function(Backbone, RequestL
 
       }.bind(this));
 
-      // this.on("add",    this._handleConnect.bind(this) );
-      // this.on("remove", this._handleDisconnect.bind(this));
+      this.on("add",    this._handleConnect.bind(this) );
+      this.on("remove", this._handleDisconnect.bind(this));
       // when the tab has completed its connection workflow, do
       chrome.tabs.onUpdated.addListener(function(responseListenerId, changeInfo) {
         var responseListener = null;
@@ -50,17 +42,22 @@ define(['backbone', 'RequestListener', 'lib/utils'], function(Backbone, RequestL
 
       chrome.tabs.onRemoved.addListener(function(responseListenerId, isWindowClosing) {
         console.log("TAB closing", responseListenerId, "TODO: removelisteners and port");
-        this.trigger("disconnect", responseListenerId);
+        this.remove("port:"+responseListenerId);
       }.bind(this));
 
     },
 
     _handleConnect: function( panel ){
-      // console.info("panel connect", arguments );
+      console.info("panel connect", panel );
     },
 
     _handleDisconnect: function( panel ){
-      // console.info("panel disconnect", arguments );
+      console.info("panel disconnect", panel );
+      if( typeof panel === "undefined" || panel === null ){
+        console.error( "No panel found to call removeListeners().");
+        return;
+      }
+      panel.removeListeners();
     }
 
 
