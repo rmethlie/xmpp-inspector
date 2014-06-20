@@ -12,10 +12,6 @@ define(['BaseView',
     
     el: "#stream",
 
-    requestSentPrefix: "",
-
-    responseReceivedPrefix: "",
-
     template: _.template(streamDataTemplate),
 
     dataStreamConfig: {
@@ -41,12 +37,19 @@ define(['BaseView',
       var _this = this;
 
       this.model.on( "request:sent", function(data){
-        this.appendData(data, {prefix: this.requestSentPrefix});
+        var prefix = this.requestSentPrefix;
+        if (typeof(prefix) == "function") {
+          prefix = prefix(data);
+        }
+        this.appendData(data, {prefix: prefix});
       }.bind(this));
 
       this.model.on("request:finished", function(data){
-        console.info( "[rquest finished]", data );
-        this.appendData(data, {prefix: this.responseReceivedPrefix});
+        var prefix = this.responseReceivedPrefix;
+        if (typeof(prefix) == "function") {
+          prefix = prefix(data);
+        }
+        this.appendData(data, {prefix: prefix});
       }.bind(this));
 
     },
