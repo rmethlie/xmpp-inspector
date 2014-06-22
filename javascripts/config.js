@@ -23,6 +23,7 @@ require.config({
         InspectorView: "/javascripts/views/Inspector.view",
         Panels: "collections/Panels.collection",
         Panel: "models/Panel.model",
-        BackgroundPage: "models/BackgroundPage.model"
+        BackgroundPage: "models/BackgroundPage.model",
+        io: "http://127.0.0.1/socket.io/socket.io.js"
     }
 });

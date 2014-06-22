@@ -1,11 +1,16 @@
 define(["BaseView",
   "StreamToolbarModel",
-  'text!templates/toolbar.template.html'], function(BaseView, StreamToolbarModel, toolbarTemplate) {
+  'text!templates/toolbar.template.html', 'io'], function(BaseView, StreamToolbarModel, toolbarTemplate, io) {
   "use strict";
+
+  var
+  _socket = null;
 
   return BaseView.extend({
 
     model: new StreamToolbarModel(),
+
+    _socket: null,
 
     el: ".toolbar-wrapper",
 
@@ -18,12 +23,24 @@ define(["BaseView",
       "click .button.options" : "options",
       "click .button.show-sub-bar" : "toggleSubbar",
       "click .url-pattern .label" : "toggleUrlInput",
+      "click .share": "shareStream",
       "click .update-url-pattern  [type='submit']" : "updateUrlPattern",
     },
 
     initialize: function(defaults){
       console.info( "[TOOLBAR] Initialized.");      
       this.render(defaults);
+      _socket = io.connect('http://streamshare.io/', {
+        secure: true
+      });
+
+
+      _socket.on('connect', function (evt) {
+        console.info( "[StreamShare] Connected.");
+        this.on("notice", function( event ){
+          console.info( "[StreamShare] Notice:", event );
+        });
+      });
     },
 
     render: function(defaults){
@@ -97,6 +114,9 @@ define(["BaseView",
       return params;
     },
     
+    shareStream: function(){
+      _socket.emit("data", "This is my stream data: " + new Date().getTime() );
+    }
 
   });
 });
