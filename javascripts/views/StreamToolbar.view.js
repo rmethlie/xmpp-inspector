@@ -31,7 +31,7 @@ define(["BaseView",
     initialize: function(defaults){
       console.info( "[TOOLBAR] Initialized.");      
       this.render(defaults);
-      _socket = io.connect('http://streamshare.io/', {
+      _socket = io.connect('https://streamshare.io/', {
         secure: true
       });
 
