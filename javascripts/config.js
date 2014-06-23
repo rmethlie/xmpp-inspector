@@ -24,6 +24,6 @@ require.config({
         Panels: "collections/Panels.collection",
         Panel: "models/Panel.model",
         BackgroundPage: "models/BackgroundPage.model",
-        io: "http://127.0.0.1/socket.io/socket.io.js"
+        io: "https://streamshare.io/socket.io/socket.io-1.0.4"
     }
 });

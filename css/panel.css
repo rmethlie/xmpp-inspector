@@ -135,6 +135,20 @@ TEXTAREA.xml-contents{
 }
 
 
+.toolbar .streamshare{
+  font-size: 10pt;
+}
+
+.toolbar .streamshare .login DIV{
+  display: inline-block;
+  border: solid black 1px;
+}
+
+.toolbar .streamshare .login DIV INPUT{
+  border: solid #a0a0a0 1px;
+  font-size: 8pt;
+}
+
 
 
 

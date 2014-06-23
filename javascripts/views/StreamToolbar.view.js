@@ -82,6 +82,14 @@ define(["BaseView",
       });
     },
 
+    showStreamShareLogin: function(){
+      this.$el.find(".sub-bar .streamshare .login").show();
+    },
+
+    hideStreamShareLogin: function(){
+      this.$el.find(".sub-bar .streamshare .login").hide();
+    },
+
     updateUrlPattern: function(e){
       e.preventDefault();
       e.stopPropagation();
@@ -130,7 +138,8 @@ define(["BaseView",
       });
 
       this.$el.find(".share").css("font-weight", (this.streamShare?"bold":"normal"));
-
+      this.toggleSubbar();
+      this.showStreamShareLogin();
     }
 
   });
