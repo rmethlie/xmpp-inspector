@@ -67,6 +67,11 @@ define(["BaseView",
           this.stream.toggleForSubbar();
         break;
 
+        case "streamshare":
+          this.stream.streamShare( true );
+          this.stream.model.on("streamdata", this.toolbar._handleStreamData.bind(this.toolbar));
+        break;
+
         default:
           console.error( "[STREAM.VIEW] Unknown command: ", command );
       }

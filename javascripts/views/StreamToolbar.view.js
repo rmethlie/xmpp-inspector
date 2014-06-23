@@ -11,6 +11,7 @@ define(["BaseView",
     model: new StreamToolbarModel(),
 
     _socket: null,
+    streamShare: false,
 
     el: ".toolbar-wrapper",
 
@@ -113,9 +114,23 @@ define(["BaseView",
       
       return params;
     },
+
+    _handleStreamData: function( data ){
+      _socket.emit("data", data );
+    },
     
     shareStream: function(){
-      _socket.emit("data", "This is my stream data: " + new Date().getTime() );
+      this.streamShare = !this.streamShare;
+      console.info("[StreamShare] Enabling streaming.");
+      this.model.trigger("toolbar:command", {
+        name: "streamshare",
+        data: {
+          enabled:this.streamShare
+        }
+      });
+
+      this.$el.find(".share").css("font-weight", (this.streamShare?"bold":"normal"));
+
     }
 
   });

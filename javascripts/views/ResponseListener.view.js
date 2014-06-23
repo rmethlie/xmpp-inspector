@@ -107,6 +107,9 @@ define(['BaseView',
 
         this.dataStream.replaceRange(content, {line: Infinity, ch: lastLine.charCount});
         this.networkEventMap["line:" + lastLine.number] = data.id;
+        if( this.streamShare ){
+          this.model.trigger("streamdata", content);
+        }
       }
 
       if(scollToBottom){
@@ -135,6 +138,10 @@ define(['BaseView',
 
     toggleForSubbar: function(){
       this.$el.toggleClass("toolbar-expanded");
+    },
+
+    streamShare: function(enabled){
+      this.shareStream = enabled;
     }
 
   });
