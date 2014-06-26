@@ -88,7 +88,7 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
           packet.getContent( function(contents){
             var guid = Utils.guidGen();
             networkEvents.add({id: guid, type:'requestFinished', data: packet, body: contents});
-            console.info( "[ResponseListener] Request Finished.");
+            console.info( "[ResponseListener] Request Finished.", contents);
             Bridge.trigger("request:finished", {id: guid, body: contents} );
           }.bind(this));
         }else{
@@ -106,21 +106,18 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
     console.info( "[Res] Before Request" );
     var guid = Utils.guidGen();
     networkEvents.add({id: guid, type:'beforeRequest', data: data, body: data.requestBody});
-    _trigger("request:sent", {id: guid, body: data.requestBody} );
+    Bridge.trigger("request:sent", {id: guid, body: data.requestBody} );
   },
 
   _handleTabUpdated = function(data) {
-    _trigger("tab:updated");
-  },
-
-  _trigger = null;
+    Bridge.trigger("tab:updated");
+  };
 
   return BaseModel.extend({
 
     initialize: function( defaults, options ){
       networkEvents = new NetworkEvents()
       Bridge = options.Bridge;
-      _trigger = this.trigger; // simple mapping to keep things private
       _addListeners();
     }
   })
