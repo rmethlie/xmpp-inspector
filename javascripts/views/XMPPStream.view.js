@@ -4,7 +4,7 @@ define(["ResponseListenerView"], function(ResponseListenerView) {
   return ResponseListenerView.extend({
     
     el                      : "#xmpp-stream",
-    requestSentPrefix       : "<!-- " + new Date().toTimeString() + " request sent >>>>>>>>>>>> -->",
-    responseReceivedPrefix  : "<!-- <<<<<<<<<<<< " + new Date().toTimeString() + " response received -->"
+    requestSentPrefix       : function(){ return "<!-- " + new Date().toTimeString() + " request sent >>>>>>>>>>>> -->";},
+    responseReceivedPrefix  : function(){ return "<!-- <<<<<<<<<<<< " + new Date().toTimeString() + " response received -->";}
   });
 });
