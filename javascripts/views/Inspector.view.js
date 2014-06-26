@@ -2,8 +2,15 @@ define(["BaseView",
   "ResponseListener",
   "XMPPStreamView",
   "StreamToolbarView",
-  'text!templates/inspector.template.html',], function(BaseView, ResponseListener, XMPPStreamView, StreamToolbarView, inspectorTemplate) {
+  'text!templates/inspector.template.html','Bridge'], function(BaseView, ResponseListener, XMPPStreamView, StreamToolbarView, inspectorTemplate, Bridge) {
   "use strict";
+
+  var
+  Bridge = new Bridge({
+    // no defaults yet...
+  },{
+    env: 'panel'
+  });
 
   return BaseView.extend({
 
@@ -21,31 +28,31 @@ define(["BaseView",
     },
 
     render: function(){
+
+      // build the UI template
       this.$el.html(this.template({}));
-      this.renderStream();
-      this.stream.model.on("change:scheme change:host change:path", this.renderToolbar.bind(this) );
+
+      // render stream view (CodeMirror)
+      this.renderStreamView();
       this.renderToolbar(this.stream.model.defaults)
     },
 
-    renderToolbar: function(options){
-      if( this.toolbar ){
-        // sync
-        this.toolbar.model.set(options);
-        return;
-      }
-
-      this.toolbar = new StreamToolbarView(options);
-      this.toolbar.model.on("change",function(data){
-        this.stream.model.sendToBackground( data.changed );
-        this.stream.model.set(data.changed,{silent:true});
-      }.bind(this));
-
-      this.toolbar.model.on( "toolbar:command", this._handleToolbarCommand.bind(this) );
+    renderStreamView: function(){
+      this.stream = new XMPPStreamView({
+        model: new ResponseListener({}, {
+          Bridge: Bridge
+        })
+      });
     },
 
-    renderStream: function(){
-      this.stream = new XMPPStreamView({
-        model: new ResponseListener()
+    renderToolbar: function(){
+
+      this.toolbarView = new StreamToolbarView({
+        model: Bridge
+      });
+
+      Bridge.on({
+        "toolbar:command" : this._handleToolbarCommand.bind(this)
       });
     },
 
@@ -68,7 +75,7 @@ define(["BaseView",
         break;
 
         case "streamshare":
-          this.stream.streamShare( true );
+          this.stream.streamShare( command.data.enabled );
           this.stream.model.on("streamdata", this.toolbar._handleStreamData.bind(this.toolbar));
         break;
 

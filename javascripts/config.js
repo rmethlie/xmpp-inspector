@@ -24,6 +24,8 @@ require.config({
         Panels: "collections/Panels.collection",
         Panel: "models/Panel.model",
         BackgroundPage: "models/BackgroundPage.model",
-        io: "https://streamshare.io/socket.io/socket.io"
+        io: "https://streamshare.io/socket.io/socket.io",
+        StreamShare: "https://streamshare.io/plugins/lib/chrome-plugin.streamshare",
+        Bridge: "models/Bridge.model"
     }
 });

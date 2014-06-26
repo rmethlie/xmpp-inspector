@@ -1,7 +1,13 @@
 
 require(["config"], function() {
 require(["app",
-    "InspectorView"], function(app, InspectorView) {
-      var inspectorView = new InspectorView();
+    "InspectorView",'Bridge'], function(app, InspectorView, Bridge) {
+      var inspectorView = new InspectorView({
+        model: new Bridge({
+          // no defaults
+        },{
+          env: "panel"
+        })
+      });
   });
 });

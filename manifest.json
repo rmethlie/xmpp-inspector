@@ -12,7 +12,7 @@
     "clipboardWrite",
     "webRequest",
     "*://*/*",
-    "http://streamshare.io/*"
+    "https://streamshare.io/*"
     ],
   "background": {
     "page": "background.html",

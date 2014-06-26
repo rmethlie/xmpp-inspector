@@ -4,50 +4,47 @@ define(["BaseView",
   "use strict";
 
   var
-  _socket = null;
+  _socket = null,
+  Bridge = null;
 
   return BaseView.extend({
 
-    model: new StreamToolbarModel(),
-
-    _socket: null,
-    streamShare: false,
-
     el: ".toolbar-wrapper",
+
+    streamSharing: false,
 
     template: _.template(toolbarTemplate),
 
     events: {
-      "click .button.reload"  : "reload",
-      "click .button.copy"   : "copy",
-      "click .button.clear"   : "clear",
-      "click .button.options" : "options",
-      "click .button.show-sub-bar" : "toggleSubbar",
-      "click .url-pattern .label" : "toggleUrlInput",
-      "click .share": "shareStream",
-      "click .update-url-pattern  [type='submit']" : "updateUrlPattern",
+      "click .button.reload"        : "reload",
+      "click .button.copy"          : "copy",
+      "click .button.clear"         : "clear",
+      "click .button.options"       : "options",
+      "click .button.show-sub-bar"  : "toggleSubbar",
+      "click .url-pattern .label"   : "toggleUrlInput",
+      "click .share"                : "toggleStreamShare",
+      "click .update-url-pattern  [type='submit']" : "updateUrlPattern"
     },
 
-    initialize: function(defaults){
+    initialize: function(){
+
+      // naming convention (needs another look)
+      Bridge = this.model;
+      
+      this.render();
+      
+      Bridge.on({
+        "change:scheme"   : this.render.bind(this),
+        "change:host"     : this.render.bind(this),
+        "change:path"     : this.render.bind(this)
+      });
+
       console.info( "[TOOLBAR] Initialized.");      
-      this.render(defaults);
-      _socket = io.connect('https://streamshare.io/', {
-        secure: true
-      });
-
-
-      _socket.on('connect', function (evt) {
-        console.info( "[StreamShare] Connected.");
-        this.on("notice", function( event ){
-          console.info( "[StreamShare] Notice:", event );
-        });
-      });
     },
 
-    render: function(defaults){
-      defaults = defaults || this.model.attributes;
+    render: function(){
       this.$el.html(this.template({
-        filter: this.scrubPattern(defaults)
+        filter: this.scrubPattern(this.model.attributes)
       }));
     },
 
@@ -57,14 +54,14 @@ define(["BaseView",
 
     clear: function(){
       // clear stream list
-      this.model.trigger("toolbar:command", {
+      Bridge.trigger("toolbar:command", {
         name: "clear",
         data: {}
       });
     },
 
     copy: function(){
-      this.model.trigger("toolbar:command", {
+      Bridge.trigger("toolbar:command", {
         name: "copy",
         data: {}
       });
@@ -77,7 +74,7 @@ define(["BaseView",
 
     toggleSubbar: function(){
       this.$el.find(".sub-bar").toggleClass("hidden");
-      this.model.trigger("toolbar:command", {
+      Bridge.trigger("toolbar:command", {
         name: "toggle-subbar"
       });
     },
@@ -100,7 +97,7 @@ define(["BaseView",
       });
 
       this.$el.find(".url-pattern .output").html(urlParams.scheme + "://" + urlParams.host +"/" + urlParams.path);
-      this.model.set(urlParams);
+      Bridge.set(urlParams);
 
       this.toggleUrlInput();
     },
@@ -126,20 +123,38 @@ define(["BaseView",
     _handleStreamData: function( data ){
       _socket.emit("data", data );
     },
-    
-    shareStream: function(){
-      this.streamShare = !this.streamShare;
-      console.info("[StreamShare] Enabling streaming.");
-      this.model.trigger("toolbar:command", {
-        name: "streamshare",
-        data: {
-          enabled:this.streamShare
-        }
-      });
 
-      this.$el.find(".share").css("font-weight", (this.streamShare?"bold":"normal"));
+    _handleStreamConnectionState: function(state){
+
+      switch( state ){
+
+        case "connected":
+
+        break;
+
+      }
+    },
+
+    _onStreamShareConnected: function(){
+      this.$el.find(".share").css("font-weight", "bold");
+    },
+
+
+    _onStreamShareDisconnected: function(){
+      this.$el.find(".share").css("font-weight", "bold");
+    },
+
+    _onStreamShareAuthFail: function(){
       this.toggleSubbar();
-      this.showStreamShareLogin();
+    },
+    
+    toggleStreamShare: function(){
+
+      this.streamSharing = !this.streamSharing;
+      console.info("[StreamShare] Enabling streaming.");
+      Bridge.set("streamshare", {
+        enabled: this.streamSharing
+      });
     }
 
   });

@@ -1,6 +1,13 @@
-define(['backbone', 'RequestListener', 'lib/utils'], function(Backbone, RequestListener, Utils) {
+define(['backbone', 'RequestListener', 'lib/utils','Bridge'], function(Backbone, RequestListener, Utils, Bridge) {
   "use strict";
 
+  var
+  initialized = false,
+  Bridge = new Bridge({
+    // no defaults yet...
+  },{
+    env: 'background'
+  });
 
   return Backbone.Collection.extend({
     
@@ -12,36 +19,53 @@ define(['backbone', 'RequestListener', 'lib/utils'], function(Backbone, RequestL
     },
 
     addListeners: function(){
+      if( initialized ){
+        console.info( "second init");
+        return;
+      }
+      initialized = true;
 
-      // todo: trigger removeListener when the tab/window is closed
-      // this.on("disconnect", function(panel){
-      // });
-      
+      console.info( "initialized");
       // listen for panel connections
-      chrome.runtime.onConnect.addListener(function(port) {
-      
-        console.log("[RequestListeners] Recvd 'onConnect' event.", port );  
-        this.add(new RequestListener().setPort(port));
+      chrome.runtime.onConnect.addListener(function(Panel) {
 
-      }.bind(this));
-
-      this.on("add",    this._handleConnect.bind(this) );
-      this.on("remove", this._handleDisconnect.bind(this));
-      // when the tab has completed its connection workflow, do
-      chrome.tabs.onUpdated.addListener(function(responseListenerId, changeInfo) {
-        var responseListener = null;
-        if (changeInfo.status === 'complete') {
-          if( responseListener = this.get(responseListenerId) ){
-            responseListener.sendMessageToResponseListener({
-              event: "state:update",
-              data: "tab:update:complete"
-            });
-          }
+        // why?!?
+        if( this.get(Panel.name) ){
+          console.info( "exists!!!");
         }
+        // add a request listener to the collection
+        // pass in the bridge for comm/sync
+        this.add(new RequestListener({}, {
+          Bridge: Bridge,
+          Panel: Panel
+        }));
+
+        Panel.onMessage.addListener( Bridge.handleBackgroundEvent.bind(Bridge) ); 
+
+        console.info( "Adding panel", this.models);
       }.bind(this));
 
+      // add listeners to handle new/deleted ports
+      this.on({
+        "add"   : this._handleConnect.bind(this),
+        "remove": this._handleDisconnect.bind(this)
+      });
+
+      // // when the tab has completed its connection workflow, do
+      // chrome.tabs.onUpdated.addListener(function(panelId, changeInfo) {
+      //   var panel = null;
+      //   if (changeInfo.status === 'complete') {
+      //     if( panel = this.get(panelId) ){
+      //       Bridge.sendToPanel( panel, {
+      //         event: "state:update",
+      //         data: "tab:update:complete"
+      //       });
+      //     }
+      //   }
+      // }.bind(this));
+
+      // on disconnect
       chrome.tabs.onRemoved.addListener(function(responseListenerId, isWindowClosing) {
-        console.log("TAB closing", responseListenerId, "TODO: removelisteners and port");
         this.remove("port:"+responseListenerId);
       }.bind(this));
 
@@ -59,7 +83,6 @@ define(['backbone', 'RequestListener', 'lib/utils'], function(Backbone, RequestL
       }
       panel.removeListeners();
     }
-
 
   });
 });
