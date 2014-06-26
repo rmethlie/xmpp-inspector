@@ -42,6 +42,7 @@ define(['BaseView',
       var _this = this;
 
       this.listenTo(this.model, "request:sent", function(data){
+        console.info( "[REQUEST] Sent.")
         var prefix = this.requestSentPrefix;
         if (typeof(prefix) == "function") {
           prefix = prefix(data);
@@ -50,6 +51,7 @@ define(['BaseView',
       });
 
       this.listenTo(this.model, "request:finished", function(data){
+        console.info( "[REQUEST] Finished.")
         var prefix = this.responseReceivedPrefix;
         if (typeof(prefix) == "function") {
           prefix = prefix(data);

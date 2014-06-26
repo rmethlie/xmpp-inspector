@@ -39,9 +39,11 @@ define(["BaseView",
 
     renderStreamView: function(){
       this.stream = new XMPPStreamView({
-        model: new ResponseListener({}, {
-          Bridge: Bridge
-        })
+        model: Bridge
+      });
+
+      this.responseListener = new ResponseListener({}, {
+        Bridge: Bridge
       });
     },
 
@@ -68,7 +70,7 @@ define(["BaseView",
           this.stream.copy();
         break;
         case "url-pattern-update":
-          this.stream.model.updateFilter(command.pattern);
+          this.responseListener.updateFilter(command.pattern);
         break;
         case "toggle-subbar":
           this.stream.toggleForSubbar();
@@ -76,7 +78,7 @@ define(["BaseView",
 
         case "streamshare":
           this.stream.streamShare( command.data.enabled );
-          this.stream.model.on("streamdata", this.toolbar._handleStreamData.bind(this.toolbar));
+          Bridge.on("streamdata", this.toolbar._handleStreamData.bind(this.toolbar));
         break;
 
         default:

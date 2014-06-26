@@ -84,13 +84,15 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
         console.info( "WRPattern", _generateWebRequestPattern() );
         var urlPattern = new RegExp( _generateWebRequestPattern(), "ig");
         if( urlPattern.test( packet.request.url ) ){
+          console.info( "[ResponseListener] Matched: ", packet.request.url );
           packet.getContent( function(contents){
             var guid = Utils.guidGen();
             networkEvents.add({id: guid, type:'requestFinished', data: packet, body: contents});
-            _trigger("request:finished", {id: guid, body: contents} );
+            console.info( "[ResponseListener] Request Finished.");
+            Bridge.trigger("request:finished", {id: guid, body: contents} );
           }.bind(this));
         }else{
-          console.info( "failed", packet.request.url );
+          //console.info( "failed", packet.request.url );
         }
       }catch( e ){
         console.error( e.stack, true );
@@ -101,7 +103,7 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
   // todo: store the network requests and their states as objects on this stream
   //  for now just append the content to get this party started
   _handleBeforeRequest =  function(data){
-
+    console.info( "[Res] Before Request" );
     var guid = Utils.guidGen();
     networkEvents.add({id: guid, type:'beforeRequest', data: data, body: data.requestBody});
     _trigger("request:sent", {id: guid, body: data.requestBody} );

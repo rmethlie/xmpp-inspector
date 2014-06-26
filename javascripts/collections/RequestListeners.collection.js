@@ -32,6 +32,7 @@ define(['backbone', 'RequestListener', 'lib/utils','Bridge'], function(Backbone,
         // why?!?
         if( this.get(Panel.name) ){
           console.info( "exists!!!");
+          return;
         }
         // add a request listener to the collection
         // pass in the bridge for comm/sync
@@ -40,7 +41,7 @@ define(['backbone', 'RequestListener', 'lib/utils','Bridge'], function(Backbone,
           Panel: Panel
         }));
 
-        Panel.onMessage.addListener( Bridge.handleBackgroundEvent.bind(Bridge) ); 
+        Panel.onMessage.addListener( Bridge.handlePanelEvent.bind(Bridge) ); 
 
         console.info( "Adding panel", this.models);
       }.bind(this));

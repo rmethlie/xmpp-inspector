@@ -8,8 +8,12 @@ define(['BaseView',
   
   var format = require('beautifier/beautify-html');
   var CodeMirror = require('codemirror/lib/codemirror');
+  var Bridge = null;
   return BaseView.extend({
-    
+
+    defaults: {
+      test: "test"
+    },
     el: "#stream",
 
     requestSentPrefix: "",
@@ -32,20 +36,22 @@ define(['BaseView',
 
     initialize: function(options){
       console.log("[StreamView] initialize");
+      Bridge = this.model;
       this.render();
       this.dataStream = CodeMirror.fromTextArea(document.getElementById("dataStream"), this.dataStreamConfig);
       this.addlisteners(options);
-      // this.model.connect();
     },
 
     addlisteners: function(options){
       var _this = this;
 
-      this.model.on( "request:sent", function(data){
+      console.info( "Bridge?", Bridge );
+
+      Bridge.on( "request:sent", function(data){
         this.appendData(data, {prefix: this.requestSentPrefix});
       }.bind(this));
 
-      this.model.on("request:finished", function(data){
+      Bridge.on("request:finished", function(data){
         console.info( "[rquest finished]", data );
         this.appendData(data, {prefix: this.responseReceivedPrefix});
       }.bind(this));
@@ -108,7 +114,7 @@ define(['BaseView',
         this.dataStream.replaceRange(content, {line: Infinity, ch: lastLine.charCount});
         this.networkEventMap["line:" + lastLine.number] = data.id;
         if( this.streamShare ){
-          this.model.trigger("streamdata", content);
+          Bridge.trigger("streamdata", content);
         }
       }
 
@@ -133,7 +139,7 @@ define(['BaseView',
         content = stream.getValue();
       }
 
-      this.model.sendToBackground({event: "copy:text", data: content});
+      Bridge.sendToBackground({event: "copy:text", data: content});
     },
 
     toggleForSubbar: function(){

@@ -45,7 +45,7 @@ define(['BaseModel', 'lib/utils'], function( BaseModel, Utils ){
 
 
   _handlePanelEvent = function(event,data) {
-    console.log("[RequestListener] onMessage", event, ":",data );
+    console.log("[Bridge] Panel Event", event );
     _trigger( event, data );
   };
 
@@ -69,7 +69,6 @@ define(['BaseModel', 'lib/utils'], function( BaseModel, Utils ){
         case 'background':
 
           // init the connection
-          
           
         break;
 
@@ -95,7 +94,7 @@ define(['BaseModel', 'lib/utils'], function( BaseModel, Utils ){
 
     },
 
-    handleBackgroundEvent: _handleBackgroundEvent,
+    handlePanelEvent: _handlePanelEvent,
     // // public
     sendToPanel: _sendToPanel.bind(this),
     sendToBackground: _sendToBackground.bind(this)
