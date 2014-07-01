@@ -62,40 +62,9 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
     },
     
     addListeners: function(){
-      console.log("[Stream] addListeners");
-
-      // init the connection
-      this._connection = chrome.runtime.connect({name: this.webRequestManifest().name });
-      this._connection.onMessage.addListener(this._handleBackgroundEvent.bind(this));
-
-      this.sendToBackground({ 
-        event: "add:listener", 
-        data: this.webRequestManifest() 
-      });
-
-      // Description: Handle the message sent from the background page
-      this.on("stream:update", function(data){
-        this.handleBeforeRequest(data);
-      });
-
-      this.on("tab:updated:complete", function(data){
-        this.handleTabUpdated(data);
-      });
-
+      console.log("[ResponseListener] addListeners");
       this.listenToRequestFinished();
 
-    },
-
-    _handleBackgroundEvent: function(event){
-      console.info( "[responselistener] handle background event", event );
-
-      if( event.event ){
-        // event
-        this.trigger( event.event, event.data );
-      }else{
-        // sync
-        this.set(event.data);
-      }
     },
     
     // Description: Listen to finished network requests
@@ -122,42 +91,6 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
         }
       }.bind(this));
     },
-
-    // todo: store the network requests and their states as objects on this stream
-    //  for now just append the content to get this party started
-    handleBeforeRequest: function(data){
-
-      var guid = Utils.guidGen();
-      this.networkEvents.add({id: guid, type:'beforeRequest', data: data, body: data.requestBody});
-      this.trigger("request:sent", {id: guid, body: data.requestBody} );
-    },
-
-    handleTabUpdated: function(data) {
-      this.trigger("tab:updated");
-    },
-
-    webRequestManifest: function(){
-      console.info( "WRFilter", this.generateWebRequestFilter() )
-      return {
-        scheme  : this.get("scheme"),
-        host    : this.get("host"),
-        path    : this.get("path"),
-        types   : ["xmlhttprequest"],
-        tabId   : this.get("tabId"),
-        name    : this.get("backgroundConnectionName")
-      };
-    },
-
-    sendToBackground: function( data ){
-      if( this._connection && this._connection.postMessage ){
-        try{
-          this._connection.postMessage(data);
-        }catch( e ){
-          console.error(e.stack);
-          debugger;
-        }
-      }
-    }
 
   });
 });

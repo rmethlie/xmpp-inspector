@@ -2,7 +2,8 @@ define(["BaseView",
   "ResponseListener",
   "XMPPStreamView",
   "StreamToolbarView",
-  'text!templates/inspector.template.html',], function(BaseView, ResponseListener, XMPPStreamView, StreamToolbarView, inspectorTemplate) {
+  "Stream",
+  'text!templates/inspector.template.html',], function(BaseView, ResponseListener, XMPPStreamView, StreamToolbarView, Stream, inspectorTemplate) {
   "use strict";
 
   return BaseView.extend({
@@ -45,7 +46,8 @@ define(["BaseView",
 
     renderStream: function(){
       this.stream = new XMPPStreamView({
-        model: new ResponseListener()
+        // model: new ResponseListener()
+        model: new Stream()
       });
     },
 
