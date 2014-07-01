@@ -39,8 +39,6 @@ define(['BaseView',
 
     addlisteners: function(options){
       var _this = this;
-      
-      console.info( "Bridge?", Bridge );
 
       Bridge.on( "request:sent", function(data){
         var prefix = this.requestSentPrefix;
@@ -52,13 +50,11 @@ define(['BaseView',
       }.bind(this));
 
       Bridge.on("request:finished", function(data){
-        console.info( "[rquest finished]", data );
         var prefix = this.responseReceivedPrefix;
         if (typeof(prefix) == "function") {
           prefix = prefix(data);
         }
         this.appendData(data, {prefix: prefix});
-
       }.bind(this));
 
     },
@@ -118,9 +114,6 @@ define(['BaseView',
 
         this.dataStream.replaceRange(content, {line: Infinity, ch: lastLine.charCount});
         this.networkEventMap["line:" + lastLine.number] = data.id;
-        if( this.streamShare ){
-          Bridge.trigger("streamdata", content);
-        }
       }
 
       if(scollToBottom){

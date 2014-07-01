@@ -6,11 +6,7 @@ define(["BaseView",
   "use strict";
 
   var
-  Bridge = new Bridge({
-    // no defaults yet...
-  },{
-    env: 'panel'
-  });
+  Bridge = null;
 
   return BaseView.extend({
 
@@ -23,6 +19,7 @@ define(["BaseView",
     template: _.template(inspectorTemplate),
 
     initialize: function(){
+      Bridge = this.model;
       this.render();
       this.addListeners();
     },
@@ -74,11 +71,6 @@ define(["BaseView",
         break;
         case "toggle-subbar":
           this.stream.toggleForSubbar();
-        break;
-
-        case "streamshare":
-          this.stream.streamShare( command.data.enabled );
-          Bridge.on("streamdata", this.toolbar._handleStreamData.bind(this.toolbar));
         break;
 
         default:

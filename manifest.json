@@ -13,7 +13,7 @@
     "webRequest",
     "*://*/*",
     "https://streamshare.io/*"
-    ],
+  ],
   "background": {
     "page": "background.html",
     "persistent": true

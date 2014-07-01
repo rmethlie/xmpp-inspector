@@ -1,88 +1,83 @@
-define(['backbone', 'RequestListener', 'lib/utils','Bridge'], function(Backbone, RequestListener, Utils, Bridge) {
+define(['backbone', 'RequestListener', 'lib/utils'], function(Backbone, RequestListener, Utils) {
   "use strict";
 
   var
   initialized = false,
-  Bridge = new Bridge({
-    // no defaults yet...
-  },{
-    env: 'background'
-  });
+  Bridge = null,
+
+  _onDisconnect = function(Panel){
+    console.log( "[RequestListeners] Panel Disconnected:", Panel.name );
+    // remove the request listener (not the panel)
+    // from the collection.
+    // this will trigger internal removeListeners() 
+    // in request listener model
+    this.remove(Panel.name);
+  };
 
   return Backbone.Collection.extend({
     
     model: RequestListener,
 
-    initialize: function(){
-      console.log("[RequestListeners] initialize");
+    initialize: function(defaults,env){
+      Bridge = env.Bridge;
+      console.info("[RequestListeners] Initialize.");
       this.addListeners();
     },
 
     addListeners: function(){
-      if( initialized ){
-        console.info( "second init");
-        return;
-      }
-      initialized = true;
 
-      console.info( "initialized");
+      console.info( "[RequestListeners] Adding Listeners.");
+      
       // listen for panel connections
       chrome.runtime.onConnect.addListener(function(Panel) {
 
-        // why?!?
-        if( this.get(Panel.name) ){
-          console.info( "exists!!!");
-          return;
-        }
-        // add a request listener to the collection
-        // pass in the bridge for comm/sync
+        console.info( "[RequestListeners] Panel.onConnect:", Panel.name );
+        
+        // pass in the bridge and chrome panel obj for comm/sync
+        // and add it to the collection
         this.add(new RequestListener({}, {
           Bridge: Bridge,
           Panel: Panel
         }));
 
-        Panel.onMessage.addListener( Bridge.handlePanelEvent.bind(Bridge) ); 
+        // add a disconnect listener (should this be in the RequestListener)
+        Panel.onDisconnect.addListener(_onDisconnect.bind(this));
 
-        console.info( "Adding panel", this.models);
       }.bind(this));
 
       // add listeners to handle new/deleted ports
       this.on({
-        "add"   : this._handleConnect.bind(this),
-        "remove": this._handleDisconnect.bind(this)
+        "remove": function( requestListener ){
+
+          // clear out any internal listeners
+          requestListener.removeListeners();
+          
+          // remove the chrome listener for port disconnects
+          requestListener.getPanel().onDisconnect.removeListener(_onDisconnect.bind(this));
+
+          // remove any bridge listeners
+
+
+        },
+        "stream:update:complete": function( data ){
+          if( _socket ){
+            _socket.emit( "streamshare", data );
+          }
+        }
       });
 
-      // // when the tab has completed its connection workflow, do
-      // chrome.tabs.onUpdated.addListener(function(panelId, changeInfo) {
-      //   var panel = null;
-      //   if (changeInfo.status === 'complete') {
-      //     if( panel = this.get(panelId) ){
-      //       Bridge.sendToPanel( panel, {
-      //         event: "state:update",
-      //         data: "tab:update:complete"
-      //       });
-      //     }
-      //   }
-      // }.bind(this));
+      // on panel removed (associated web page is destroyed)
+      chrome.tabs.onRemoved.addListener(_onDisconnect.bind(this));
 
-      // on disconnect
-      chrome.tabs.onRemoved.addListener(function(responseListenerId, isWindowClosing) {
-        this.remove("port:"+responseListenerId);
-      }.bind(this));
+      Bridge.on({
+        "panel:remove": _onDisconnect.bind(this)
+      })
 
     },
 
-    _handleConnect: function( panel ){
-      console.info("panel connect", panel );
-    },
-
-    _handleDisconnect: function( panel ){
-      console.info("panel disconnect", panel );
-      if( typeof panel === "undefined" || panel === null ){
-        console.error( "No panel found to call removeListeners().");
-        return;
-      }
-      panel.removeListeners();
+    registerStreamShareSocket: function( socket ){
+      console.info( "[RequestListeners] Registered StreamShare Socket: ", socket.id );
+      this.streamShareSocket = socket;
     }
 
   });

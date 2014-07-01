@@ -1,4 +1,4 @@
-define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkEvents, Utils) {
+define(['BaseModel', 'NetworkEvents', 'NetworkEvent', 'lib/utils'], function(BaseModel, NetworkEvents, NetworkEvent, Utils) {
   "use strict";
 
   // Description: Listen for webRequests in the background and send message to dev tools extension
@@ -9,7 +9,7 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
   networkEvents             = null,
 
   _webRequestManifest = function(){
-    console.info( "WRFilter", _generateWebRequestFilter() )
+    console.log( "[ResponseListener] Building URL Schema.", _generateWebRequestFilter() );
     return {
       scheme  : Bridge.get("scheme"),
       host    : Bridge.get("host"),
@@ -53,12 +53,7 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
   },
   
   _addListeners = function(){
-    console.log("[Stream] addListeners");
-
-    Bridge.sendToBackground({ 
-      event: "add:listener", 
-      data: _webRequestManifest() 
-    });
+    console.log("[ResponseListener] Adding Listeners.");
 
     // Description: Handle the message sent from the background page
     Bridge.on("stream:update", function(data){
@@ -80,30 +75,43 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
   _listenToRequestFinished = function(){
 
     chrome.devtools.network.onRequestFinished.addListener(function(packet){
+      
+      console.groupCollapsed("[ResponseListener] Testing URL.", packet.request.url );
       try{
-        console.info( "WRPattern", _generateWebRequestPattern() );
+        console.log( "URL Schema:", _generateWebRequestPattern() );
         var urlPattern = new RegExp( _generateWebRequestPattern(), "ig");
         if( urlPattern.test( packet.request.url ) ){
-          console.info( "[ResponseListener] Matched: ", packet.request.url );
           packet.getContent( function(contents){
-            var guid = Utils.guidGen();
-            networkEvents.add({id: guid, type:'requestFinished', data: packet, body: contents});
-            console.info( "[ResponseListener] Request Finished.", contents);
-            Bridge.trigger("request:finished", {id: guid, body: contents} );
+            var 
+            guid = Utils.guidGen(),
+            netEvent = new NetworkEvent({
+              id: guid, 
+              type:'requestFinished', 
+              data: packet, 
+              body: contents
+            });
+
+            networkEvents.add(netEvent);
+
+            // trigger on both sides of the bridge.
+            Bridge.triggerGlobal("request:finished", netEvent.attributes);
+            
+            console.log( "Matched. Logging", netEvent.getXMPPStanzaType() );
           }.bind(this));
         }else{
-          //console.info( "failed", packet.request.url );
+          console.log( "No Match. Skipping." );
         }
       }catch( e ){
         console.error( e.stack, true );
       }
+      console.groupEnd();
     }.bind(this));
   },
 
   // todo: store the network requests and their states as objects on this stream
   //  for now just append the content to get this party started
   _handleBeforeRequest =  function(data){
-    console.info( "[Res] Before Request" );
+    console.log( "[ResponseListener] Before Request" );
     var guid = Utils.guidGen();
     networkEvents.add({id: guid, type:'beforeRequest', data: data, body: data.requestBody});
     Bridge.trigger("request:sent", {id: guid, body: data.requestBody} );

@@ -2,9 +2,9 @@ define(['BaseModel', 'lib/utils'], function( BaseModel, Utils ){
 
 
   var
-  _trigger = null,
+  _env = null,
   _connection = null,
-  _panels = {},
+  Bridge = null,
 
   // PANEL uses these
   _sendToBackground = function( data ){
@@ -13,7 +13,6 @@ define(['BaseModel', 'lib/utils'], function( BaseModel, Utils ){
         _connection.postMessage(data);
       }catch( e ){
         console.error(e.stack);
-        debugger;
       }
     }
   },
@@ -24,29 +23,89 @@ define(['BaseModel', 'lib/utils'], function( BaseModel, Utils ){
     if( event.event ){
       // event
       // e.g, ("some-event", { some: object })
-      this.trigger( event.event, event.data );
+      Bridge.trigger( event.event, event.data );
     }else{
       // sync
       // trigger background sync
-      this.set(event.data);
+      Bridge.set(event.data);
     }
   },
 
 
   // and...
   // BACKGROUND uses these
-  _sendToPanel = function( panel, message ){
-    if( panel.postMessage ){
-      panel.postMessage(message);
-    }else{
-      console.error("could not send message to response listener" );
+  _sendToPanel = function( Panel, message ){
+    try{
+      if( Panel.postMessage ){
+        Panel.postMessage(message);
+      }else{
+        console.error("could not send message to response listener" );
+      }
+    }catch( e ){
+      Bridge.trigger("panel:remove", Panel );
+      console.error( "[Bridge] Panel disconnected during message send.", Panel.name );
     }
   },
 
 
   _handlePanelEvent = function(event,data) {
-    console.log("[Bridge] Panel Event", event );
-    _trigger( event, data );
+    if( event.event ){
+      // event
+      // e.g, ("some-event", { some: object })
+      console.log("[Bridge] Panel Event", event.event, ":", event.data );
+      Bridge.trigger( event.event, event.data );
+    }else{
+      // sync
+      // trigger background sync
+      Bridge.set(event.data);
+    }
+  },
+
+  _bindPanel = function(Panel){
+    // bind the panel's onMessage handler to the Bridge listener
+    Panel.onMessage.addListener( _handlePanelEvent.bind(Bridge) ); 
+  },
+
+  _releasePanel = function( Panel ){
+
+    Panel.onMessage.removeListener( _handlePanelEvent.bind(Bridge) ); 
+  },
+
+  _bindBackground = function(){
+
+    var 
+    backgroundConnectionName = "port:" + chrome.devtools.inspectedWindow.tabId;
+    
+    _connection = chrome.runtime.connect({
+      name: "port:" + chrome.devtools.inspectedWindow.tabId 
+    });
+
+    _connection.onMessage.addListener(_handleBackgroundEvent.bind(Bridge));
+  },
+
+  _releaseBackground = function(){
+
+    _connection.onMessage.removeListener(_handleBackgroundEvent.bind(Bridge) );
+
+  },
+
+  _triggerGlobal = function( event, data ){
+
+    // trigger local
+    Bridge.trigger(event,data);
+
+    // send over the bridge
+    if( _env === 'panel' ){
+      Bridge.sendToBackground({
+        event: event,
+        data: data
+      });
+    }else if( _env === 'background' ){
+      Bridge.sendToPanel({
+        event: event,
+        data: data
+      })
+    }
   };
 
   return BaseModel.extend({
@@ -62,31 +121,28 @@ define(['BaseModel', 'lib/utils'], function( BaseModel, Utils ){
 
     initialize: function(attrs,config){
 
+      // create a local reference to this
+      Bridge = this;
+
+      // 
       console.info("[XMPP-Bridge] Init", config);
-      _trigger = this.trigger;
-      switch( config.env ){
+      _env = config.env;
+      switch( _env ){
 
         case 'background':
 
           // init the connection
+          // so far, nothing to see here.
           
         break;
 
-
         case 'panel':
-          var 
-          backgroundConnectionName = "port:" + chrome.devtools.inspectedWindow.tabId;
-          
-          _connection = chrome.runtime.connect({
-            name: "port:" + chrome.devtools.inspectedWindow.tabId 
-          });
 
-          _connection.onMessage.addListener(_handleBackgroundEvent.bind(this));
+          _bindBackground();
 
-
-          this.on("change",function(data){
+          Bridge.on("change",function(data){
             this.sendToBackground( data.changed );
-          }.bind(this));
+          }.bind(Bridge));
 
         break;
 
@@ -94,10 +150,12 @@ define(['BaseModel', 'lib/utils'], function( BaseModel, Utils ){
 
     },
 
-    handlePanelEvent: _handlePanelEvent,
-    // // public
-    sendToPanel: _sendToPanel.bind(this),
-    sendToBackground: _sendToBackground.bind(this)
+    // public stuff
+    sendToPanel       : _sendToPanel,
+    sendToBackground  : _sendToBackground,
+    bindPanel         : _bindPanel,
+    bindBackground    : _bindBackground,
+    triggerGlobal     : _triggerGlobal
 
   });
 

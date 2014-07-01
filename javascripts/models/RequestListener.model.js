@@ -12,6 +12,8 @@ define(['lib/utils', 'BaseModel'], function(Utils, BaseModel) {
   handlers           = {},
   _responseListener = null,
   id                = null,
+  _paused           = false,
+  _trigger          = null,
 
 
   _generateWebRequestFilter = function(){
@@ -39,6 +41,8 @@ define(['lib/utils', 'BaseModel'], function(Utils, BaseModel) {
         requestBody: content
       }
     });
+
+    console.info( "[RequestListener] Before Request." );
   },
 
   _onCompleted = function(info) {    
@@ -50,17 +54,21 @@ define(['lib/utils', 'BaseModel'], function(Utils, BaseModel) {
         info: info
       }
     });
+
+    _trigger( "stream:update:complete", info );
+
+    console.info( "[RequestListener] Completed.", info );
   },
 
   _addListeners = function(){
-    console.log("[StreamListener] addListeners");
+    console.log("[RequestListener] Adding Listeners.");
     _listenToBeforeRequest();
     _listenToCompleted();
   },
 
   _removeListeners = function(){
     var handler;
-    console.log("[StreamListener] removeListeners");
+    console.log("[RequestListener] Removing Listeners.");
     for(handler in handlers){
       chrome.webRequest[handler].removeListener(handlers[handler]);
       delete handlers[handler];
@@ -69,7 +77,7 @@ define(['lib/utils', 'BaseModel'], function(Utils, BaseModel) {
 
   _listenToBeforeRequest = function(){
     // Get the request body
-    handlers["onBeforeRequest"] = _onBeforeRequest;
+    handlers["onBeforeRequest"] = _onBeforeRequest.bind(this);
 
     chrome.webRequest.onBeforeRequest.addListener(
         handlers["onBeforeRequest"],
@@ -86,7 +94,7 @@ define(['lib/utils', 'BaseModel'], function(Utils, BaseModel) {
   _listenToCompleted = function(){
     // get response headers, http status & response
     // chrome.webRequest.onResponseStarted.addListener()
-    handlers["onCompleted"] = _onCompleted;
+    handlers["onCompleted"] = _onCompleted.bind(this);
 
     chrome.webRequest.onCompleted.addListener(
         handlers["onCompleted"],
@@ -98,41 +106,53 @@ define(['lib/utils', 'BaseModel'], function(Utils, BaseModel) {
         },
         ["responseHeaders"]
     );
+  },
+
+  _pause = function(){
+
   };
 
-
-
-
   return BaseModel.extend({
-    removeListeners : _removeListeners,
-    addListeners    : _addListeners,
+
     initialize: function( attrs, options ){
 
       console.info( "[RequestListener] Create.");
+
+      // create "globals"
       Bridge = options.Bridge;
       Panel = options.Panel;
+      Bridge.bindPanel( Panel );
       this.id = id = Panel.name;
       this.set("pid", id);
+      _trigger = this.trigger;
 
         // listen for this-specific changes
       Bridge.on({
+
+        // Attribute changes
+
+        // URL schema
         "change:host change:scheme change:path": function(){
           _removeListeners();
           _addListeners();
         },
 
-        "add:listener": function( data ){
-          console.log("add:listener", data );
-          _addListeners();
-        },
+        // Eventss
 
+        // command to copy current text
         "copy:text": function( data ){
-          console.log("copy:text");
           Utils.copyText(data);
         }
-
       });
-    }
+
+      _addListeners();
+    },
+
+    pause: _pause,
+    getPanel: function(){
+      return Panel;
+    },
+    removeListeners: _removeListeners
   });
 
 });

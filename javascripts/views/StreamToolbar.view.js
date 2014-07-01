@@ -1,10 +1,9 @@
 define(["BaseView",
   "StreamToolbarModel",
-  'text!templates/toolbar.template.html', 'io'], function(BaseView, StreamToolbarModel, toolbarTemplate, io) {
+  'text!templates/toolbar.template.html'], function(BaseView, StreamToolbarModel, toolbarTemplate) {
   "use strict";
 
   var
-  _socket = null,
   Bridge = null;
 
   return BaseView.extend({
@@ -120,9 +119,6 @@ define(["BaseView",
       return params;
     },
 
-    _handleStreamData: function( data ){
-      _socket.emit("data", data );
-    },
 
     _handleStreamConnectionState: function(state){
 
@@ -151,9 +147,12 @@ define(["BaseView",
     toggleStreamShare: function(){
 
       this.streamSharing = !this.streamSharing;
-      console.info("[StreamShare] Enabling streaming.");
-      Bridge.set("streamshare", {
-        enabled: this.streamSharing
+      console.info("[StreamShare] Toggling StreamShare.", this.streamSharing);
+      Bridge.sendToBackground({
+        event: "streamshare",
+        data: {
+          enabled: this.streamSharing
+        }
       });
     }
 
