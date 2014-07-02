@@ -13,39 +13,13 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'lib/utils'], function
       tabId: chrome.devtools.inspectedWindow.tabId,
       backgroundConnectionName: "port:" + chrome.devtools.inspectedWindow.tabId,
     },
+    
+    networkEvents: new NetworkEvents(),
 
     generateWebRequestFilter: function(){
       return [ this.get("scheme") + "://" + this.get("host") +  "/*" + this.get("path") + "*" ];
     },
 
-    generateWebRequestPattern: function(){
-
-      var 
-      host = this.get("host"),
-      scheme = this.get("scheme"),
-      path = this.get("path"),
-      pattern = null;
-
-      // do the work...
-
-      scheme = scheme.replace(/\*+/g, ".*");
-
-      if((host = host.replace(/\*+/g, ".*")).length === 0){
-        host = ".*";
-      }
-
-      path = path.replace(/\*+/g, ".*").replace(/\//g, "\/");
-      
-      pattern = scheme + ":\/\/" + host;
-      if(path.length){
-        pattern += "\/*" + path + "*";
-      }
-
-      return pattern;
-
-    },
-
-    networkEvents: new NetworkEvents(),
 
     initialize: function(){
       console.log("[Stream] initialize");
@@ -74,6 +48,10 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'lib/utils'], function
         this.handleTabUpdated(data);
       });
 
+      this.listenTo(this.responseListener, "request:finished", function(response){
+        this.handleRequestFinished(response);
+      });
+
     },
 
     _handleBackgroundEvent: function(event){
@@ -88,10 +66,12 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'lib/utils'], function
       }
     },
 
-    // todo: store the network requests and their states as objects on this stream
-    //  for now just append the content to get this party started
-    handleBeforeRequest: function(data){
+    handleRequestFinished: function(response){
+      this.networkEvents.add(response);
+      this.trigger("request:finished", {id: response.id, body: response.body});
+    },
 
+    handleBeforeRequest: function(data){
       var guid = Utils.guidGen();
       this.networkEvents.add({id: guid, type:'beforeRequest', data: data, body: data.requestBody});
       this.trigger("request:sent", {id: guid, body: data.requestBody} );
