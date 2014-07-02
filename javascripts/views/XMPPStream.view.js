@@ -1,4 +1,4 @@
-define(["ResponseListenerView"], function(ResponseListenerView) {
+define(["StreamView"], function(ResponseListenerView) {
   "use strict";
 
   return ResponseListenerView.extend({
