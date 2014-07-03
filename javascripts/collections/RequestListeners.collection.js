@@ -32,7 +32,7 @@ define(['backbone', 'RequestListener', 'lib/utils'], function(Backbone, RequestL
       chrome.runtime.onConnect.addListener(function(Panel) {
 
         console.info( "[RequestListeners] Panel.onConnect:", Panel.name );
-        
+
         // pass in the bridge and chrome panel obj for comm/sync
         // and add it to the collection
         this.add(new RequestListener({}, {
@@ -56,13 +56,6 @@ define(['backbone', 'RequestListener', 'lib/utils'], function(Backbone, RequestL
           requestListener.getPanel().onDisconnect.removeListener(_onDisconnect.bind(this));
 
           // remove any bridge listeners
-
-
-        },
-        "stream:update:complete": function( data ){
-          if( _socket ){
-            _socket.emit( "streamshare", data );
-          }
         }
       });
 

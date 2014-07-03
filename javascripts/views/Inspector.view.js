@@ -66,9 +66,6 @@ define(["BaseView",
         case "copy":
           this.stream.copy();
         break;
-        case "url-pattern-update":
-          this.responseListener.updateFilter(command.pattern);
-        break;
         case "toggle-subbar":
           this.stream.toggleForSubbar();
         break;

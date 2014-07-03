@@ -47,7 +47,7 @@ define(['lib/utils', 'BaseModel'], function(Utils, BaseModel) {
 
   _onCompleted = function(info) {    
 
-    Bridge.sendToPanel( Panel, {
+    Bridge.triggerGlobal( Panel, {
       event: "stream:update", 
       data: {
         state:"completed",
@@ -64,6 +64,9 @@ define(['lib/utils', 'BaseModel'], function(Utils, BaseModel) {
     console.log("[RequestListener] Adding Listeners.");
     _listenToBeforeRequest();
     _listenToCompleted();
+
+    // init comm channels
+    Bridge.bindPanel( Panel );
   },
 
   _removeListeners = function(){
@@ -73,6 +76,9 @@ define(['lib/utils', 'BaseModel'], function(Utils, BaseModel) {
       chrome.webRequest[handler].removeListener(handlers[handler]);
       delete handlers[handler];
     }
+
+    // clear comm channels
+    Bridge.releasePanel( Panel );
   },
 
   _listenToBeforeRequest = function(){
@@ -121,7 +127,6 @@ define(['lib/utils', 'BaseModel'], function(Utils, BaseModel) {
       // create "globals"
       Bridge = options.Bridge;
       Panel = options.Panel;
-      Bridge.bindPanel( Panel );
       this.id = id = Panel.name;
       this.set("pid", id);
       _trigger = this.trigger;

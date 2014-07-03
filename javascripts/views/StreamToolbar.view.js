@@ -97,8 +97,6 @@ define(["BaseView",
 
       this.$el.find(".url-pattern .output").html(urlParams.scheme + "://" + urlParams.host +"/" + urlParams.path);
       Bridge.set(urlParams);
-
-      this.toggleUrlInput();
     },
 
     toggleUrlInput: function(){

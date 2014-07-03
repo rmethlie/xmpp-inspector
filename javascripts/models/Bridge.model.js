@@ -1,11 +1,11 @@
-define(['BaseModel', 'lib/utils'], function( BaseModel, Utils ){
+define(['BaseModel', 'lib/utils', 'backbone'], function( BaseModel, Utils, Backbone ){
 
 
   var
   _env = null,
   _connection = null,
+  _panels = [],
   Bridge = null,
-
   // PANEL uses these
   _sendToBackground = function( data ){
     if( _connection && _connection.postMessage ){
@@ -20,14 +20,15 @@ define(['BaseModel', 'lib/utils'], function( BaseModel, Utils ){
   _handleBackgroundEvent = function(event){
     console.info( "[Bridge] Background Event", event );
 
-    if( event.event ){
+    if( event.event === "__sync__" ){
+
+      // sync data
+      Backbone.Model.prototype.set.apply(this,event.data);
+
+    }else{
       // event
       // e.g, ("some-event", { some: object })
       Bridge.trigger( event.event, event.data );
-    }else{
-      // sync
-      // trigger background sync
-      Bridge.set(event.data);
     }
   },
 
@@ -39,7 +40,7 @@ define(['BaseModel', 'lib/utils'], function( BaseModel, Utils ){
       if( Panel.postMessage ){
         Panel.postMessage(message);
       }else{
-        console.error("could not send message to response listener" );
+        console.error("[Bridge] could not send message to response listener" );
       }
     }catch( e ){
       Bridge.trigger("panel:remove", Panel );
@@ -47,28 +48,40 @@ define(['BaseModel', 'lib/utils'], function( BaseModel, Utils ){
     }
   },
 
+  _handlePanelEvent = function(event) {
+    
+    if( event.event === "__sync__" ){
 
-  _handlePanelEvent = function(event,data) {
-    if( event.event ){
+      console.log( "[Bridge] Panel set data" );
+      // sync data
+      Backbone.Model.prototype.set.call(this,event.data);
+      
+    }else{
       // event
       // e.g, ("some-event", { some: object })
       console.log("[Bridge] Panel Event", event.event, ":", event.data );
       Bridge.trigger( event.event, event.data );
-    }else{
-      // sync
-      // trigger background sync
-      Bridge.set(event.data);
     }
   },
 
   _bindPanel = function(Panel){
     // bind the panel's onMessage handler to the Bridge listener
     Panel.onMessage.addListener( _handlePanelEvent.bind(Bridge) ); 
+
+    // Give it an id for BB.Collection purposes
+    Panel.id = Panel.name;
+    
+    // add it to the local collection
+    _panels[Panel.name] = Panel;
   },
 
   _releasePanel = function( Panel ){
 
+    // release chrome.runtime listeners
     Panel.onMessage.removeListener( _handlePanelEvent.bind(Bridge) ); 
+
+    // clear the panel from the collection
+    delete _panels[Panel.name];
   },
 
   _bindBackground = function(){
@@ -101,11 +114,37 @@ define(['BaseModel', 'lib/utils'], function( BaseModel, Utils ){
         data: data
       });
     }else if( _env === 'background' ){
-      Bridge.sendToPanel({
-        event: event,
-        data: data
+
+      // broadcast to all available panels
+      _.each( _panels, function( Panel ){
+        _sendToPanel( Panel, { // weird right? using attrs makes sense when you look closer...
+          event: event,
+          data: data
+        });
+      });
+    }
+  },
+
+  _setGlobal = function( event, data ){
+
+    if( typeof event === "object"){
+      data = event;
+    }
+
+    data = {
+      event: "__sync__",
+      data: data
+    }
+
+    if( _env === 'panel' ){
+      _sendToBackground( data );
+    }else{
+
+      _.each( _panels, function( Panel ){
+        _sendToPanel( Panel, data ); // see above
       })
     }
+
   };
 
   return BaseModel.extend({
@@ -125,24 +164,16 @@ define(['BaseModel', 'lib/utils'], function( BaseModel, Utils ){
       Bridge = this;
 
       // 
-      console.info("[XMPP-Bridge] Init", config);
+      console.info("[Bridge] Init", config);
       _env = config.env;
       switch( _env ){
 
         case 'background':
-
-          // init the connection
-          // so far, nothing to see here.
-          
         break;
 
         case 'panel':
 
           _bindBackground();
-
-          Bridge.on("change",function(data){
-            this.sendToBackground( data.changed );
-          }.bind(Bridge));
 
         break;
 
@@ -150,11 +181,18 @@ define(['BaseModel', 'lib/utils'], function( BaseModel, Utils ){
 
     },
 
+    set: function(){
+      Backbone.Model.prototype.set.apply(this,arguments);
+      _setGlobal( arguments );
+    },
+
     // public stuff
     sendToPanel       : _sendToPanel,
     sendToBackground  : _sendToBackground,
     bindPanel         : _bindPanel,
+    releasePanel      : _releasePanel,
     bindBackground    : _bindBackground,
+    releaseBackground : _releaseBackground,
     triggerGlobal     : _triggerGlobal
 
   });
