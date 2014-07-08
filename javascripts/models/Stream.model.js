@@ -7,7 +7,7 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'lib/utils'], function
     _connection: null,  //connection to background page
 
     defaults :{
-      scheme: "http", 
+      scheme: "*", 
       host: "*", 
       path: "http-bind",
       tabId: chrome.devtools.inspectedWindow.tabId,
