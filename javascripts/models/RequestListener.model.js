@@ -5,7 +5,7 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
   return BaseModel.extend({
 
     defaults: {
-      scheme: "http", 
+      scheme: "*", 
       host: "*", 
       path: "http-bind",
       types: ["xmlhttprequest"],
