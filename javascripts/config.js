@@ -7,6 +7,7 @@ require.config({
         text: "bower_components/requirejs-text/text",
         codemirror: "bower_components/codemirror/",
         beautifier: "bower_components/js-beautify/js/lib",
+        ace: "bower_components/ace/lib/ace/",
         Utils: "lib/utils",
         BaseModel: "models/Base.model",
         BaseView: "views/Base.view",

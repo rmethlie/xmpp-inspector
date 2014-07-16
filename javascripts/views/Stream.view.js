@@ -1,13 +1,12 @@
 define(['BaseView',
   'text!templates/stream-data.template.html',
   'text!templates/stream-data-wrapper.template.html',
-  'codemirror/mode/xml/xml',
+  'ace/ace',
   'beautifier/beautify-html'],
-  function(BaseView, streamDataTemplate, streamDataWrapperTemplate) {
+  function(BaseView, streamDataTemplate, streamDataWrapperTemplate, Ace) {
   "use strict";
   
   var format = require('beautifier/beautify-html');
-  var CodeMirror = require('codemirror/lib/codemirror');
   return BaseView.extend({
     
     el: "#stream",
@@ -28,7 +27,9 @@ define(['BaseView',
     initialize: function(options){
       console.log("[StreamView] initialize");
       this.render();
-      this.dataStream = CodeMirror.fromTextArea(document.getElementById("dataStream"), this.dataStreamConfig);
+      this.dataStream = Ace.edit(document.getElementById("dataStream"));
+      this.dataStream.setTheme("ace/theme/monokai");
+      this.dataStream.getSession().setMode("ace/mode/javascript");
       this.addlisteners(options);
       // this.model.connect();
     },
