@@ -27,9 +27,14 @@ define(['BaseView',
     initialize: function(options){
       console.log("[StreamView] initialize");
       this.render();
-      this.dataStream = Ace.edit(document.getElementById("dataStream"));
-      this.dataStream.setTheme("ace/theme/monokai");
+      this.dataStream = Ace.edit("dataStream");
+      this.dataStream.setTheme("ace/theme/chrome");
       this.dataStream.getSession().setMode("ace/mode/javascript");
+
+      var aceSession = this.dataStream.getSession();
+      var count = aceSession.getLength();
+      this.dataStream.gotoLine(count, aceSession.getLine(count-1).length, false);
+      this.dataStream.insert("last line");
       this.addlisteners(options);
       // this.model.connect();
     },
