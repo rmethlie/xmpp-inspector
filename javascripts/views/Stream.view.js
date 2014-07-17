@@ -34,7 +34,7 @@ define(['BaseView',
       var aceSession = this.dataStream.getSession();
       var count = aceSession.getLength();
       this.dataStream.gotoLine(count, aceSession.getLine(count-1).length, false);
-      this.dataStream.insert("last line");
+      this.dataStream.insert("<xml><data atrr=\"1\"/></xml>");
       this.dataStream.find("last");
       this.addlisteners(options);
     },
