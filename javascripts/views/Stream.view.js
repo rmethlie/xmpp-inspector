@@ -37,7 +37,6 @@ define(['BaseView',
       this.dataStream.insert("last line");
       this.dataStream.find("last");
       this.addlisteners(options);
-      // this.model.connect();
     },
 
     addlisteners: function(options){
