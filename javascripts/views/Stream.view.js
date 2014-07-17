@@ -35,6 +35,7 @@ define(['BaseView',
       var count = aceSession.getLength();
       this.dataStream.gotoLine(count, aceSession.getLine(count-1).length, false);
       this.dataStream.insert("last line");
+      this.dataStream.find("last");
       this.addlisteners(options);
       // this.model.connect();
     },
