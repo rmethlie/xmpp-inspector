@@ -73,6 +73,7 @@ define(['BaseView',
       this.render();
       this.dataStream = CodeMirror.fromTextArea(document.getElementById("dataStream"), this.dataStreamConfig);
       this.find("key");
+      this.findNext();
       // this.dataStream.execCommand("findNext");
       this.addlisteners(options);
     },
