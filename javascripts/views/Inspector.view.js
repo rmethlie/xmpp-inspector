@@ -52,6 +52,15 @@ define(["BaseView",
     },
 
     addListeners: function(){
+
+      $(window).on("keyup", function(event){
+        console.log(event);
+        if(event.metaKey && event.keyCode === 70){
+          event.preventDefault();
+          console.log("SEARCH!");
+        }
+      });
+
     },
 
     _handleToolbarCommand: function( command ){
