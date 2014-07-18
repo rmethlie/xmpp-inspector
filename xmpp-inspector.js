@@ -3,7 +3,10 @@ chrome.devtools.panels.create(
   "XMPP",
   null,
   "panel.html",
-  function(panel){
+  function(extensionPanel){
+    extensionPanel.onSearch.addListener(function(){
+      console.log(arguments);
+    })
   }
 );
 
