@@ -6,6 +6,21 @@ define(["BaseView",
   'text!templates/inspector.template.html',], function(BaseView, ResponseListener, XMPPStreamView, StreamToolbarView, Stream, inspectorTemplate) {
   "use strict";
 
+
+  function stopPropagation(e) {
+    if (e.stopPropagation)
+        e.stopPropagation();
+    else
+        e.cancelBubble = true;
+  };
+  
+  function preventDefault(e) {
+    if (e.preventDefault)
+        e.preventDefault();
+    else
+        e.returnValue = false;
+  };
+
   return BaseView.extend({
 
     el: "body",
@@ -53,13 +68,15 @@ define(["BaseView",
 
     addListeners: function(){
 
-      $(window).on("keyup", function(event){
-        console.log(event);
-        if(event.metaKey && event.keyCode === 70){
-          event.preventDefault();
+      document.addEventListener("keydown", function(event){
+        console.log("keydown", event);
+        if(event.metaKey && event.which === 70){
+          stopPropagation(event);
+          preventDefault(event);
           console.log("SEARCH!");
+          return false
         }
-      });
+      }, true);
 
     },
 
