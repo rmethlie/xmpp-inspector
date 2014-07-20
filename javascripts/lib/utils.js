@@ -34,7 +34,26 @@ define([], function() {
       copyFrom.text(text);
       copyFrom.select();
       document.execCommand('copy', true);
-    }
+    },
+
+    stopEvent: function(e) {
+      this.stopPropagation(e);
+      this.preventDefault(e);
+    },
+
+    stopPropagation: function(e) {
+      if (e.stopPropagation)
+          e.stopPropagation();
+      else
+          e.cancelBubble = true;
+    },
+    
+    preventDefault: function(e) {
+      if (e.preventDefault)
+          e.preventDefault();
+      else
+          e.returnValue = false;
+    },
 
   }
 });
