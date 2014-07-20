@@ -70,11 +70,13 @@ define(['BaseView',
 
     initialize: function(options){
       console.log("[StreamView] initialize");
+      
+      if(!options)
+        options = {};
+      
+      this.inspectorView = options.inspectorView;
       this.render();
       this.dataStream = CodeMirror.fromTextArea(document.getElementById("dataStream"), this.dataStreamConfig);
-      this.find("key");
-      this.findNext();
-      // this.dataStream.execCommand("findNext");
       this.addlisteners(options);
     },
     
@@ -135,6 +137,11 @@ define(['BaseView',
         this.appendData(data, {prefix: prefix});
       }.bind(this));
 
+      this.listenTo(this.inspectorView, "search:submit", function(query){
+        this.find(query);
+        // this.findNext();
+        // this.dataStream.execCommand("findNext");
+      });
     },
 
     render: function(){

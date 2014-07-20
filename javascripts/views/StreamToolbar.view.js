@@ -1,6 +1,7 @@
 define(["BaseView",
   "StreamToolbarModel",
-  'text!templates/toolbar.template.html'], function(BaseView, StreamToolbarModel, toolbarTemplate) {
+  'text!templates/toolbar.template.html',
+  'lib/utils'], function(BaseView, StreamToolbarModel, toolbarTemplate, Utils) {
   "use strict";
 
   return BaseView.extend({
@@ -19,11 +20,16 @@ define(["BaseView",
       "click .button.show-sub-bar" : "toggleSubbar",
       "click .url-pattern .label" : "toggleUrlInput",
       "click .update-url-pattern  [type='submit']" : "updateUrlPattern",
+      "submit .search form": "submitSearch"
     },
 
-    initialize: function(defaults){
-      console.info( "[TOOLBAR] Initialized.");      
-      this.render(defaults);
+    initialize: function(options){
+      console.info( "[TOOLBAR] Initialized.");
+      this.inspectorView = options.inspectorView;
+      this.render(options);
+      this.listenTo(this.inspectorView, "search:init", function(){
+        this.showSearchBar();
+      });
     },
 
     render: function(defaults){
@@ -35,6 +41,22 @@ define(["BaseView",
 
     reload: function(){
       document.location.reload();
+    },
+
+    showSearchBar: function(){
+      this.$el.find(".sub-bar").removeClass("hidden");
+
+    },
+
+    hideSearchBar: function(){
+      this.$el.find(".sub-bar").addClass("hidden");
+
+    },
+
+    submitSearch: function(e){
+      Utils.stopEvent(e);
+      var query = this.$el.find("#searchInput").val();
+      this.inspectorView.trigger("search:submit", query);
     },
 
     clear: function(){

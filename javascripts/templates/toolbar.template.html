@@ -14,7 +14,6 @@
         </span>
       </div>
     </div>
-    <!-- <div class="form-wrapper"> -->
       <form class="update-url-pattern hidden">
         <select class="scheme">
           <option <% if(filter.scheme === "*") {%>selected <%} %> value="*">&lt;all&gt;</option>
@@ -30,18 +29,19 @@
         <input class="path" type="text" value="<%= filter.path %>"/>
         <button type="submit">Go</button>
       </form>
-    <!-- </div> -->
-    <!-- 
-    <div class="button filter show-sub-bar" data-button-id="filter">
-      <i class="fa fa-filter icon"></i><div class="label">Filter</div>
-    </div>
-     -->
+    
   </div>
   
   <div class="sub-bar hidden">
-    <div class="button">            
-      Hi I am the sub bar
+    <div class="search">
+      <form>
+        <input id="searchInput" type="text" value="" placeholder="Search for:" />
+        <button type="submit">Find</button>
+      </form>
     </div>
+    <!-- <div class="button">            
+      Hi I am the sub bar
+    </div> -->
   </div>
   
 </div>

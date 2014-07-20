@@ -3,23 +3,9 @@ define(["BaseView",
   "XMPPStreamView",
   "StreamToolbarView",
   "Stream",
-  'text!templates/inspector.template.html',], function(BaseView, ResponseListener, XMPPStreamView, StreamToolbarView, Stream, inspectorTemplate) {
+  'text!templates/inspector.template.html',
+  'lib/utils'], function(BaseView, ResponseListener, XMPPStreamView, StreamToolbarView, Stream, inspectorTemplate, Utils) {
   "use strict";
-
-
-  function stopPropagation(e) {
-    if (e.stopPropagation)
-        e.stopPropagation();
-    else
-        e.cancelBubble = true;
-  };
-  
-  function preventDefault(e) {
-    if (e.preventDefault)
-        e.preventDefault();
-    else
-        e.returnValue = false;
-  };
 
   return BaseView.extend({
 
@@ -44,12 +30,17 @@ define(["BaseView",
     },
 
     renderToolbar: function(options){
+      if(!options){
+        options = {};
+      }
+
       if( this.toolbar ){
         // sync
         this.toolbar.model.set(options);
         return;
       }
 
+      options.inspectorView = this;
       this.toolbar = new StreamToolbarView(options);
       this.toolbar.model.on("change",function(data){
         this.stream.model.sendToBackground( data.changed );
@@ -62,7 +53,8 @@ define(["BaseView",
     renderStream: function(){
       this.stream = new XMPPStreamView({
         // model: new ResponseListener()
-        model: new Stream()
+        model: new Stream(),
+        inspectorView: this
       });
     },
 
@@ -71,12 +63,11 @@ define(["BaseView",
       document.addEventListener("keydown", function(event){
         console.log("keydown", event);
         if(event.metaKey && event.which === 70){
-          stopPropagation(event);
-          preventDefault(event);
-          console.log("SEARCH!");
+          Utils.stopEvent(event);
+          this.trigger("search:init");
           return false
         }
-      }, true);
+      }.bind(this), true);
 
     },
 
