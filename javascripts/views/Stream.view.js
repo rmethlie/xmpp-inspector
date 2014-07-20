@@ -96,16 +96,17 @@ define(['BaseView',
 
     findNext: function(cm, rev) {
       var _this = this;
+      cm = this.dataStream;
       function getSearchCursor(cm, query, pos) {
         // Heuristic: if the query string is all lowercase, do a case insensitive search.
         return cm.getSearchCursor(query, pos, queryCaseInsensitive(query));
       };
 
       this.dataStream.operation(function() {
-        var state = _this.getSearchState(_this.dataStream);
-        var cursor = getSearchCursor(_this.dataStream, state.query, rev ? state.posFrom : state.posTo);
+        var state = _this.getSearchState(cm);
+        var cursor = getSearchCursor(cm, state.query, rev ? state.posFrom : state.posTo);
         if (!cursor.find(rev)) {
-          cursor = getSearchCursor(_this.dataStream, state.query, rev ? CodeMirror.Pos(cm.lastLine()) : CodeMirror.Pos(cm.firstLine(), 0));
+          cursor = getSearchCursor(cm, state.query, rev ? CodeMirror.Pos(cm.lastLine()) : CodeMirror.Pos(cm.firstLine(), 0));
           if (!cursor.find(rev)) return;
         }
         _this.dataStream.setSelection(cursor.from(), cursor.to());
@@ -138,8 +139,10 @@ define(['BaseView',
       }.bind(this));
 
       this.listenTo(this.inspectorView, "search:submit", function(query){
-        this.find(query);
-        // this.findNext();
+        if(this.getSearchState().query)
+          this.findNext();
+        else
+          this.find(query);
         // this.dataStream.execCommand("findNext");
       });
     },
