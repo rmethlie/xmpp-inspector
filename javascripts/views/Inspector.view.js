@@ -61,7 +61,6 @@ define(["BaseView",
     addListeners: function(){
 
       document.addEventListener("keydown", function(event){
-        console.log("keydown", event);
         if(event.metaKey && event.which === 70){
           Utils.stopEvent(event);
           this.trigger("search:init");
@@ -75,16 +74,16 @@ define(["BaseView",
       switch( command.name ){
         case "clear":
           this.stream.clear();
-        break;
+          break;
         case "copy":
           this.stream.copy();
-        break;
+          break;
         case "url-pattern-update":
           this.stream.model.updateFilter(command.pattern);
-        break;
+          break;
         case "toggle-subbar":
           this.stream.toggleForSubbar();
-        break;
+          break;
 
         default:
           console.error( "[STREAM.VIEW] Unknown command: ", command );
