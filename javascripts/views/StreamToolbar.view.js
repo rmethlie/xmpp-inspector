@@ -45,13 +45,14 @@ define(["BaseView",
 
     showSearchBar: function(){
       this.$el.find(".sub-bar").removeClass("hidden");
+      this.toggleSubbar("show");
       var query = this.$el.find("#searchInput").focus();
 
     },
 
     hideSearchBar: function(){
       this.$el.find(".sub-bar").addClass("hidden");
-
+      this.toggleSubbar("hide");
     },
 
     submitSearch: function(e){
@@ -80,10 +81,23 @@ define(["BaseView",
       $button.toggleClass("accordian");
     },
 
-    toggleSubbar: function(){
-      this.$el.find(".sub-bar").toggleClass("hidden");
+    toggleSubbar: function(state){
+      if(!state)
+        state = null
+      switch(state){
+        case "show":
+          this.$el.find(".sub-bar").removeClass("hidden");
+          break;
+        case "hide":
+          this.$el.find(".sub-bar").addClass("hidden");
+          break;
+        default: 
+          this.$el.find(".sub-bar").toggleClass("hidden");
+        
+      }
       this.model.trigger("toolbar:command", {
-        name: "toggle-subbar"
+        name: "toggle-subbar",
+        state: state
       });
     },
 

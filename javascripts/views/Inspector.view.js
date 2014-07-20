@@ -82,7 +82,7 @@ define(["BaseView",
           this.stream.model.updateFilter(command.pattern);
           break;
         case "toggle-subbar":
-          this.stream.toggleForSubbar();
+          this.stream.toggleForSubbar(command.state);
           break;
 
         default:
