@@ -2,7 +2,7 @@ define(['BaseView',
   'text!templates/stream-data.template.html',
   'text!templates/stream-data-wrapper.template.html',
   'codemirror/mode/xml/xml',
-  'codemirror/addon/search/search',
+  'codemirror/addon/search/searchcursor',
   'beautifier/beautify-html'],
   function(BaseView, streamDataTemplate, streamDataWrapperTemplate) {
   "use strict";
@@ -115,6 +115,16 @@ define(['BaseView',
       });
     },
 
+    clearSearch: function () {
+      var cm = this.dataStream;
+      cm.operation(function() {
+        var state = this.getSearchState(cm);
+        if (!state.query) return;
+        state.query = null;
+        cm.removeOverlay(state.overlay);
+      }.bind(this));
+    }, 
+
     getSearchState: function () {
       return this.dataStream.state.search || (this.dataStream.state.search = new SearchState());
     },
@@ -143,7 +153,10 @@ define(['BaseView',
           this.findNext();
         else
           this.find(query);
-        // this.dataStream.execCommand("findNext");
+      });
+
+      this.listenTo(this.inspectorView, "search:cancel", function(){
+        this.clearSearch();
       });
     },
 

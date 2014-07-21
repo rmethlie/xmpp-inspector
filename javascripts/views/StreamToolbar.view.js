@@ -30,6 +30,10 @@ define(["BaseView",
       this.listenTo(this.inspectorView, "search:init", function(){
         this.showSearchBar();
       });
+
+      this.listenTo(this.inspectorView, "search:cancel", function(){
+        this.hideSearchBar();
+      });
     },
 
     render: function(defaults){
