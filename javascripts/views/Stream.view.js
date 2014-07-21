@@ -149,10 +149,12 @@ define(['BaseView',
       }.bind(this));
 
       this.listenTo(this.inspectorView, "search:submit", function(query){
-        if(this.getSearchState().query)
+        if(this.getSearchState().query === query){
           this.findNext();
-        else
+        }else{
+          this.clearSearch();
           this.find(query);
+        }
       });
 
       this.listenTo(this.inspectorView, "search:cancel", function(){
