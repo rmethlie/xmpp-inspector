@@ -48,7 +48,7 @@ define(['BaseView',
     } else if (query == "") {
       query = /x^/;
     }
-    return query;
+    return query.toLowerCase();
   }
 
   return BaseView.extend({
