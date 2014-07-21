@@ -87,6 +87,9 @@ TEXTAREA.xml-contents{
   overflow: hidden;
   height: 2em;
 }
+.toolbar .sub-bar{
+  padding: inherit 5px;
+}
 
 .toolbar .button, .toolbar form {
   display: table-cell;
