@@ -62,17 +62,19 @@ define(["BaseView",
     addListeners: function(){
 
       document.addEventListener("keydown", function(event){
-        console.log(this.model.get("state"), event.which);
+        
         if((event.metaKey || event.ctrlKey) && event.which === 70){
           Utils.stopEvent(event);
           this.model.set("state", "search");
           this.trigger("search:init");
-          return false
+          return false;
         }
+        
         if(this.model.get("state") === "search" && event.which === 27){
+          Utils.stopEvent(event);
           this.model.set("state", null);
           this.trigger("search:cancel");
-          return false
+          return false;
         }
       }.bind(this), true);
 
