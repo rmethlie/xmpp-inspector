@@ -21,6 +21,7 @@ require.config({
         NetworkEvents: "collections/NetworkEvents.collection",
         StreamToolbarModel: "/javascripts/models/StreamToolbar.model",
         StreamToolbarView: "/javascripts/views/StreamToolbar.view",
+        InspectorModel: "/javascripts/models/Inspector.model",
         InspectorView: "/javascripts/views/Inspector.view",
         Panels: "collections/Panels.collection",
         Panel: "models/Panel.model",

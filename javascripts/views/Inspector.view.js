@@ -1,10 +1,11 @@
 define(["BaseView",
+  "InspectorModel",
   "ResponseListener",
   "XMPPStreamView",
   "StreamToolbarView",
   "Stream",
   'text!templates/inspector.template.html',
-  'lib/utils'], function(BaseView, ResponseListener, XMPPStreamView, StreamToolbarView, Stream, inspectorTemplate, Utils) {
+  'lib/utils'], function(BaseView, InspectorModel, ResponseListener, XMPPStreamView, StreamToolbarView, Stream, inspectorTemplate, Utils) {
   "use strict";
 
   return BaseView.extend({
@@ -18,6 +19,7 @@ define(["BaseView",
     template: _.template(inspectorTemplate),
 
     initialize: function(){
+      this.model = new InspectorModel();
       this.render();
       this.addListeners();
     },
@@ -52,7 +54,6 @@ define(["BaseView",
 
     renderStream: function(){
       this.stream = new XMPPStreamView({
-        // model: new ResponseListener()
         model: new Stream(),
         inspectorView: this
       });
@@ -61,9 +62,16 @@ define(["BaseView",
     addListeners: function(){
 
       document.addEventListener("keydown", function(event){
-        if(event.metaKey && event.which === 70){
+        console.log(this.model.get("state"), event.which);
+        if((event.metaKey || event.ctrlKey) && event.which === 70){
           Utils.stopEvent(event);
+          this.model.set("state", "search");
           this.trigger("search:init");
+          return false
+        }
+        if(this.model.get("state") === "search" && event.which === 27){
+          this.model.set("state", null);
+          this.trigger("search:cancel");
           return false
         }
       }.bind(this), true);
