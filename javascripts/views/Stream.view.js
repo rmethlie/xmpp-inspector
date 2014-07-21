@@ -241,8 +241,18 @@ define(['BaseView',
       this.model.sendToBackground({event: "copy:text", data: content});
     },
 
-    toggleForSubbar: function(){
-      this.$el.toggleClass("toolbar-expanded");
+    toggleForSubbar: function(state){
+
+      switch(state){
+        case "show":
+          this.$el.addClass("toolbar-expanded");
+          break;
+        case "hide":
+          this.$el.removeClass("toolbar-expanded");
+          break;
+        default:
+          this.$el.toggleClass("toolbar-expanded");
+      }
     }
 
   });
