@@ -39,6 +39,10 @@ define(['BaseView',
     }};
   }
 
+  function getSearchCursor(cm, query, pos) {
+    // Heuristic: if the query string is all lowercase, do a case insensitive search.
+    return cm.getSearchCursor(query, pos, queryCaseInsensitive(query));
+  };
 
   function parseQuery(query) {
     var isRE = query.match(/^\/(.*)\/([a-z]*)$/);
@@ -82,35 +86,37 @@ define(['BaseView',
     
     find: function(query, rev){
       var _this = this;
+      var cm = this.dataStream;
       var state = this.getSearchState();
-      this.dataStream.operation( function() {
+      if (state.query) return this.findNext(cm, rev);
+      cm.operation( function() {
         if (!query || state.query) return;
         state.query = parseQuery(query);
-        _this.dataStream.removeOverlay(state.overlay, queryCaseInsensitive(state.query));
+        cm.removeOverlay(state.overlay, queryCaseInsensitive(state.query));
         state.overlay = searchOverlay(state.query, queryCaseInsensitive(state.query));
-        _this.dataStream.addOverlay(state.overlay);
-        state.posFrom = state.posTo = _this.dataStream.getCursor();
-        _this.findNext(_this.dataStream, rev);
+        cm.addOverlay(state.overlay);
+        state.posFrom = state.posTo = cm.getCursor();
+        _this.findNext(cm, rev);
       });
     },
 
+    findPrevious: function() {
+      this.find(this.dataStream, false);
+    },
+    
     findNext: function(cm, rev) {
       var _this = this;
       cm = this.dataStream;
-      function getSearchCursor(cm, query, pos) {
-        // Heuristic: if the query string is all lowercase, do a case insensitive search.
-        return cm.getSearchCursor(query, pos, queryCaseInsensitive(query));
-      };
 
-      this.dataStream.operation(function() {
+      cm.operation(function() {
         var state = _this.getSearchState(cm);
         var cursor = getSearchCursor(cm, state.query, rev ? state.posFrom : state.posTo);
         if (!cursor.find(rev)) {
           cursor = getSearchCursor(cm, state.query, rev ? CodeMirror.Pos(cm.lastLine()) : CodeMirror.Pos(cm.firstLine(), 0));
           if (!cursor.find(rev)) return;
         }
-        _this.dataStream.setSelection(cursor.from(), cursor.to());
-        _this.dataStream.scrollIntoView({from: cursor.from(), to: cursor.to()});
+        cm.setSelection(cursor.from(), cursor.to());
+        cm.scrollIntoView({from: cursor.from(), to: cursor.to()});
         state.posFrom = cursor.from(); state.posTo = cursor.to();
       });
     },
@@ -150,7 +156,10 @@ define(['BaseView',
 
       this.listenTo(this.inspectorView, "search:submit", function(query){
         if(this.getSearchState().query === query){
-          this.findNext();
+          if(this.findPrevious)
+            this.findPrevious();
+          else
+            this.findNext();
         }else{
           this.clearSearch();
           this.find(query);
@@ -159,6 +168,14 @@ define(['BaseView',
 
       this.listenTo(this.inspectorView, "search:cancel", function(){
         this.clearSearch();
+      });
+
+
+      document.addEventListener("keydown", function(event){
+        if(event.shiftKey)
+          this.findPrevious = true;
+        else
+          this.findPrevious = false;
       });
     },
 
