@@ -48,14 +48,12 @@ define(["BaseView",
     },
 
     showSearchBar: function(){
-      this.$el.find(".sub-bar").removeClass("hidden");
       this.toggleSubbar("show");
       var query = this.$el.find("#searchInput").focus();
 
     },
 
     hideSearchBar: function(){
-      this.$el.find(".sub-bar").addClass("hidden");
       this.toggleSubbar("hide");
     },
 
