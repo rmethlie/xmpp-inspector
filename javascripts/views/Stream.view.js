@@ -67,6 +67,7 @@ define(['BaseView',
       lineWrapping: true,
       readOnly: true,
       theme: "xmpp default", // apply our modifications to the default CodeMirror theme.
+      styleSelectedText: true
     },
 
     // map the line number in the data stream to the networkEvent stored in the model
@@ -155,6 +156,7 @@ define(['BaseView',
       }.bind(this));
 
       this.listenTo(this.inspectorView, "search:submit", function(options){
+        this.$el.addClass("searching");
         var query = options.query;
         var reverse = options.reverse;
         if(this.getSearchState().query === query){
@@ -169,6 +171,7 @@ define(['BaseView',
       });
 
       this.listenTo(this.inspectorView, "search:cancel", function(){
+        this.$el.removeClass("searching");
         this.clearSearch();
       });
 

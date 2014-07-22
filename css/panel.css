@@ -55,12 +55,25 @@ TEXTAREA.xml-contents{
   font-style: italic;
 }
 
+
+.cm-s-xmpp.CodeMirror .cm-searching {
+  font-weight: bold;
+  background: rgba(244, 0, 95, .4);
+  color: white !important;
+}
+
 .cm-s-xmpp.CodeMirror .CodeMirror-scroll {
   /*
   overflow-y: hidden;
   overflow-x: auto;
   */
 }
+
+.searching .CodeMirror-selected  { 
+  background-color: rgb(244, 0, 95) !important; 
+}
+
+.searching .CodeMirror-selectedtext { color: white; }
 
 .toolbar-wrapper {
   position: relative;
