@@ -74,7 +74,7 @@ define(["BaseView",
     submitSearch: function(e){
       Utils.stopEvent(e);
       var query = {
-        query   : this.$el.find("#searchInput").val(),
+        query   : this.$el.find("#searchInput").val().toLowerCase(), // toLowerCase() triggers case-insensitive search
         reverse : this.shiftKey
       };
 
