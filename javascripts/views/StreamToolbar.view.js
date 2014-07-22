@@ -34,6 +34,20 @@ define(["BaseView",
       this.listenTo(this.inspectorView, "search:cancel", function(){
         this.hideSearchBar();
       });
+
+      document.addEventListener("keydown", function(event){
+        if(event.shiftKey)
+          this.shiftKey = true;
+
+        console.log("[StreamToolbar] shiftKey", this.shiftKey);
+      }.bind(this));
+
+      document.addEventListener("keyup", function(event){
+        if(!event.shiftKey)
+          this.shiftKey = false;
+
+        console.log("this.shiftKey:", this.shiftKey);
+      }.bind(this));
     },
 
     render: function(defaults){
@@ -59,7 +73,11 @@ define(["BaseView",
 
     submitSearch: function(e){
       Utils.stopEvent(e);
-      var query = this.$el.find("#searchInput").val();
+      var query = {
+        query   : this.$el.find("#searchInput").val(),
+        reverse : this.shiftKey
+      };
+
       this.inspectorView.trigger("search:submit", query);
     },
 

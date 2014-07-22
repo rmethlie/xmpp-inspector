@@ -101,7 +101,7 @@ define(['BaseView',
     },
 
     findPrevious: function() {
-      this.find(this.dataStream, false);
+      this.find(this.dataStream, true);
     },
     
     findNext: function(cm, rev) {
@@ -154,9 +154,11 @@ define(['BaseView',
         this.appendData(data, {prefix: prefix});
       }.bind(this));
 
-      this.listenTo(this.inspectorView, "search:submit", function(query){
+      this.listenTo(this.inspectorView, "search:submit", function(options){
+        var query = options.query;
+        var reverse = options.reverse;
         if(this.getSearchState().query === query){
-          if(this.findPrevious)
+          if(reverse)
             this.findPrevious();
           else
             this.findNext();
@@ -170,13 +172,6 @@ define(['BaseView',
         this.clearSearch();
       });
 
-
-      document.addEventListener("keydown", function(event){
-        if(event.shiftKey)
-          this.findPrevious = true;
-        else
-          this.findPrevious = false;
-      });
     },
 
     render: function(){
