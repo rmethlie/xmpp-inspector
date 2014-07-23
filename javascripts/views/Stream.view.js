@@ -1,14 +1,11 @@
 define(['BaseView',
   'text!templates/stream-data.template.html',
   'text!templates/stream-data-wrapper.template.html',
-  'codemirror/mode/xml/xml',
-  'codemirror/addon/search/searchcursor',
+  'lib/stream-container',
   'beautifier/beautify-html'],
-  function(BaseView, streamDataTemplate, streamDataWrapperTemplate) {
+  function(BaseView, streamDataTemplate, streamDataWrapperTemplate, CodeMirror, format) {
   "use strict";
   
-  var format = require('beautifier/beautify-html');
-  var CodeMirror = require('codemirror/lib/codemirror');
   
   function SearchState() {
     this.posFrom = this.posTo = this.query = null;

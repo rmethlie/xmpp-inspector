@@ -25,6 +25,7 @@ require.config({
         InspectorView: "/javascripts/views/Inspector.view",
         Panels: "collections/Panels.collection",
         Panel: "models/Panel.model",
+        StreamContainer: "lib/stream-container",
         BackgroundPage: "models/BackgroundPage.model"
     }
 });
