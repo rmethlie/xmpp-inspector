@@ -58,13 +58,9 @@ TEXTAREA.xml-contents{
 
 
 .cm-s-xmpp.CodeMirror .cm-searching {
-
   border: solid 1px rgb(244, 0, 95);
   background: none;
   border-radius: 3px;
-  /*font-weight: bold;
-  background: rgba(244, 0, 95, .4);
-  color: white !important;*/
 }
 
 .searching .CodeMirror-selected  { 
