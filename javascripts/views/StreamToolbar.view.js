@@ -63,7 +63,7 @@ define(["BaseView",
 
     showSearchBar: function(){
       this.toggleSubbar("show");
-      var query = this.$el.find("#searchInput").focus();
+      var query = this.$el.find("#searchInput").focus().select();
 
     },
 
