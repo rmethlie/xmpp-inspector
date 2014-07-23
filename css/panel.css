@@ -62,13 +62,6 @@ TEXTAREA.xml-contents{
   color: white !important;
 }
 
-.cm-s-xmpp.CodeMirror .CodeMirror-scroll {
-  /*
-  overflow-y: hidden;
-  overflow-x: auto;
-  */
-}
-
 .searching .CodeMirror-selected  { 
   background-color: rgb(244, 0, 95) !important; 
 }
