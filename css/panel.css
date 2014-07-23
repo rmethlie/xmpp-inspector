@@ -48,6 +48,7 @@ TEXTAREA.xml-contents{
   font-family: Menlo, monospace;
   font-size: 11px;
   height: auto;
+  line-height: 1.3em;
 }
 
 .cm-s-xmpp.CodeMirror .cm-comment {
