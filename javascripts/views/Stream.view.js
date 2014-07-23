@@ -1,7 +1,7 @@
 define(['BaseView',
   'text!templates/stream-data.template.html',
   'text!templates/stream-data-wrapper.template.html',
-  'lib/stream-container',
+  'lib/codemirror-container',
   'beautifier/beautify-html'],
   function(BaseView, streamDataTemplate, streamDataWrapperTemplate, CodeMirror, format) {
   "use strict";
