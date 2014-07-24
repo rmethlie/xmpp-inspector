@@ -77,6 +77,10 @@ define(["BaseView",
       this.$el.find(".sub-bar .search").removeClass("hidden");
       var query = this.$el.find("#searchInput").focus().select();
 
+      // if a query is already in the bar search for it automatically
+      if(query.length)
+        this.submitSearch();
+
     },
 
     hideSearchBar: function(){
@@ -85,7 +89,9 @@ define(["BaseView",
     },
 
     submitSearch: function(e){
-      Utils.stopEvent(e.originalEvent);
+      if(e)
+        Utils.stopEvent(e.originalEvent);
+      
       var query = {
         query   : this.$el.find("#searchInput").val().toLowerCase(), // toLowerCase() triggers case-insensitive search
         reverse : this.shiftKey
