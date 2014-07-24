@@ -41,14 +41,17 @@ define(["BaseView",
         this.hideSearchBar();
       });
 
-      this.$el.on("keydown", function(event){
-        if(event.shiftKey)
+      this.$el.on("keydown", function(e){
+        if(e.shiftKey)
           this.shiftKey = true;
       }.bind(this));
 
-      this.$el.on("keyup", function(event){
-        if(!event.shiftKey)
+      this.$el.on("keyup", function(e){
+        if(!e.shiftKey)
           this.shiftKey = false;
+
+        this.submitSearch(e);
+
       }.bind(this));
 
     },

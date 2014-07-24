@@ -85,6 +85,11 @@ define(['BaseView',
     find: function(query, rev){
       var _this = this;
       var cm = this.dataStream;
+
+      // Codemirror uses cursor selection to highlight results. This resets the selection to it's start point
+      // this prevents auto search on key up from advancing to the next result
+      cm.setSelection( cm.getCursor(true) );
+
       var state = this.getSearchState();
       if (state.query) return this.findNext(cm, rev);
       cm.operation( function() {
