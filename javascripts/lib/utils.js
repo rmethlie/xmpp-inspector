@@ -55,5 +55,18 @@ define([], function() {
           e.returnValue = false;
     },
 
+    isKeyCodeVisible: function(code){
+      // based on http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
+      return (code >= 48 && code <= 90) ||
+         (code >= 106 && code <= 111) ||
+          (code >= 186 && code <= 192) ||
+            (code >= 219 && code <= 222) ||
+              (code === 13) || // enter
+                (code === 8) || // backspace
+                  (code === 32) || // space
+                    (code === 9) // tab
+
+    }
+
   }
 });

@@ -20,7 +20,6 @@ define(["BaseView",
       "click .button.show-sub-bar" : "toggleSubbar",
       "click .url-pattern .label" : "toggleUrlInput",
       "click .update-url-pattern  [type='submit']" : "updateUrlPattern",
-      "submit .search form": "submitSearch"
     },
 
     initialize: function(options){
@@ -41,6 +40,10 @@ define(["BaseView",
         this.hideSearchBar();
       });
 
+      this.$el.find(".search form").on("submit", function(e){
+        Utils.stopEvent(e.originalEvent);
+      }.bind(this));
+
       this.$el.on("keydown", function(e){
         if(e.shiftKey)
           this.shiftKey = true;
@@ -50,7 +53,9 @@ define(["BaseView",
         if(!e.shiftKey)
           this.shiftKey = false;
 
-        this.submitSearch(e);
+        // if this is a visible character then begin auto search
+        if(Utils.isKeyCodeVisible(e.keyCode))
+          this.submitSearch(e);
 
       }.bind(this));
 
