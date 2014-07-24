@@ -34,6 +34,8 @@ define(["BaseView",
 
     addListeners: function(){
 
+      var $searchInput = $(this.$el.find("#searchInput")[0]);
+
       this.listenTo(this.inspectorView, "search:init", function(){
         this.showSearchBar();
       });
@@ -46,12 +48,12 @@ define(["BaseView",
         Utils.stopEvent(e.originalEvent);
       }.bind(this));
 
-      this.$el.on("keydown", function(e){
+      $searchInput.on("keydown", function(e){
         if(e.shiftKey)
           this.shiftKey = true;
       }.bind(this));
 
-      this.$el.on("keyup", function(e){
+      $searchInput.on("keyup", function(e){
         if(!e.shiftKey)
           this.shiftKey = false;
 
