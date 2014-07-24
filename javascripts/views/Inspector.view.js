@@ -63,6 +63,7 @@ define(["BaseView",
 
       document.addEventListener("keydown", function(event){
         
+        // cmd+f or ctrl+f trigger search
         if((event.metaKey || event.ctrlKey) && event.which === 70){
           Utils.stopEvent(event);
           this.model.set("state", "search");
@@ -70,6 +71,7 @@ define(["BaseView",
           return false;
         }
         
+        // ESC cancels search state
         if(this.model.get("state") === "search" && event.which === 27){
           Utils.stopEvent(event);
           this.model.set("state", null);

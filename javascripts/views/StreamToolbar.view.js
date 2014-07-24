@@ -27,6 +27,12 @@ define(["BaseView",
       console.info( "[TOOLBAR] Initialized.");
       this.inspectorView = options.inspectorView;
       this.render(options);
+      this.addListeners();
+
+    },
+
+    addListeners: function(){
+
       this.listenTo(this.inspectorView, "search:init", function(){
         this.showSearchBar();
       });
@@ -35,19 +41,16 @@ define(["BaseView",
         this.hideSearchBar();
       });
 
-      document.addEventListener("keydown", function(event){
+      this.$el.on("keydown", function(event){
         if(event.shiftKey)
           this.shiftKey = true;
-
-        console.log("[StreamToolbar] shiftKey", this.shiftKey);
       }.bind(this));
 
-      document.addEventListener("keyup", function(event){
+      this.$el.on("keyup", function(event){
         if(!event.shiftKey)
           this.shiftKey = false;
-
-        console.log("this.shiftKey:", this.shiftKey);
       }.bind(this));
+
     },
 
     render: function(defaults){
@@ -63,16 +66,18 @@ define(["BaseView",
 
     showSearchBar: function(){
       this.toggleSubbar("show");
+      this.$el.find(".sub-bar .search").removeClass("hidden");
       var query = this.$el.find("#searchInput").focus().select();
 
     },
 
     hideSearchBar: function(){
+      this.$el.find(".sub-bar .search").addClass("hidden");
       this.toggleSubbar("hide");
     },
 
     submitSearch: function(e){
-      Utils.stopEvent(e);
+      Utils.stopEvent(e.originalEvent);
       var query = {
         query   : this.$el.find("#searchInput").val().toLowerCase(), // toLowerCase() triggers case-insensitive search
         reverse : this.shiftKey
