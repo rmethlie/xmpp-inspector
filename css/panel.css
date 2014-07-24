@@ -63,11 +63,14 @@ TEXTAREA.xml-contents{
   border-radius: 3px;
 }
 
-.searching .CodeMirror-selected  { 
-  background-color: rgb(244, 0, 95) !important; 
+.CodeMirror-selected  { 
+  background-color: rgb(179, 212, 253) !important; 
 }
 
-.searching .cm-searching.CodeMirror-selectedtext { color: white; }
+.searching .cm-searching.CodeMirror-selectedtext { 
+  color: white;
+  background-color: rgb(244, 0, 95) !important;
+}
 
 .toolbar-wrapper {
   position: relative;
