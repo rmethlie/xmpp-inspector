@@ -55,7 +55,7 @@ define(["BaseView",
 
         // if this is a visible character then begin auto search
         if(Utils.isKeyCodeVisible(e.keyCode))
-          this.submitSearch(e);
+          _.debounce(this.submitSearch(e), 300);
 
       }.bind(this));
 
