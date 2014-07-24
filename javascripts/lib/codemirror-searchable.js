@@ -1,4 +1,4 @@
-define([],
+define(['codemirror/lib/codemirror'],
   function(CodeMirror) {
   "use strict";
   
