@@ -64,7 +64,8 @@ define(['BaseView',
       lineWrapping: true,
       readOnly: true,
       theme: "xmpp default", // apply our modifications to the default CodeMirror theme.
-      styleSelectedText: true
+      styleSelectedText: true,
+      styleActiveLine: true
     },
 
     // map the line number in the data stream to the networkEvent stored in the model
