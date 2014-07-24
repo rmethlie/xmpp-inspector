@@ -15,11 +15,13 @@ define(["BaseView",
     events: {
       "click .button.reload"  : "reload",
       "click .button.copy"   : "copy",
+      "click .button.find"   : "startSearch",
       "click .button.clear"   : "clear",
       "click .button.options" : "options",
       "click .button.show-sub-bar" : "toggleSubbar",
       "click .url-pattern .label" : "toggleUrlInput",
       "click .update-url-pattern  [type='submit']" : "updateUrlPattern",
+      "click .search .cancel" : "cancelSearch",
     },
 
     initialize: function(options){
@@ -75,7 +77,9 @@ define(["BaseView",
     showSearchBar: function(){
       this.toggleSubbar("show");
       this.$el.find(".sub-bar .search").removeClass("hidden");
-      var query = this.$el.find("#searchInput").focus().select();
+      var input = this.$el.find("#searchInput");
+      input.focus().select();
+      var query = input.val()
 
       // if a query is already in the bar search for it automatically
       if(query.length)
@@ -113,6 +117,16 @@ define(["BaseView",
         name: "copy",
         data: {}
       });
+    },
+
+    startSearch: function(e){
+      Utils.stopEvent(e);
+      this.inspectorView.initSearch();
+    },
+
+    cancelSearch: function(e){
+      Utils.stopEvent(e);
+      this.inspectorView.cancelSearch();
     },
 
     options: function(e){

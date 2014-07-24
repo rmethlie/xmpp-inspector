@@ -66,20 +66,32 @@ define(["BaseView",
         // cmd+f or ctrl+f trigger search (we're not picky)
         if((event.metaKey || event.ctrlKey) && event.which === 70){
           Utils.stopEvent(event);
-          this.model.set("state", "search");
-          this.trigger("search:init");
+          this.initSearch();
           return false;
         }
         
         // ESC cancels search state
         if(this.model.get("state") === "search" && event.which === 27){
           Utils.stopEvent(event);
-          this.model.set("state", null);
-          this.trigger("search:cancel");
+          this.cancelSearch();
           return false;
         }
       }.bind(this), true);
 
+    },
+
+    getState: function(){
+      this.model.get("state");
+    },
+
+    initSearch: function(){
+      this.model.set("state", "search");
+      this.trigger("search:init");
+    },
+
+    cancelSearch: function(){
+      this.model.set("state", null);
+      this.trigger("search:cancel");      
     },
 
     _handleToolbarCommand: function( command ){
