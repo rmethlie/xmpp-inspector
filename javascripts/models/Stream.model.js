@@ -68,7 +68,7 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'lib/utils'], function
 
     handleRequestFinished: function(response){
       this.networkEvents.add(response);
-      this.trigger("request:finished", {id: response.id, body: response.body});
+      this.trigger("request:finished", {id: response.id, body: response.body, response: response.data.response});
     },
 
     handleBeforeRequest: function(data){

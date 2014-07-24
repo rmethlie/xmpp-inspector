@@ -134,7 +134,10 @@ define(['BaseView',
           this.dataStream.replaceRange(options.prefix, {line: Infinity, ch: lastLine.charCount});
           lastLine = this.getLastLineInfo();
         }
-
+        if(data.response){
+          if(data.response.content.mimeType === "application/json")
+            this.dataStream.setOption('mode', {name: "javascript", json: true});
+        }
         this.dataStream.replaceRange(content, {line: Infinity, ch: lastLine.charCount});
         this.networkEventMap["line:" + lastLine.number] = data.id;
       }
@@ -142,6 +145,8 @@ define(['BaseView',
       if(scollToBottom){
         this.dataStream.scrollIntoView({line: this.dataStream.lastLine(), ch: 1});
       }
+      
+      this.dataStream.setOption('mode', 'text/html');
     },
 
     clear: function(){      

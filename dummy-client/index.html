@@ -1,44 +1,31 @@
 <html>
 <head>
-  <!--?prettify lang=xml linenums=true?-->
-  <script src="/google-code-prettify/src/prettify.js"></script>
   <link rel="stylesheet" type="text/css" href="github.css" />
 </head>
-<body onload="prettyPrint()">
-  <pre class="prettyprint lang-javascript">
-    var x = "1";
-  </pre>
-  <br/><br>
-
-  <pre class="prettyprint lang-xml">
-    &lt;stream&gt;
-      &lt;sample key="value"&gt;content&lt;/sample&gt;
-    &lt;/stream&gt;
-  </pre>
+<body>
   <div id="output"></div>
   <script type="text/javascript" src="jquery-1.11.0.min.js"></script>
   <script type="text/javascript">
-  $(document).ready(function(){
-    // window.timer = setInterval(function(){
-    //   $.ajax({
-    //     url: "/nhttp-bind/",
-    //     type: "POST",
-    //     processData: false,
-    //     data: "<data>This is my POST data</data>",
-    //     success: function(){
-    //       var timestamp = new Date().getTime();
-    //       $("#output").html("updated: " + timestamp);
-    //     }
-    //   });
-    // }, 5000);
-
-  });
-  function test(){
+  $(document).ready(function(){});
+  function xml(){
     $.ajax({
         url: "/nhttp-bind/",
         type: "POST",
         processData: false,
         data: "<data>This is my POST data</data>",
+        success: function(){
+          var timestamp = new Date().getTime();
+          $("#output").html("updated: " + timestamp);
+        }
+      });
+  }
+
+  function json(){
+    $.ajax({
+        url: "/nhttp-bind/json/post/",
+        type: "POST",
+        processData: false,
+        data: "{value: 'This is my POST data'}",
         success: function(){
           var timestamp = new Date().getTime();
           $("#output").html("updated: " + timestamp);

@@ -7,9 +7,15 @@ app.use(express.static(__dirname + '/'));
 // app.use(express.static("/Users/paulguerra/Projects/xmpp-inspector/"));
 //app.use("/assets/cabin", express.static("/Users/paulguerra/Projects/Eikon/Chat/www/assets/cabin"));
 
-app.get('/nhttp-bind/', function(req, res) {
+
+app.post('/nhttp-bind/json/get/', function(req, res) {
   // console.log(req.route.path);
-  res.sendfile(__dirname + '/sample.xml');
+  res.sendfile(__dirname + '/sample.json');
+});
+
+app.post('/nhttp-bind/json/post/', function(req, res) {
+  // console.log(req.route.path);
+  res.sendfile(__dirname + '/sample.json');
 });
 
 app.post('/nhttp-bind/', function(req, res) {
