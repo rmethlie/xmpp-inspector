@@ -48,6 +48,7 @@ TEXTAREA.xml-contents{
   font-family: Menlo, monospace;
   font-size: 11px;
   height: auto;
+  line-height: 1.3em;
 }
 
 .cm-s-xmpp.CodeMirror .cm-comment {
@@ -55,11 +56,20 @@ TEXTAREA.xml-contents{
   font-style: italic;
 }
 
-.cm-s-xmpp.CodeMirror .CodeMirror-scroll {
-  /*
-  overflow-y: hidden;
-  overflow-x: auto;
-  */
+
+.cm-s-xmpp.CodeMirror .cm-searching {
+  border: solid 1px rgb(244, 0, 95);
+  background: none;
+  border-radius: 3px;
+}
+
+.CodeMirror-selected  { 
+  background-color: rgb(179, 212, 253) !important; 
+}
+
+.searching .cm-searching.CodeMirror-selectedtext { 
+  color: white;
+  background-color: rgb(244, 0, 95) !important;
 }
 
 .toolbar-wrapper {
@@ -86,6 +96,9 @@ TEXTAREA.xml-contents{
   clear:both;
   overflow: hidden;
   height: 2em;
+}
+.toolbar .sub-bar{
+  padding: inherit 5px;
 }
 
 .toolbar .button, .toolbar form {

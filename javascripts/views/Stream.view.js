@@ -1,13 +1,12 @@
 define(['BaseView',
   'text!templates/stream-data.template.html',
   'text!templates/stream-data-wrapper.template.html',
-  'codemirror/mode/xml/xml',
+  'lib/codemirror-container',
+  'lib/codemirror-searchable',
   'beautifier/beautify-html'],
-  function(BaseView, streamDataTemplate, streamDataWrapperTemplate) {
+  function(BaseView, streamDataTemplate, streamDataWrapperTemplate, CodeMirror, cmSearchable, format) {
   "use strict";
-  
-  var format = require('beautifier/beautify-html');
-  var CodeMirror = require('codemirror/lib/codemirror');
+
   return BaseView.extend({
     
     el: "#stream",
@@ -20,6 +19,8 @@ define(['BaseView',
       lineWrapping: true,
       readOnly: true,
       theme: "xmpp default", // apply our modifications to the default CodeMirror theme.
+      styleSelectedText: true,
+      styleActiveLine: false
     },
 
     // map the line number in the data stream to the networkEvent stored in the model
@@ -27,12 +28,19 @@ define(['BaseView',
 
     initialize: function(options){
       console.log("[StreamView] initialize");
+      
+      if(!options)
+        options = {};
+
+      _.extend(this, cmSearchable);
+
+      this.inspectorView = options.inspectorView;
       this.render();
       this.dataStream = CodeMirror.fromTextArea(document.getElementById("dataStream"), this.dataStreamConfig);
+      this.initSearchable(this.dataStream);
       this.addlisteners(options);
-      // this.model.connect();
     },
-
+    
     addlisteners: function(options){
       var _this = this;
 
@@ -51,6 +59,26 @@ define(['BaseView',
         }
         this.appendData(data, {prefix: prefix});
       }.bind(this));
+
+      this.listenTo(this.inspectorView, "search:submit", function(options){
+        this.$el.addClass("searching");
+        var query = options.query;
+        var reverse = options.reverse;
+        if(this.getSearchState().query === query){
+          if(reverse)
+            this.findPrevious();
+          else
+            this.findNext();
+        }else{
+          this.clearSearch();
+          this.find(query);
+        }
+      });
+
+      this.listenTo(this.inspectorView, "search:cancel", function(){
+        this.$el.removeClass("searching");
+        this.clearSearch();
+      });
 
     },
 
@@ -135,8 +163,18 @@ define(['BaseView',
       this.model.sendToBackground({event: "copy:text", data: content});
     },
 
-    toggleForSubbar: function(){
-      this.$el.toggleClass("toolbar-expanded");
+    toggleForSubbar: function(state){
+
+      switch(state){
+        case "show":
+          this.$el.addClass("toolbar-expanded");
+          break;
+        case "hide":
+          this.$el.removeClass("toolbar-expanded");
+          break;
+        default:
+          this.$el.toggleClass("toolbar-expanded");
+      }
     }
 
   });
