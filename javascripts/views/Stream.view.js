@@ -112,10 +112,10 @@ define(['BaseView',
 
     appendData: function(data, options){
       if(!options)
-        options = {}
+        options = {};
       var content = data.body;
       var scollToBottom = false;
-      var lastLine = this.getLastLineInfo();      
+      var lastLine = this.getLastLineInfo();
 
       // if the user is already at  the bottom of the stream scroll to the bottom after appending the new content
       if(this.isAtBottom()){
@@ -125,7 +125,7 @@ define(['BaseView',
       if(content){
         content = format.html_beautify(content);
         
-        if(options.prefix){ 
+        if(options.prefix){
           if(lastLine.number > 0)
             options.prefix = "\n\n" + options.prefix + "\n";
           else
@@ -144,7 +144,7 @@ define(['BaseView',
       }
     },
 
-    clear: function(){      
+    clear: function(){
       this.dataStream.setValue("");
       this.dataStream.clearHistory();
       this.dataStream.clearGutter();
