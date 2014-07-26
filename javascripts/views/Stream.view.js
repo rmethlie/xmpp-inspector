@@ -112,34 +112,17 @@ define(['BaseView',
 
     appendData: function(data, options){
       if(!options)
-        options = {}
-      var content = data.body;
-      var scollToBottom = false;
-      var lastLine = this.getLastLineInfo();      
+        options = {};
+
+      var scollToBottom = false;    
 
       // if the user is already at  the bottom of the stream scroll to the bottom after appending the new content
       if(this.isAtBottom()){
         scollToBottom = true;
       }
 
-      if(content){
-        content = format.html_beautify(content);
-        
-        if(options.prefix){ 
-          if(lastLine.number > 0)
-            options.prefix = "\n\n" + options.prefix + "\n";
-          else
-            options.prefix = options.prefix + "\n";
-
-          this.dataStream.replaceRange(options.prefix, {line: Infinity, ch: lastLine.charCount});
-          lastLine = this.getLastLineInfo();
-        }
-        if(data.response){
-          if(data.response.content.mimeType === "application/json")
-            this.dataStream.setOption('mode', {name: "javascript", json: true});
-        }
-        this.dataStream.replaceRange(content, {line: Infinity, ch: lastLine.charCount});
-        this.networkEventMap["line:" + lastLine.number] = data.id;
+      if(data.body){
+        this.appendDataAsXML(data, options);
       }
 
       if(scollToBottom){
@@ -147,6 +130,31 @@ define(['BaseView',
       }
       
       this.dataStream.setOption('mode', 'text/html');
+    },
+
+    appendDataAsXML: function(data, options){
+
+      var content = data.body;
+      var type = data.type;
+      var lastLine = this.getLastLineInfo();  
+
+      content = format.html_beautify(content);
+        
+      if(options.prefix){ 
+        if(lastLine.number > 0)
+          options.prefix = "\n\n" + options.prefix + "\n";
+        else
+          options.prefix = options.prefix + "\n";
+
+        this.dataStream.replaceRange(options.prefix, {line: Infinity, ch: lastLine.charCount});
+        lastLine = this.getLastLineInfo();
+      }
+      if(data.response){
+        if(data.response.content.mimeType === "application/json")
+          this.dataStream.setOption('mode', {name: "javascript", json: true});
+      }
+      this.dataStream.replaceRange(content, {line: Infinity, ch: lastLine.charCount});
+      this.networkEventMap["line:" + lastLine.number] = data.id;
     },
 
     clear: function(){      
