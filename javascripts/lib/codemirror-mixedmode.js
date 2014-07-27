@@ -2,8 +2,8 @@ define(['codemirror/lib/codemirror'],
   function(CodeMirror) {
   "use strict";
 
-  var others = Array.prototype.slice.call(arguments, 1);
-  var n_others = others.length;
+  // var others = Array.prototype.slice.call(arguments, 1);
+  // var n_others = others.length;
 
   function indexOf(string, pattern, from) {
     if (typeof pattern == "string") return string.indexOf(pattern, from);
@@ -11,7 +11,15 @@ define(['codemirror/lib/codemirror'],
     return m ? m.index + from : -1;
   }
 
+  var cm = null;
+  var stateHistory = [];
+  // ex of a multiplex mode config object
+  // {open: "<<", close: ">>", mode: CodeMirror.getMode(config, "text/plain"), delimStyle: "delimit"}
   return {
+      initMixedMode: function(cmInstance){
+        cm = cmInstance;
+      },
+
       startState: function() {
         return {
           outer: CodeMirror.startState(outer),
@@ -26,6 +34,24 @@ define(['codemirror/lib/codemirror'],
           innerActive: state.innerActive,
           inner: state.innerActive && CodeMirror.copyState(state.innerActive.mode, state.inner)
         };
+      },
+
+      setFormat: function(format) {
+          state = cm.getStateAfter();
+          stateHistory.push(state);
+          other = {
+            mode: CodeMirror.getMode(CodeMirror.defaults, "application/xml")
+          }
+          state.innerActive = other;
+          state.inner = CodeMirror.startState(other.mode, state.indent ? state.indent(state.outer, "") : 0);
+      },
+      
+      resetFormat: function() {
+          currState = cm.getStateAfter();        
+          currState.innerActive = currState.inner = null;
+          lastState = stateHistory.pop();
+          // state.inner = CodeMirror.startState(other.mode, outer.indent ? outer.indent(state.outer, "") : 0);
+          // return other.delimStyle;
       },
 
       token: function(stream, state) {
@@ -47,7 +73,29 @@ define(['codemirror/lib/codemirror'],
           var outerToken = outer.token(stream, state.outer);
           if (cutOff != Infinity) stream.string = oldContent;
           return outerToken;
-        };
+        } else {
+          var curInner = state.innerActive, oldContent = stream.string;
+          if (!curInner.close && stream.sol()) {
+            state.innerActive = state.inner = null;
+            return this.token(stream, state);
+          }
+          var found = curInner.close ? indexOf(oldContent, curInner.close, stream.pos) : -1;
+          if (found == stream.pos) {
+            stream.match(curInner.close);
+            state.innerActive = state.inner = null;
+            return curInner.delimStyle;
+          }
+          if (found > -1) stream.string = oldContent.slice(0, found);
+          var innerToken = curInner.mode.token(stream, state.inner);
+          if (found > -1) stream.string = oldContent;
+
+          if (curInner.innerStyle) {
+            if (innerToken) innerToken = innerToken + ' ' + curInner.innerStyle;
+            else innerToken = curInner.innerStyle;
+          }
+
+          return innerToken;
+        }
       },
 
       indent: function(state, textAfter) {
@@ -74,11 +122,6 @@ define(['codemirror/lib/codemirror'],
         }
       },
 
-      electricChars: outer.electricChars,
-
-      innerMode: function(state) {
-        return state.inner ? {state: state.inner, mode: state.innerActive.mode} : {state: state.outer, mode: outer};
-      }
     };
-  };
+  }
 );

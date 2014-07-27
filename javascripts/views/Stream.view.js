@@ -3,6 +3,7 @@ define(['BaseView',
   'text!templates/stream-data-wrapper.template.html',
   'lib/codemirror-container',
   'lib/codemirror-searchable',
+  'lib/codemirror-mixedmode',
   'beautifier/beautify-html'],
   function(BaseView, streamDataTemplate, streamDataWrapperTemplate, CodeMirror, cmSearchable, format) {
   "use strict";
