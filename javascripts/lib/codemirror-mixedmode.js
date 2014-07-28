@@ -37,9 +37,9 @@ define(['codemirror/lib/codemirror'],
       },
 
       setFormat: function(format) {
-          state = cm.getStateAfter();
+          var state = cm.getStateAfter();
           stateHistory.push(state);
-          other = {
+          var other = {
             mode: CodeMirror.getMode(CodeMirror.defaults, "application/xml")
           }
           state.innerActive = other;

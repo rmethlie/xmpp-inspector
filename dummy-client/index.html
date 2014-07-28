@@ -1,12 +1,91 @@
 <html>
 <head>
-  <link rel="stylesheet" type="text/css" href="github.css" />
+<link rel="stylesheet" href="codemirror/lib/codemirror.css">
+
+  <script src="codemirror/lib/codemirror.js"></script>
+  <script src="codemirror/addon/mode/multiplex.js"></script>
+  <script src="codemirror/mode/javascript/javascript.js"></script>
+  <script src="codemirror/mode/xml/xml.js"></script>
+  <style type="text/css">
+        .CodeMirror {border: 1px solid black;}
+        .cm-delimit {color: #fa4;}
+      </style>
 </head>
 <body>
-  <div id="output"></div>
+<form>
+  <textarea id="code" name="code"></textarea>
+</form>
+  
+  <script>
+    CodeMirror.defineMode("demo", function(config) {
+      return CodeMirror.multiplexingMode(
+        CodeMirror.getMode(config, "text/plain"), {
+          open: /^json:start (.*)$/, close: /^json:end (.*)$/,
+          mode: CodeMirror.getMode(config, "javascript"),
+          delimStyle: "delimit"
+        },
+        {
+          open: /^xml:start (.*)$/, close: /^xml:end (.*)$/,
+          mode: CodeMirror.getMode(config, "text/html"),
+          delimStyle: "delimit"
+        }
+      );
+    });
+    var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+      mode: "demo",
+      // mode: "javascript",
+      lineNumbers: true,
+      lineWrapping: true
+    });
+  </script>
   <script type="text/javascript" src="jquery-1.11.0.min.js"></script>
   <script type="text/javascript">
-  $(document).ready(function(){});
+
+  var xml = 'xml:start http://whatever.com \n' +
+            '<stream><sample key="value">content</sample><sample key="value">content</sample></stream>' +
+            '\nxml:end http://whatever.com';
+
+  var json =  'json:start http://json.com\n' +
+              '{key1: "value", key3: "value2"}' + 
+              '\njson:end http://json.com';
+
+
+  function setFormat (format) {
+      var state = editor.getStateAfter();
+      var other = {
+        mode: CodeMirror.getMode(CodeMirror.defaults, "text/html")
+      }
+      state.innerActive = other;
+      //state.inner = true;
+      state.inner = CodeMirror.startState(other.mode, state.indent ? state.indent(state.outer, "") : 0);
+      return state;
+  }
+
+  function appendXML(format){
+    var lastLine = getLastLineInfo();  
+    content = xml;
+    editor.replaceRange("\n" + content, {line: Infinity, ch: lastLine.charCount});    
+  }
+
+  function appendJSON(format){
+
+    var lastLine = getLastLineInfo();  
+    content = json;
+    editor.replaceRange("\n" + content, {line: Infinity, ch: lastLine.charCount});
+      
+  }
+
+  function getLastLineInfo(){
+    var lastLineNumber = editor.lastLine();
+    var handler = editor.getLineHandle(lastLineNumber);
+
+    return {
+      number    : lastLineNumber,
+      handler   : handler,
+      charCount : handler.text.length
+    };
+  }
+
   function xml(){
     $.ajax({
         url: "/nhttp-bind/",

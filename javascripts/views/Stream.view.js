@@ -5,7 +5,7 @@ define(['BaseView',
   'lib/codemirror-searchable',
   'lib/codemirror-mixedmode',
   'beautifier/beautify-html'],
-  function(BaseView, streamDataTemplate, streamDataWrapperTemplate, CodeMirror, cmSearchable, format) {
+  function(BaseView, streamDataTemplate, streamDataWrapperTemplate, CodeMirror, cmSearchable, cmMixedMode, format) {
   "use strict";
 
   return BaseView.extend({
@@ -15,10 +15,10 @@ define(['BaseView',
     template: _.template(streamDataTemplate),
 
     dataStreamConfig: {
-      mode: "text/html",
+      mode: "text/plain",
       lineNumbers: true,
       lineWrapping: true,
-      readOnly: true,
+      readOnly: false,
       theme: "xmpp default", // apply our modifications to the default CodeMirror theme.
       styleSelectedText: true,
       styleActiveLine: false
@@ -34,11 +34,13 @@ define(['BaseView',
         options = {};
 
       _.extend(this, cmSearchable);
+      _.extend(this, cmMixedMode);
 
       this.inspectorView = options.inspectorView;
       this.render();
       this.dataStream = CodeMirror.fromTextArea(document.getElementById("dataStream"), this.dataStreamConfig);
       this.initSearchable(this.dataStream);
+      this.initMixedMode(this.dataStream);      
       this.addlisteners(options);
     },
     
@@ -139,6 +141,7 @@ define(['BaseView',
       var type = data.type;
       var lastLine = this.getLastLineInfo();  
 
+      // this.setFormat();
       content = format.html_beautify(content);
         
       if(options.prefix){ 
