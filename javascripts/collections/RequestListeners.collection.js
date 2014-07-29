@@ -12,10 +12,6 @@ define(['BaseCollection', 'RequestListener', 'lib/utils'], function(BaseCollecti
     },
 
     addListeners: function(){
-
-      // todo: trigger removeListener when the tab/window is closed
-      // this.on("disconnect", function(panel){
-      // });
       
       // listen for panel connections
       chrome.runtime.onConnect.addListener(function(port) {
