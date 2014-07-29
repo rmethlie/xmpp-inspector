@@ -21,8 +21,10 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'lib/utils'], function
     },
 
 
-    initialize: function(){
+    initialize: function(options){
       console.log("[Stream] initialize");
+      var id = options.name ? options.name : Utils.guidGen();
+      this.set("id", id);
       this.responseListener = new ResponseListener({stream: this});
       this.addListeners();
     },
