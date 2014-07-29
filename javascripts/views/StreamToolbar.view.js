@@ -1,7 +1,8 @@
 define(["BaseView",
   "StreamToolbarModel",
+  "StreamsManagerView",
   'text!templates/toolbar.template.html',
-  'lib/utils'], function(BaseView, StreamToolbarModel, toolbarTemplate, Utils) {
+  'lib/utils'], function(BaseView, StreamToolbarModel, StreamsManager, toolbarTemplate, Utils) {
   "use strict";
 
   return BaseView.extend({
@@ -18,6 +19,7 @@ define(["BaseView",
       "click .button.find"   : "startSearch",
       "click .button.clear"   : "clear",
       "click .button.options" : "options",
+      "click .button.streams" : "showStreams",
       "click .button.show-sub-bar" : "toggleSubbar",
       "click .url-pattern .label" : "toggleUrlInput",
       "click .update-url-pattern  [type='submit']" : "updateUrlPattern",
@@ -29,6 +31,7 @@ define(["BaseView",
       this.inspectorView = options.inspectorView;
       this.render(options);
       this.addListeners();
+      this.streams = new StreamsManager();
 
     },
 
@@ -189,6 +192,9 @@ define(["BaseView",
       return params;
     },
     
+    showStreams: function(e) {
+
+    }
 
   });
 });

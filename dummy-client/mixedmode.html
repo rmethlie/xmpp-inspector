@@ -17,23 +17,23 @@
 </form>
   
   <script>
-    CodeMirror.defineMode("demo", function(config) {
-      return CodeMirror.multiplexingMode(
-        CodeMirror.getMode(config, "text/plain"), {
-          open: /^json:start (.*)$/, close: /^json:end (.*)$/,
-          mode: CodeMirror.getMode(config, {name: "javascript", json: true}),
-          delimStyle: "delimit"
-        },
-        {
-          open: /^xml:start (.*)$/, close: /^xml:end (.*)$/,
-          mode: CodeMirror.getMode(config, "text/html"),
-          delimStyle: "delimit"
-        }
-      );
-    });
+    // CodeMirror.defineMode("demo", function(config) {
+    //   return CodeMirror.multiplexingMode(
+    //     CodeMirror.getMode(config, "text/plain"), {
+    //       open: /^json:start (.*)$/, close: /^json:end (.*)$/,
+    //       mode: CodeMirror.getMode(config, "javascript"),
+    //       delimStyle: "delimit"
+    //     },
+    //     {
+    //       open: /^xml:start (.*)$/, close: /^xml:end (.*)$/,
+    //       mode: CodeMirror.getMode(config, "text/html"),
+    //       delimStyle: "delimit"
+    //     }
+    //   );
+    // });
     var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-      mode: "demo",
-      // mode: "javascript",
+      // mode: "demo",
+      mode: "javascript",
       lineNumbers: true,
       lineWrapping: true
     });
@@ -45,9 +45,9 @@
             '<stream><sample key="value">content</sample><sample key="value">content</sample></stream>' +
             '\nxml:end http://whatever.com';
 
-  var jsonData = {key1: "value", key3: "value2", nested: {k1: "v1"}} ;
-  var jsonPrefix =  'json:start http://json.com\n';
-  var jsonPostfix =  '\njson:end http://json.com';
+  var json =  'json:start http://json.com\n' +
+              '{key1: "value", key3: "value2"}' + 
+              '\njson:end http://json.com';
 
 
   function setFormat (format) {
@@ -63,14 +63,14 @@
 
   function appendXML(format){
     var lastLine = getLastLineInfo();  
-    var content = xml;
+    content = xml;
     editor.replaceRange("\n" + content, {line: Infinity, ch: lastLine.charCount});    
   }
 
   function appendJSON(format){
 
     var lastLine = getLastLineInfo();  
-    var content = jsonPrefix + JSON.stringify(jsonData, null, '  ') + jsonPostfix;
+    content = json;
     editor.replaceRange("\n" + content, {line: Infinity, ch: lastLine.charCount});
       
   }

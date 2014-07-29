@@ -1,7 +1,7 @@
-define(['backbone', 'NetworkEvent'], function(Backbone, NetworkEvent) {
+define(['BaseCollection', 'NetworkEvent'], function(BaseCollection, NetworkEvent) {
   "use strict";
      
-  return Backbone.Collection.extend({
+  return BaseCollection.extend({
     
     model: NetworkEvent,
     

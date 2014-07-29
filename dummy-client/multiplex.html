@@ -1,0 +1,127 @@
+<html>
+<head>
+<link rel="stylesheet" href="codemirror/lib/codemirror.css">
+
+  <script src="codemirror/lib/codemirror.js"></script>
+  <script src="codemirror/addon/mode/multiplex.js"></script>
+  <script src="codemirror/mode/xml/xml.js"></script>
+  <style type="text/css">
+        .CodeMirror {border: 1px solid black;}
+        .cm-delimit {color: #fa4;}
+      </style>
+</head>
+<body>
+<form>
+  <textarea id="code" name="code">
+    <html>
+      <body >
+        <h1></h1>
+        <<
+            multiline
+            not html
+            at all : &amp;amp; <link/>
+        >>
+        <p>this is html again</p>
+      </body>
+    </html>
+  </textarea>
+</form>
+  
+  <script>
+    CodeMirror.defineMode("demo", function(config) {
+      return CodeMirror.multiplexingMode(
+
+        CodeMirror.getMode(CodeMirror.defaults, "text/html"),
+        {open: "json:start", close: "json:end",
+         mode: CodeMirror.getMode(CodeMirror.defaults, {name: "javascript", json: true}),
+         delimStyle: "delimit"}
+        // CodeMirror.getMode(config, "text/html"),
+        // {open: "json", close: "/json",
+        //  mode: CodeMirror.getMode(config, "text/plain"),
+        //  delimStyle: "delimit"}
+        // .. more multiplexed styles can follow here
+      );
+    });
+    var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+      mode: "demo",
+      // mode: "javascript",
+      lineNumbers: true,
+      lineWrapping: true
+    });
+  </script>
+  <script type="text/javascript" src="jquery-1.11.0.min.js"></script>
+  <script type="text/javascript">
+
+  // var xml = 'xml:start http://whatever.com \n' +
+  //           '<stream><sample key="value">content</sample><sample key="value">content</sample></stream>' +
+  //           '\nxml:end http://whatever.com';
+
+  // var json =  'json:start http://json.com\n' +
+  //             '{key1: "value", key3: "value2"}' + 
+  //             '\njson:end http://json.com';
+
+
+  // function setFormat (format) {
+  //     var state = editor.getStateAfter();
+  //     var other = {
+  //       mode: CodeMirror.getMode(CodeMirror.defaults, "text/html")
+  //     }
+  //     state.innerActive = other;
+  //     //state.inner = true;
+  //     state.inner = CodeMirror.startState(other.mode, state.indent ? state.indent(state.outer, "") : 0);
+  //     return state;
+  // }
+
+  // function appendXML(format){
+  //   var lastLine = getLastLineInfo();  
+  //   content = xml;
+  //   editor.replaceRange("\n" + content, {line: Infinity, ch: lastLine.charCount});    
+  // }
+
+  // function appendJSON(format){
+
+  //   var lastLine = getLastLineInfo();  
+  //   content = json;
+  //   editor.replaceRange("\n" + content, {line: Infinity, ch: lastLine.charCount});
+      
+  // }
+
+  // function getLastLineInfo(){
+  //   var lastLineNumber = editor.lastLine();
+  //   var handler = editor.getLineHandle(lastLineNumber);
+
+  //   return {
+  //     number    : lastLineNumber,
+  //     handler   : handler,
+  //     charCount : handler.text.length
+  //   };
+  // }
+
+  // function xml(){
+  //   $.ajax({
+  //       url: "/nhttp-bind/",
+  //       type: "POST",
+  //       processData: false,
+  //       data: "<data>This is my POST data</data>",
+  //       success: function(){
+  //         var timestamp = new Date().getTime();
+  //         $("#output").html("updated: " + timestamp);
+  //       }
+  //     });
+  // }
+
+  // function json(){
+  //   $.ajax({
+  //       url: "/nhttp-bind/json/post/",
+  //       type: "POST",
+  //       processData: false,
+  //       data: "{value: 'This is my POST data'}",
+  //       success: function(){
+  //         var timestamp = new Date().getTime();
+  //         $("#output").html("updated: " + timestamp);
+  //       }
+  //     });
+  // }
+  </script>
+</body>
+</html>

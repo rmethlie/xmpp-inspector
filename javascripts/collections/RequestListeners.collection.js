@@ -1,8 +1,8 @@
-define(['backbone', 'RequestListener', 'lib/utils'], function(Backbone, RequestListener, Utils) {
+define(['BaseCollection', 'RequestListener', 'lib/utils'], function(BaseCollection, RequestListener, Utils) {
   "use strict";
 
 
-  return Backbone.Collection.extend({
+  return BaseCollection.extend({
     
     model: RequestListener,
 

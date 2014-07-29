@@ -3,6 +3,7 @@ require.config({
     paths: {
         underscore: "bower_components/underscore/underscore",
         jquery: "bower_components/jquery/dist/jquery.min",
+        qtip: "bower_components/qtip2/jquery.qtip.min",
         backbone: "bower_components/backbone/backbone",
         text: "bower_components/requirejs-text/text",
         codemirror: "bower_components/codemirror/",
@@ -17,6 +18,7 @@ require.config({
         XMPPStreamView: "views/XMPPStream.view",
         RequestListener: "models/RequestListener.model",
         RequestListeners: "collections/RequestListeners.collection",
+        BaseCollection: "collections/Base.collection",
         NetworkEvent: "models/NetworkEvent.model",
         NetworkEvents: "collections/NetworkEvents.collection",
         StreamToolbarModel: "/javascripts/models/StreamToolbar.model",
@@ -25,6 +27,7 @@ require.config({
         InspectorView: "/javascripts/views/Inspector.view",
         Panels: "collections/Panels.collection",
         Panel: "models/Panel.model",
+        StreamsManagerView: "views/StreamsManager.view",
         StreamContainer: "lib/codemirror-container",
         BackgroundPage: "models/BackgroundPage.model"
     }
