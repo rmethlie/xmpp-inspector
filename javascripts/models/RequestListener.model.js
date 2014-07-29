@@ -49,13 +49,6 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
       return this;
     },
 
-    // onChangeURLs: function( update ){
-
-    //   if( update.change.urls ){
-
-    //   }
-    // },
-
     onBeforeRequest: function(info) {
 
       var content = "";
@@ -124,22 +117,6 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
       );
     },
     
-    // listenToSendHeaders: function(){
-    //   // get request headers (after everyone has had a chance to change them)
-    //   var _this = this;
-    //   this.onSendHeaders = chrome.webRequest.onSendHeaders.addListener(
-    //       function(info) {
-    //       },
-    //       // filters
-    //       {
-    //         urls  : this.generateWebRequestFilter(),
-    //         types : this.get("types"),
-    //         tabId : this.get("tabId")
-    //       }, 
-    //       ["requestHeaders"]
-    //   );
-    // },
-    
     listenToCompleted: function(){
       // get response headers, http status & response
       // chrome.webRequest.onResponseStarted.addListener()
@@ -167,7 +144,6 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
         debugger;
       }
     },
-
 
     onMessage: function(event,data) {
       console.log("[RequestListener] onMessage", event, ":",data );
