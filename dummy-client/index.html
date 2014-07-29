@@ -41,7 +41,7 @@
   <script type="text/javascript" src="jquery-1.11.0.min.js"></script>
   <script type="text/javascript">
 
-  var xml = 'xml:start http://whatever.com \n' +
+  var xmlData = 'xml:start http://whatever.com \n' +
             '<stream><sample key="value">content</sample><sample key="value">content</sample></stream>' +
             '\nxml:end http://whatever.com';
 
@@ -63,7 +63,7 @@
 
   function appendXML(format){
     var lastLine = getLastLineInfo();  
-    var content = xml;
+    var content = xmlData;
     editor.replaceRange("\n" + content, {line: Infinity, ch: lastLine.charCount});    
   }
 
@@ -101,8 +101,8 @@
 
   function json(){
     $.ajax({
-        url: "/nhttp-bind/json/post/",
-        type: "POST",
+        url: "/json/get/",
+        type: "GET",
         processData: false,
         data: "{value: 'This is my POST data'}",
         success: function(){
