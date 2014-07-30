@@ -48,8 +48,6 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
               var guid = Utils.guidGen();
               this.trigger("request:finished", {id: guid, type:'requestFinished', data: packet, body: contents} );
             }.bind(this));
-          }else{
-            console.info( "failed", packet.request.url );
           }
         }catch( e ){
           console.error( e.stack, true );
