@@ -1,4 +1,4 @@
-define(['BaseCollection', 'RequestListener', 'lib/utils'], function(BaseCollection, RequestListener, Utils) {
+define(['BaseCollection', 'ChromeConnection', 'RequestListener', 'lib/utils'], function(BaseCollection, ChromeConnection, RequestListener, Utils) {
   "use strict";
 
 
@@ -6,19 +6,22 @@ define(['BaseCollection', 'RequestListener', 'lib/utils'], function(BaseCollecti
     
     model: RequestListener,
 
+    chromeConnections : new BaseCollection(),
+
     initialize: function(){
       console.log("[RequestListeners] initialize");
       this.addListeners();
-      // !!!: debug remove
-      window.RL = this;
+      window.RLC = this;
     },
 
-    addListeners: function(){
-      
+    addListeners: function(){      
       // listen for panel connections
       chrome.runtime.onConnect.addListener(function(port) {
         console.log("[RequestListeners] Recvd 'onConnect' event", port );  
-        this.add(new RequestListener().setPort(port));
+        // todo: add logic to detect duplicate connections
+        this.chromeConnections.add(new ChromeConnection({port: port}));
+        // this.add(new RequestListener().setPort(port));
+
       }.bind(this));
 
       this.on("add",    this._handleConnect.bind(this) );
@@ -44,17 +47,17 @@ define(['BaseCollection', 'RequestListener', 'lib/utils'], function(BaseCollecti
 
     },
 
-    _handleConnect: function( panel ){
-      console.info("panel connect", this.models, panel );
+    _handleConnect: function( chromeConnection ){
+      console.info("chromeConnection connect", chromeConnection );
     },
 
-    _handleDisconnect: function( panel ){
-      console.info("panel disconnect", panel );
-      if( typeof panel === "undefined" || panel === null ){
-        console.error( "No panel found to call removeListeners().");
+    _handleDisconnect: function( chromeConnection ){
+      console.info("panel disconnect", chromeConnection );
+      if( typeof chromeConnection === "undefined" || chromeConnection === null ){
+        console.error( "No chromeConnection found to call removeListeners().");
         return;
       }
-      panel.removeListeners();
+      chromeConnection.removeWRListeners();
     }
 
 

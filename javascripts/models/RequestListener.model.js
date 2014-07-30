@@ -147,28 +147,7 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
         console.error("could not send message to response listener" );
         debugger;
       }
-    },
-
-    onMessage: function(event,data) {
-      console.log("[RequestListener] onMessage", event, ":",data );
-
-      switch(event){
-        case "add:listener":
-          console.log("add:listener", data );
-          this.set(data); // manifest
-          this.addListeners();
-          break;
-
-        case "change:protocol":
-          this.set(data);
-        break;
-        case "copy:text":
-          console.log("copy:text");
-          Utils.copyText(data);
-          break;
-      }
     }
-
 
   });
 });
