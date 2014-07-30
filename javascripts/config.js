@@ -26,6 +26,7 @@ require.config({
         Panels: "collections/Panels.collection",
         Panel: "models/Panel.model",
         StreamContainer: "lib/codemirror-container",
-        BackgroundPage: "models/BackgroundPage.model"
+        BackgroundPage: "models/BackgroundPage.model",
+        ChromeConnection: "models/ChromeConnection.model"
     }
 });
