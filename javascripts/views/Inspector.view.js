@@ -62,6 +62,13 @@ define(["BaseView",
       });
 
       this.model.streams.add(new Stream({name: "default"}));
+      this.model.streams.add(new Stream({
+        name: "json-test",
+        scheme: "*", 
+        host: "*", 
+        path: "json"
+
+      }));
 
     },
 

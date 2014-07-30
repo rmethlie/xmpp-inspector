@@ -44,13 +44,18 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
         }
       }.bind(this)); 
 
-
       this.id = port["name"];
+      
+      // if(!window.listeners)
+      //   window.listeners = [];
+      // window.listeners.push(this);
+      
       return this;
     },
 
     onBeforeRequest: function(info) {
 
+      console.info( "onBeforeRequest", info );
       var content = "";
       // note: requestBody.raw[0].bytes is an ArrayBuffer type object 
       //  but it becomes a regular object when passed to the devtools extension page.
@@ -84,7 +89,6 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
     addListeners: function(){
       console.log("[StreamListener] addListeners");
       this.listenToBeforeRequest();
-      //this.listenToSendHeaders();
       this.listenToCompleted();
     },
 

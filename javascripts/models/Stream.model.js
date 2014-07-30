@@ -11,7 +11,7 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'lib/utils'], function
       host: "*", 
       path: "http-bind",
       tabId: chrome.devtools.inspectedWindow.tabId,
-      backgroundConnectionName: "port:" + chrome.devtools.inspectedWindow.tabId,
+      backgroundConnectionNamePrefix: "port:" + chrome.devtools.inspectedWindow.tabId,
     },
     
     networkEvents: new NetworkEvents(),
@@ -91,7 +91,7 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'lib/utils'], function
         path    : this.get("path"),
         types   : ["xmlhttprequest"],
         tabId   : this.get("tabId"),
-        name    : this.get("backgroundConnectionName")
+        name    : this.get("backgroundConnectionNamePrefix") + "-" + parseInt(Math.random()*10000)
       };
     },
 

@@ -9,16 +9,16 @@ define(['BaseCollection', 'RequestListener', 'lib/utils'], function(BaseCollecti
     initialize: function(){
       console.log("[RequestListeners] initialize");
       this.addListeners();
+      // !!!: debug remove
+      window.RL = this;
     },
 
     addListeners: function(){
       
       // listen for panel connections
       chrome.runtime.onConnect.addListener(function(port) {
-      
-        console.log("[RequestListeners] Recvd 'onConnect' event.", port );  
+        console.log("[RequestListeners] Recvd 'onConnect' event", port );  
         this.add(new RequestListener().setPort(port));
-
       }.bind(this));
 
       this.on("add",    this._handleConnect.bind(this) );
@@ -38,13 +38,14 @@ define(['BaseCollection', 'RequestListener', 'lib/utils'], function(BaseCollecti
 
       chrome.tabs.onRemoved.addListener(function(responseListenerId, isWindowClosing) {
         console.log("TAB closing", responseListenerId, "TODO: removelisteners and port");
+        // !!!: remove all the listeners from that tab
         this.remove("port:"+responseListenerId);
       }.bind(this));
 
     },
 
     _handleConnect: function( panel ){
-      console.info("panel connect", panel );
+      console.info("panel connect", this.models, panel );
     },
 
     _handleDisconnect: function( panel ){
