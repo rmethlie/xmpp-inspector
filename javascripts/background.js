@@ -1,6 +1,6 @@
 
 require(["config"], function() {
-  require(['RequestListeners'], function(RequestListeners) {
-      var requestListeners = new RequestListeners();
+  require(['PanelConnections'], function(PanelConnections) {
+      var panelConnections = new PanelConnections();
   });
 });
