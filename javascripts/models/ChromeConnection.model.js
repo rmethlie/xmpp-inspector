@@ -25,12 +25,7 @@ define(['BaseModel', 'BaseCollection', 'RequestListener'], function(BaseModel, B
       }.bind(this)); 
 
       this.id = port["name"];
-
     },
-
-    // addWRListener: function(){},
-    
-    // removeWRListeners: function(){},
 
 
     onMessage: function(event,data) {
@@ -44,7 +39,7 @@ define(['BaseModel', 'BaseCollection', 'RequestListener'], function(BaseModel, B
 
         case "change:protocol":
           this.WRListeners.findWhere({id: data.id}).set(data);
-        break;
+          break;
         
         case "copy:text":
           console.log("copy:text");
