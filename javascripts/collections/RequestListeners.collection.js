@@ -19,13 +19,13 @@ define(['BaseCollection', 'ChromeConnection', 'RequestListener', 'lib/utils'], f
       chrome.runtime.onConnect.addListener(function(port) {
         console.log("[RequestListeners] Recvd 'onConnect' event", port );  
         // todo: add logic to detect duplicate connections
-        this.chromeConnections.add(new ChromeConnection({port: port}));
+        this.chromeConnections.add(new ChromeConnection({id: port.name, port: port}));
         // this.add(new RequestListener().setPort(port));
 
       }.bind(this));
 
-      this.on("add",    this._handleConnect.bind(this) );
-      this.on("remove", this._handleDisconnect.bind(this));
+      this.listenTo(this.chromeConnections, "add",    this._handleConnect.bind(this) );
+      this.listenTo(this.chromeConnections, "remove", this._handleDisconnect.bind(this));
       // when the tab has completed its connection workflow, do
       chrome.tabs.onUpdated.addListener(function(responseListenerId, changeInfo) {
         var responseListener = null;
@@ -42,7 +42,8 @@ define(['BaseCollection', 'ChromeConnection', 'RequestListener', 'lib/utils'], f
       chrome.tabs.onRemoved.addListener(function(responseListenerId, isWindowClosing) {
         console.log("TAB closing", responseListenerId, "TODO: removelisteners and port");
         // !!!: remove all the listeners from that tab
-        this.remove("port:"+responseListenerId);
+        // this.chromeConnections.findWhere({id: "port:"+responseListenerId});
+        this.chromeConnections.remove({id: "port:"+responseListenerId});
       }.bind(this));
 
     },
@@ -57,7 +58,7 @@ define(['BaseCollection', 'ChromeConnection', 'RequestListener', 'lib/utils'], f
         console.error( "No chromeConnection found to call removeListeners().");
         return;
       }
-      chromeConnection.removeWRListeners();
+      // chromeConnection.removeWRListeners();
     }
 
 
