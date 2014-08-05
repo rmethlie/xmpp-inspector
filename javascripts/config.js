@@ -19,6 +19,7 @@ require.config({
         XMPPStreamView: "views/XMPPStream.view",
         RequestListener: "models/RequestListener.model",
         RequestListeners: "collections/RequestListeners.collection",
+        PanelConnections: "collections/PanelConnections.collection",
         BaseCollection: "collections/Base.collection",
         NetworkEvent: "models/NetworkEvent.model",
         NetworkEvents: "collections/NetworkEvents.collection",
