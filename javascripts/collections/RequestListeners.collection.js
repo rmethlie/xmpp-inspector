@@ -4,9 +4,7 @@ define(['BaseCollection', 'ChromeConnection', 'RequestListener', 'lib/utils'], f
 
   return Backbone.Collection.extend({
     
-    model: RequestListener,
-
-    chromeConnections : new BaseCollection(),
+    model: ChromeConnection,
 
     initialize: function(){
       console.log("[RequestListeners] initialize");
@@ -18,14 +16,15 @@ define(['BaseCollection', 'ChromeConnection', 'RequestListener', 'lib/utils'], f
       // listen for panel connections
       chrome.runtime.onConnect.addListener(function(port) {
         console.log("[RequestListeners] Recvd 'onConnect' event", port );  
-        // todo: add logic to detect duplicate connections
-        this.chromeConnections.add(new ChromeConnection({id: port.name, port: port}));
+        if( !this.findWhere({id: port.name}) ) {
+          this.add({id: port.name, port: port});
+        }
         // this.add(new RequestListener().setPort(port));
 
       }.bind(this));
 
-      this.listenTo(this.chromeConnections, "add",    this._handleConnect.bind(this) );
-      this.listenTo(this.chromeConnections, "remove", this._handleDisconnect.bind(this));
+      this.on("add", this._handleConnect.bind(this));
+      this.on("remove", this._handleDisconnect.bind(this));
       // when the tab has completed its connection workflow, do
       chrome.tabs.onUpdated.addListener(function(responseListenerId, changeInfo) {
         var responseListener = null;
@@ -42,14 +41,13 @@ define(['BaseCollection', 'ChromeConnection', 'RequestListener', 'lib/utils'], f
       chrome.tabs.onRemoved.addListener(function(responseListenerId, isWindowClosing) {
         console.log("TAB closing", responseListenerId, "TODO: removelisteners and port");
         // !!!: remove all the listeners from that tab
-        // this.chromeConnections.findWhere({id: "port:"+responseListenerId});
-        this.chromeConnections.remove({id: "port:"+responseListenerId});
+        this.remove({id: "port:"+responseListenerId});
       }.bind(this));
 
     },
 
     _handleConnect: function( chromeConnection ){
-      console.info("chromeConnection connect", chromeConnection );
+      console.info("connect", chromeConnection );
     },
 
     _handleDisconnect: function( chromeConnection ){
