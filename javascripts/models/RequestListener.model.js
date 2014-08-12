@@ -18,6 +18,7 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
 
     initialize: function(){
       console.log("[RequestListener] init");
+      this.addListeners();
     },
 
     generateWebRequestFilter: function(){
@@ -25,33 +26,29 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
       return [this.get("scheme")+"://"+this.get("host")+"/*"+this.get("path")+"*"];
     },
 
-    setPort: function( port ){
+    // setPort: function( port ){
 
-      this.port = port;
+    //   this.port = port;
 
-      this.on("change:host change:scheme change:path", function( model ){
-        this.removeListeners();
-        this.addListeners();
-      }.bind(this))
+    //   this.on("change:host change:scheme change:path", function( model ){
+    //     this.removeListeners();
+    //     this.addListeners();
+    //   }.bind(this))
 
-      // handle messages
-      port.onMessage.addListener( function( message ){
-        console.info( "RAW MEssage", message );
-        if( typeof message.event === "undefined" ){
-          this.set( message );
-        }else{
-          this.onMessage( message.event, message.data );
-        }
-      }.bind(this)); 
+    //   // handle messages
+    //   port.onMessage.addListener( function( message ){
+    //     console.info( "RAW MEssage", message );
+    //     if( typeof message.event === "undefined" ){
+    //       this.set( message );
+    //     }else{
+    //       this.onMessage( message.event, message.data );
+    //     }
+    //   }.bind(this)); 
 
-      this.id = port["name"];
+    //   this.id = port["name"];
       
-      // if(!window.listeners)
-      //   window.listeners = [];
-      // window.listeners.push(this);
-      
-      return this;
-    },
+    //   return this;
+    // },
 
     onBeforeRequest: function(info) {
 
@@ -64,7 +61,7 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
       //  for details.
       if(info.requestBody)
         content = Utils.ArrayBufferToString(info.requestBody.raw[0].bytes);
-      this.sendToResponseListener({
+      this.trigger("request:before", {
         event: "stream:update", 
         data:{
           state:"beforeRequest", 
@@ -89,7 +86,7 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
     addListeners: function(){
       console.log("[StreamListener] addListeners");
       this.listenToBeforeRequest();
-      this.listenToCompleted();
+      // this.listenToCompleted();
     },
 
     removeListeners: function(){
@@ -138,16 +135,16 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
       );
     },
 
-    sendToResponseListener: function( message ){
-      console.info( this.port );
-      if( this.port.postMessage ){
-        this.port.postMessage(message);
-        console.info( "postmessage", message );
-      }else{
-        console.error("could not send message to response listener" );
-        debugger;
-      }
-    }
+    // sendToResponseListener: function( message ){
+    //   console.info( this.port );
+    //   if( this.port.postMessage ){
+    //     this.port.postMessage(message);
+    //     console.info( "postmessage", message );
+    //   }else{
+    //     console.error("could not send message to response listener" );
+    //     debugger;
+    //   }
+    // }
 
   });
 });

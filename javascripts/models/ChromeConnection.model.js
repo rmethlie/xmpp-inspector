@@ -5,17 +5,18 @@ define(['BaseModel', 'BaseCollection', 'RequestListener'], function(BaseModel, B
   //  givent point (event name) in the request lifecycle
   return BaseModel.extend({
     
-    WRListeners: new BaseCollection(),
+    requestListeners: new BaseCollection(),
 
     initialize: function(options){
       console.log("[ChromeConnection] initialize");
       this.setPort(options.port);
+      this.addListeners();
     },
 
     setPort: function( port ){
       // handle messages
       port.onMessage.addListener( function( message ){
-        console.info( "RAW MEssage", message );
+        console.info( "RAW Message", message );
         if( typeof message.event === "undefined" ){
           //todo: map the intended attribute update to the listener
           this.set( message );
@@ -29,16 +30,16 @@ define(['BaseModel', 'BaseCollection', 'RequestListener'], function(BaseModel, B
 
 
     onMessage: function(event,data) {
-      console.log("[RequestListener] onMessage", event, ":",data );
+      console.log("[ChromeConnection] onMessage", event, ":",data );
 
       switch(event){
         case "add:listener":
           console.log("add:listener", data );
-          this.WRListeners.add(data); // manifest
+          this.requestListeners.add( new RequestListener(data)); // manifest
           break;
 
         case "change:protocol":
-          this.WRListeners.findWhere({id: data.id}).set(data);
+          this.requestListeners.findWhere({id: data.id}).set(data);
           break;
         
         case "copy:text":
@@ -46,7 +47,24 @@ define(['BaseModel', 'BaseCollection', 'RequestListener'], function(BaseModel, B
           Utils.copyText(data);
           break;
       }
+    },
+
+    addListeners: function(){
+      this.requestListeners.on("request:before", function(payload){
+        this.sendToPanel(payload);
+      }.bind(this));
+    },
+
+    sendToPanel: function( message ){
+      var port = this.get("port");
+      if( port.postMessage ){
+        port.postMessage(message);
+        console.info( "postmessage", message );
+      }else{
+        console.error("could not send message to response listener" );
+      }
     }
+
   
   });
 });
