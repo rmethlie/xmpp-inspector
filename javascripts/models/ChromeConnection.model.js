@@ -1,8 +1,8 @@
 define(['BaseModel', 'BaseCollection', 'RequestListener'], function(BaseModel, BaseCollection, RequestListener) {
   "use strict";
 
-  // Description: A Packet instance represents the state of a request when at 
-  //  givent point (event name) in the request lifecycle
+  // Description: A Packet instance represents the state of a request at 
+  //  given point (event name) in the request lifecycle
   return BaseModel.extend({
     
     requestListeners: new BaseCollection(),
