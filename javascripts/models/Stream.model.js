@@ -44,10 +44,6 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'lib/utils'], function
         this.handleBeforeRequest(data);
       });
 
-      this.on("tab:updated:complete", function(data){
-        this.handleTabUpdated(data);
-      });
-
       this.listenTo(this.responseListener, "request:finished", function(response){
         this.handleRequestFinished(response);
       });
@@ -75,10 +71,6 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'lib/utils'], function
       var guid = Utils.guidGen();
       this.networkEvents.add({id: guid, type:'beforeRequest', data: data, body: data.requestBody});
       this.trigger("request:sent", {id: guid, body: data.requestBody} );
-    },
-
-    handleTabUpdated: function(data) {
-      this.trigger("tab:updated");
     },
 
     webRequestManifest: function(){
