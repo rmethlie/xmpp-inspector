@@ -63,6 +63,12 @@ define(['BaseModel', 'BaseCollection', 'RequestListener'], function(BaseModel, B
       }else{
         console.error("could not send message to response listener" );
       }
+    },
+
+    removeWebRequestListeners: function(){
+      this.requestListeners.forEach(function(listener){
+        listener.removeListeners();
+      });
     }
 
   

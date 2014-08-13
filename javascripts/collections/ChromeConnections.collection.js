@@ -38,7 +38,12 @@ define(['BaseCollection', 'ChromeConnection', 'RequestListener', 'lib/utils'], f
       chrome.tabs.onRemoved.addListener(function(responseListenerId, isWindowClosing) {
         console.log("TAB closing", responseListenerId, "TODO: removelisteners and port");
         // !!!: remove all the listeners from that tab
-        this.remove({id: "port:"+responseListenerId});
+        var params = {id: "port:" + responseListenerId};
+        var connection = this.findWhere(params);
+        if(connection){
+          connection.removeWebRequestListeners();
+          this.remove(params);
+        }
       }.bind(this));
 
     },
