@@ -19,7 +19,6 @@ define(['BaseCollection', 'ChromeConnection', 'RequestListener', 'lib/utils'], f
         if( !this.findWhere({id: port.name}) ) {
           this.add({id: port.name, port: port});
         }
-        // this.add(new RequestListener().setPort(port));
 
       }.bind(this));
 
@@ -56,7 +55,6 @@ define(['BaseCollection', 'ChromeConnection', 'RequestListener', 'lib/utils'], f
         console.error( "No chromeConnection found to call removeListeners().");
         return;
       }
-      // chromeConnection.removeWRListeners();
     }
 
 
