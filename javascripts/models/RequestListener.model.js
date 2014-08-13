@@ -93,22 +93,6 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
           ["requestBody"]
       );
     },
-    
-    listenToCompleted: function(){
-      // get response headers, http status & response
-      this.requestHandlers["onCompleted"] = this.onCompleted.bind(this);
-
-      chrome.webRequest.onCompleted.addListener(
-          this.requestHandlers["onCompleted"],
-          // filters
-          {
-            urls  : this.generateWebRequestFilter(),
-            types : this.get("types"),
-            tabId : this.get("tabId")
-          },
-          ["responseHeaders"]
-      );
-    },
 
   });
 });
