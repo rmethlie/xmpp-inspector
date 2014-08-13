@@ -11,7 +11,9 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
       types: ["xmlhttprequest"],
       tabId: -1
     },
+
     port: null,
+    
     requestHandlers: {},
 
     _responseListener: null,
@@ -22,33 +24,8 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
     },
 
     generateWebRequestFilter: function(){
-      //["*://*/*http-bind*"]
       return [this.get("scheme")+"://"+this.get("host")+"/*"+this.get("path")+"*"];
     },
-
-    // setPort: function( port ){
-
-    //   this.port = port;
-
-    //   this.on("change:host change:scheme change:path", function( model ){
-    //     this.removeListeners();
-    //     this.addListeners();
-    //   }.bind(this))
-
-    //   // handle messages
-    //   port.onMessage.addListener( function( message ){
-    //     console.info( "RAW MEssage", message );
-    //     if( typeof message.event === "undefined" ){
-    //       this.set( message );
-    //     }else{
-    //       this.onMessage( message.event, message.data );
-    //     }
-    //   }.bind(this)); 
-
-    //   this.id = port["name"];
-      
-    //   return this;
-    // },
 
     onBeforeRequest: function(info) {
 
@@ -86,7 +63,6 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
     addListeners: function(){
       console.log("[StreamListener] addListeners");
       this.listenToBeforeRequest();
-      // this.listenToCompleted();
     },
 
     removeListeners: function(){
@@ -120,7 +96,6 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
     
     listenToCompleted: function(){
       // get response headers, http status & response
-      // chrome.webRequest.onResponseStarted.addListener()
       this.requestHandlers["onCompleted"] = this.onCompleted.bind(this);
 
       chrome.webRequest.onCompleted.addListener(
@@ -134,17 +109,6 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
           ["responseHeaders"]
       );
     },
-
-    // sendToResponseListener: function( message ){
-    //   console.info( this.port );
-    //   if( this.port.postMessage ){
-    //     this.port.postMessage(message);
-    //     console.info( "postmessage", message );
-    //   }else{
-    //     console.error("could not send message to response listener" );
-    //     debugger;
-    //   }
-    // }
 
   });
 });
