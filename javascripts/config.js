@@ -11,6 +11,7 @@ require.config({
         BaseModel: "models/Base.model",
         BaseView: "views/Base.view",
         Packet: "models/Packet.model",
+        Streams: "collections/Streams.collection",
         Stream: "models/Stream.model",
         StreamView: "views/Stream.view",
         ResponseListener: "models/ResponseListener.model",
