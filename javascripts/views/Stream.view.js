@@ -175,7 +175,11 @@ define(['BaseView',
         default:
           this.$el.toggleClass("toolbar-expanded");
       }
-    }
+    },
+
+    addSource: function(stream){
+      this.model.stream.add(stream);
+    },
 
   });
 });
