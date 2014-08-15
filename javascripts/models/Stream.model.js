@@ -1,4 +1,4 @@
-define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'lib/utils'], function(BaseModel, NetworkEvents, ResponseListener, Utils) {
+define(['BaseModel', 'ResponseListener', 'lib/utils'], function(BaseModel, ResponseListener, Utils) {
   "use strict";
 
   // Description: Listen for webRequests in the background and send message to dev tools extension
@@ -13,8 +13,6 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'lib/utils'], function
       tabId: chrome.devtools.inspectedWindow.tabId,
       backgroundConnectionName: "port:" + chrome.devtools.inspectedWindow.tabId,
     },
-    
-    networkEvents: new NetworkEvents(),
 
     generateWebRequestFilter: function(){
       return [ this.get("scheme") + "://" + this.get("host") +  "/*" + this.get("path") + "*" ];
@@ -29,10 +27,6 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'lib/utils'], function
     
     addListeners: function(){
       console.log("[Stream] addListeners");
-
-      // init the connection
-      this._connection = chrome.runtime.connect({name: this.webRequestManifest().name });
-      this._connection.onMessage.addListener(this._handleBackgroundEvent.bind(this));
 
       this.sendToBackground({ 
         event: "add:listener", 
@@ -63,13 +57,11 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'lib/utils'], function
     },
 
     handleRequestFinished: function(response){
-      this.networkEvents.add(response);
       this.trigger("request:finished", {id: response.id, body: response.body});
     },
 
     handleBeforeRequest: function(data){
       var guid = Utils.guidGen();
-      this.networkEvents.add({id: guid, type:'beforeRequest', data: data, body: data.requestBody});
       this.trigger("request:sent", {id: guid, body: data.requestBody} );
     },
 
