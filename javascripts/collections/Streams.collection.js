@@ -1,4 +1,4 @@
-define(['BaseModel', 'Stream', 'NetworkEvents', 'ResponseListener', 'lib/utils'], 
+define(['BaseModel', 'Stream', 'NetworkEvents', 'ResponseListener', 'BaseCollection', 'lib/utils'], 
   function(BaseModel, Stream, NetworkEvents, ResponseListener, Utils) {
   "use strict";
 
@@ -10,6 +10,8 @@ define(['BaseModel', 'Stream', 'NetworkEvents', 'ResponseListener', 'lib/utils']
     model: Stream,
     
     networkEvents: new NetworkEvents(),
+
+    responseListeners: new BaseCollection(),
 
     initialize: function(){
       console.log("[Streams] initialize");
@@ -63,7 +65,7 @@ define(['BaseModel', 'Stream', 'NetworkEvents', 'ResponseListener', 'lib/utils']
     },
 
     webRequestManifest: function(){
-      console.info( "WRFilter", this.generateWebRequestFilter() )
+      console.info( "webRequestManifest");
       return {
         scheme  : this.get("scheme"),
         host    : this.get("host"),
