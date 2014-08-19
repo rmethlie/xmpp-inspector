@@ -1,9 +1,9 @@
 define(['BaseModel', 'Stream', 'NetworkEvents', 'ResponseListener', 'BaseCollection', 'lib/utils'], 
-  function(BaseModel, Stream, NetworkEvents, ResponseListener, Utils) {
+  function(BaseModel, Stream, NetworkEvents, ResponseListener, BaseCollection, Utils) {
   "use strict";
 
   // Description: Listen for webRequests in the background and send message to dev tools extension
-  return BaseModel.extend({
+  return BaseCollection.extend({
 
     _connection: null,  //connection to background page
     
