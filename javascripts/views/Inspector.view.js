@@ -4,9 +4,10 @@ define(["BaseView",
   "XMPPStreamView",
   "StreamToolbarView",
   "Streams",
+  "Stream",
   'text!templates/inspector.template.html',
   'lib/utils'], 
-  function(BaseView, InspectorModel, ResponseListener, XMPPStreamView, StreamToolbarView, Streams, inspectorTemplate, Utils) {
+  function(BaseView, InspectorModel, ResponseListener, XMPPStreamView, StreamToolbarView, Streams, Stream, inspectorTemplate, Utils) {
   "use strict";
 
   return BaseView.extend({
@@ -28,8 +29,8 @@ define(["BaseView",
     render: function(){
       this.$el.html(this.template({}));
       this.renderStream();
-      this.stream.model.on("change:scheme change:host change:path", this.renderToolbar.bind(this) );
-      this.renderToolbar(this.stream.model.defaults)
+      this.streamsView.streams.on("change:scheme change:host change:path", this.renderToolbar.bind(this) );
+      this.renderToolbar(this.streamsView.model.defaults)
     },
 
     renderToolbar: function(options){
@@ -46,18 +47,18 @@ define(["BaseView",
       options.inspectorView = this;
       this.toolbar = new StreamToolbarView(options);
       this.toolbar.model.on("change",function(data){
-        this.stream.model.sendToBackground( data.changed );
-        this.stream.model.set(data.changed,{silent:true});
+        this.streamsView.model.sendToBackground( data.changed );
+        this.streamsView.model.set(data.changed,{silent:true});
       }.bind(this));
 
       this.toolbar.model.on( "toolbar:command", this._handleToolbarCommand.bind(this) );
     },
 
     renderStream: function(){
-      this.stream = new XMPPStreamView({
+      this.streamsView = new XMPPStreamView({
         inspectorView: this
       });
-      this.stream.addSource(new Stream());
+      this.streamsView.addSource(new Stream());
     },
 
     addListeners: function(){
@@ -98,16 +99,16 @@ define(["BaseView",
     _handleToolbarCommand: function( command ){
       switch( command.name ){
         case "clear":
-          this.stream.clear();
+          this.streamsView.clear();
           break;
         case "copy":
-          this.stream.copy();
+          this.streamsView.copy();
           break;
         case "url-pattern-update":
-          this.stream.model.updateFilter(command.pattern);
+          this.streamsView.model.updateFilter(command.pattern);
           break;
         case "toggle-subbar":
-          this.stream.toggleForSubbar(command.state);
+          this.streamsView.toggleForSubbar(command.state);
           break;
 
         default:
