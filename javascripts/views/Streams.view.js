@@ -180,7 +180,7 @@ define(['BaseView',
     },
 
     addSource: function(stream){
-      this.model.stream.add(stream);
+      this.streams.add(stream);
     },
 
   });
