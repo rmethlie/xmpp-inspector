@@ -35,9 +35,13 @@ define(['BaseModel', 'Stream', 'NetworkEvents', 'ResponseListener', 'ResponseLis
         this.handleBeforeRequest(data);
       });
       
-      this.listenTo(this.responseListener, "request:finished", function(response){
+      this.listenTo(this.responseListeners, "request:finished", function(response){
         this.handleRequestFinished(response);
       });
+
+      // listen to changes in the collection models
+      // this.stream.model.on("change:scheme change:host change:path", this.renderToolbar.bind(this) );
+
 
     },
 
