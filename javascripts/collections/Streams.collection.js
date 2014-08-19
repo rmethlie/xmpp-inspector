@@ -1,5 +1,5 @@
-define(['BaseModel', 'Stream', 'NetworkEvents', 'ResponseListener', 'BaseCollection', 'lib/utils'], 
-  function(BaseModel, Stream, NetworkEvents, ResponseListener, BaseCollection, Utils) {
+define(['BaseModel', 'Stream', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', 'BaseCollection', 'lib/utils'], 
+  function(BaseModel, Stream, NetworkEvents, ResponseListener, ResponseListeners, BaseCollection, Utils) {
   "use strict";
 
   // Description: Listen for webRequests in the background and send message to dev tools extension
@@ -11,7 +11,7 @@ define(['BaseModel', 'Stream', 'NetworkEvents', 'ResponseListener', 'BaseCollect
     
     networkEvents: new NetworkEvents(),
 
-    responseListeners: new BaseCollection(),
+    responseListeners: new ResponseListeners(),
 
     initialize: function(){
       console.log("[Streams] initialize");
