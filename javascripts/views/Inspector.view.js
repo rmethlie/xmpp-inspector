@@ -28,8 +28,8 @@ define(["BaseView",
     render: function(){
       this.$el.html(this.template({}));
       this.renderStream();
-      // this.streamsView.streams.on("change:scheme change:host change:path", this.renderToolbar.bind(this) );
-      // this.renderToolbar(this.streamsView.model.defaults);
+      this.streamsView.streams.on("change:scheme change:host change:path", this.renderToolbar.bind(this) );
+      this.renderToolbar();
     },
 
     renderToolbar: function(options){
@@ -46,8 +46,8 @@ define(["BaseView",
       options.inspectorView = this;
       this.toolbar = new StreamToolbarView(options);
       this.toolbar.model.on("change",function(data){
-        this.streamsView.model.sendToBackground( data.changed );
-        this.streamsView.model.set(data.changed,{silent:true});
+        this.streamsView.streams.sendToBackground( data.changed );
+        this.streamsView.streams.set(data.changed,{silent:true});
       }.bind(this));
 
       this.toolbar.model.on( "toolbar:command", this._handleToolbarCommand.bind(this) );
