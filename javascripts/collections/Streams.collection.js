@@ -1,5 +1,5 @@
-define(['BaseModel', 'Stream', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', 'BaseCollection', 'lib/utils'], 
-  function(BaseModel, Stream, NetworkEvents, ResponseListener, ResponseListeners, BaseCollection, Utils) {
+define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', 'BaseCollection', 'lib/utils'], 
+  function(BaseModel, NetworkEvents, ResponseListener, ResponseListeners, BaseCollection, Utils) {
   "use strict";
 
   // Description: Listen for webRequests in the background and send message to dev tools extension

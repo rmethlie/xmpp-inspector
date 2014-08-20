@@ -13,7 +13,7 @@ require.config({
         BaseView: "views/Base.view",
         Packet: "models/Packet.model",
         Streams: "collections/Streams.collection",
-        Stream: "models/Stream.model",
+        // Stream: "models/Stream.model",
         StreamsView: "views/Streams.view",
         ResponseListener: "models/ResponseListener.model",
         XMPPStreamView: "views/XMPPStream.view",

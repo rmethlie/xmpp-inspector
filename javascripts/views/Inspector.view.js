@@ -4,10 +4,9 @@ define(["BaseView",
   "XMPPStreamView",
   "StreamToolbarView",
   "Streams",
-  "Stream",
   'text!templates/inspector.template.html',
   'lib/utils'], 
-  function(BaseView, InspectorModel, ResponseListener, XMPPStreamView, StreamToolbarView, Streams, Stream, inspectorTemplate, Utils) {
+  function(BaseView, InspectorModel, ResponseListener, XMPPStreamView, StreamToolbarView, Streams, inspectorTemplate, Utils) {
   "use strict";
 
   return BaseView.extend({
