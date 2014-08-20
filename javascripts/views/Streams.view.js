@@ -37,6 +37,7 @@ define(['BaseView',
 
       this.inspectorView = options.inspectorView;
       this.streams = new Streams();
+      this.streams.add({}); // Add a stream with default listeners
       this.render();
       this.dataStream = CodeMirror.fromTextArea(document.getElementById("dataStream"), this.dataStreamConfig);
       this.initSearchable(this.dataStream);
@@ -179,8 +180,8 @@ define(['BaseView',
       }
     },
 
-    addSource: function(stream){
-      this.streams.add(stream);
+    addSource: function(params){
+      this.streams.add(params);
     },
 
   });
