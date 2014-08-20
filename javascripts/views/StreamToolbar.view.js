@@ -27,7 +27,7 @@ define(["BaseView",
     initialize: function(options){
       console.info( "[TOOLBAR] Initialized.");
       this.inspectorView = options.inspectorView;
-      this.render(options);
+      this.render();
       this.addListeners();
 
     },
