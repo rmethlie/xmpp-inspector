@@ -4,11 +4,7 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
   // Description: Listen for webRequests in the background and send message to dev tools extension
   return BaseModel.extend({
 
-    defaults :{
-      scheme: "*", 
-      host: "*", 
-      path: "http-bind"
-    },
+    defaults : Utils.defaultListenerAttributes,
 
     generateNetworkRequestPattern: function(){
 
