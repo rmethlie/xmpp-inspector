@@ -29,8 +29,8 @@ define(["BaseView",
     render: function(){
       this.$el.html(this.template({}));
       this.renderStream();
-      this.streamsView.streams.on("change:scheme change:host change:path", this.renderToolbar.bind(this) );
-      this.renderToolbar(this.streamsView.model.defaults)
+      // this.streamsView.streams.on("change:scheme change:host change:path", this.renderToolbar.bind(this) );
+      // this.renderToolbar(this.streamsView.model.defaults);
     },
 
     renderToolbar: function(options){
@@ -58,7 +58,6 @@ define(["BaseView",
       this.streamsView = new XMPPStreamView({
         inspectorView: this
       });
-      this.streamsView.addSource(new Stream());
     },
 
     addListeners: function(){
