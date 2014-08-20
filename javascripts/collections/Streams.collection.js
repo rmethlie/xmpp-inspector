@@ -5,13 +5,18 @@ define(['BaseModel', 'Stream', 'NetworkEvents', 'ResponseListener', 'ResponseLis
   // Description: Listen for webRequests in the background and send message to dev tools extension
   return BaseCollection.extend({
 
+    defaults :{
+      tabId: chrome.devtools.inspectedWindow.tabId,
+      backgroundConnectionName: "port:" + chrome.devtools.inspectedWindow.tabId,
+    },
+
     _connection: null,  //connection to background page
     
-    model: Stream,
+    model: ResponseListener,
     
     networkEvents: new NetworkEvents(),
 
-    responseListeners: new ResponseListeners(),
+    // responseListeners: new ResponseListeners(),
 
     initialize: function(){
       console.log("[Streams] initialize");
@@ -35,13 +40,9 @@ define(['BaseModel', 'Stream', 'NetworkEvents', 'ResponseListener', 'ResponseLis
         this.handleBeforeRequest(data);
       });
       
-      this.listenTo(this.responseListeners, "request:finished", function(response){
+      this.on("request:finished", function(response){
         this.handleRequestFinished(response);
       });
-
-      // listen to changes in the collection models
-      // this.stream.model.on("change:scheme change:host change:path", this.renderToolbar.bind(this) );
-
 
     },
 
@@ -59,7 +60,6 @@ define(['BaseModel', 'Stream', 'NetworkEvents', 'ResponseListener', 'ResponseLis
 
     handleRequestFinished: function(response){
       this.networkEvents.add(response);
-      this.trigger("request:finished", {id: response.id, body: response.body});
     },
 
     handleBeforeRequest: function(data){
