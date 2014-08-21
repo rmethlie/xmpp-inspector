@@ -184,5 +184,10 @@ define(['BaseView',
       this.streams.add(params);
     },
 
+    update: function(attributes){
+      this.streams.sendToBackground(attributes);
+      this.streams.updateStream(attributes);
+    }
+
   });
 });

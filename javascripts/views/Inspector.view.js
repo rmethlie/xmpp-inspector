@@ -45,10 +45,14 @@ define(["BaseView",
 
       options.inspectorView = this;
       this.toolbar = new StreamToolbarView(options);
-      this.toolbar.model.on("change",function(data){
-        this.streamsView.streams.sendToBackground( data.changed );
-        this.streamsView.streams.set(data.changed,{silent:true});
-      }.bind(this));
+      this.listenTo(this.toolbar, "change:url", function(data){
+        this.streamsView.update( data.changed );        
+      });
+      
+      // this.toolbar.model.on("change",function(data){
+      //   this.streamsView.streams.sendToBackground( data.changed );
+      //   this.streamsView.update(data.changed);
+      // }.bind(this));
 
       this.toolbar.model.on( "toolbar:command", this._handleToolbarCommand.bind(this) );
     },

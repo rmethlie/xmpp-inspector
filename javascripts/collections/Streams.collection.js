@@ -88,6 +88,14 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
           console.error(e.stack);
         }
       }
+    },
+
+    updateStream: function(params){
+      // find the stream
+      // update it silently
+      var stream = this.findWhere({});
+      if(stream)
+        stream.set(params, {silent: true});
     }
 
   });
