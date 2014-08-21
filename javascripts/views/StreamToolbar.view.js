@@ -169,6 +169,7 @@ define(["BaseView",
       this.model.set(urlParams);
 
       this.toggleUrlInput();
+      this.trigger("change:url");
     },
 
     toggleUrlInput: function(){
