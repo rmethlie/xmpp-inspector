@@ -189,6 +189,10 @@ define(["BaseView",
       
       return params;
     },
+
+    addURL: function(attributes){
+      this.model.urls.add(attributes);
+    },
     
 
   });

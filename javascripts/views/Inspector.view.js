@@ -23,6 +23,7 @@ define(["BaseView",
       this.model = new InspectorModel();
       this.render();
       this.addListeners();
+      window.app = this;
     },
 
     render: function(){
@@ -30,6 +31,7 @@ define(["BaseView",
       this.renderStream();
       this.streamsView.streams.on("change:scheme change:host change:path", this.renderToolbar.bind(this) );
       this.renderToolbar();
+      this.initDefaultStream();
     },
 
     renderToolbar: function(options){
@@ -96,6 +98,12 @@ define(["BaseView",
     cancelSearch: function(){
       this.model.set("state", null);
       this.trigger("search:cancel");      
+    },
+
+    initDefaultStream: function(){
+      var params = Utils.defaultListenerAttributes;
+      this.streamsView.addSource(params);
+      this.toolbar.addURL(params);
     },
 
     _handleToolbarCommand: function( command ){
