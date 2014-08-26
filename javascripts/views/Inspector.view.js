@@ -23,15 +23,18 @@ define(["BaseView",
       this.model = new InspectorModel();
       this.render();
       this.addListeners();
-      window.app = this;
+      this.initDefaultStream();
     },
 
-    render: function(){
+    render: function(options){
+      if(!options){
+        options = {};
+      }
+      
       this.$el.html(this.template({}));
-      this.renderStream();
+      this.renderStream(options);
       this.streamsView.streams.on("change:scheme change:host change:path", this.renderToolbar.bind(this) );
-      this.renderToolbar();
-      this.initDefaultStream();
+      this.renderToolbar(options);
     },
 
     renderToolbar: function(options){
@@ -39,14 +42,8 @@ define(["BaseView",
         options = {};
       }
 
-      if( this.toolbar ){
-        // sync
-        this.toolbar.model.set(options);
-        return;
-      }
-
       options.inspectorView = this;
-      this.toolbar = new StreamToolbarView(options.urlPattern);
+      this.toolbar = new StreamToolbarView(options);
       this.listenTo(this.toolbar, "change:url", function(data){
         this.streamsView.update( data.changed );        
       });

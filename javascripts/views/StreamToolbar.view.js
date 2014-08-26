@@ -67,9 +67,11 @@ define(["BaseView",
 
     render: function(defaults){
       defaults = defaults || this.model.urls.at(0);
-      this.$el.html(this.template({
-        filter: this.scrubPattern(defaults)
-      }));
+      var data = {
+          filter: this.scrubPattern(defaults) || Utils.defaultListenerAttributes
+        };
+
+      this.$el.html(this.template(data));
     },
 
     reload: function(){
@@ -177,6 +179,10 @@ define(["BaseView",
     },
 
     scrubPattern: function(params){
+      if(!params || !params.scheme || !params.host || !params.path){
+        return false;
+      }
+
       params.scheme = params.scheme.replace(/\*+/g, "*");
       if(params.scheme.length === 0)
         params.scheme = "*";
