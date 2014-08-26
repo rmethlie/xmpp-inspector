@@ -27,7 +27,7 @@ define(["BaseView",
     initialize: function(options){
       console.info( "[TOOLBAR] Initialized.");
       this.inspectorView = options.inspectorView;
-      this.render();
+      this.render(options.urlPattern);
       this.addListeners();
 
     },
@@ -66,7 +66,7 @@ define(["BaseView",
     },
 
     render: function(defaults){
-      defaults = defaults || this.model.attributes;
+      defaults = defaults || this.model.urls.at(0);
       this.$el.html(this.template({
         filter: this.scrubPattern(defaults)
       }));
@@ -166,7 +166,7 @@ define(["BaseView",
       });
 
       this.$el.find(".url-pattern .output").html(urlParams.scheme + "://" + urlParams.host +"/" + urlParams.path);
-      this.model.set(urlParams);
+      this.getActiveUrl.set(urlParams);
 
       this.toggleUrlInput();
       this.trigger("change:url");
@@ -194,6 +194,10 @@ define(["BaseView",
       this.model.urls.add(attributes);
     },
     
+    getActiveUrl: function(){
+      var index = this.model.urlsCursor;
+      return this.model.urls.at(index);
+    },
 
   });
 });

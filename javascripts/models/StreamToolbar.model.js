@@ -3,7 +3,9 @@ define(['BaseModel', 'BaseCollection', 'lib/utils'], function(BaseModel, BaseCol
 
   return BaseModel.extend({
     
-    defaults : Utils.defaultListenerAttributes,
+    // defaults : Utils.defaultListenerAttributes,
+
+    urlsCursor: 0,
 
     urls: new BaseCollection(),
     
