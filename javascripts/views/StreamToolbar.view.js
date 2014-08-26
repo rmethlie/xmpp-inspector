@@ -198,6 +198,7 @@ define(["BaseView",
 
     addURL: function(attributes){
       this.model.urls.add(attributes);
+      this.render(this.model.urls.last());
     },
     
     getActiveUrl: function(){
