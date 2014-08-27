@@ -19,7 +19,6 @@ define(['BaseCollection', 'ChromeConnection', 'RequestListener', 'lib/utils'], f
         if( !this.findWhere({id: port.name}) ) {
           this.add({id: port.name, port: port});
         }
-
       }.bind(this));
 
       // when the tab has completed its connection workflow, do

@@ -34,6 +34,7 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'lib/utils'], function
       this._connection = chrome.runtime.connect({name: this.webRequestManifest().name });
       this._connection.onMessage.addListener(this._handleBackgroundEvent.bind(this));
 
+      console.log("[PGD] add bg listener", this.webRequestManifest() );
       this.sendToBackground({ 
         event: "add:listener", 
         data: this.webRequestManifest() 
@@ -82,7 +83,6 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'lib/utils'], function
     },
 
     webRequestManifest: function(){
-      console.info( "WRFilter", this.generateWebRequestFilter() )
       return {
         scheme  : this.get("scheme"),
         host    : this.get("host"),

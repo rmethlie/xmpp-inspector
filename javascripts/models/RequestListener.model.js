@@ -29,7 +29,7 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
 
     onBeforeRequest: function(info) {
 
-      console.info( "onBeforeRequest", info );
+      console.info( "[PGD] onBeforeRequest", info.tabId );
       var content = "";
       // note: requestBody.raw[0].bytes is an ArrayBuffer type object 
       //  but it becomes a regular object when passed to the devtools extension page.

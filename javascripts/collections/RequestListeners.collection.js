@@ -23,7 +23,7 @@ define(['BaseCollection', 'ChromeConnection', 'RequestListener', 'lib/utils'], f
 
       }.bind(this));
 
-      this.on("add", this._handleConnect.bind(this));
+      // this.on("add", this._handleConnect.bind(this));
       this.on("remove", this._handleDisconnect.bind(this));
       // when the tab has completed its connection workflow, do
       chrome.tabs.onUpdated.addListener(function(responseListenerId, changeInfo) {
@@ -46,9 +46,9 @@ define(['BaseCollection', 'ChromeConnection', 'RequestListener', 'lib/utils'], f
 
     },
 
-    _handleConnect: function( chromeConnection ){
-      console.info("connect", chromeConnection );
-    },
+    // _handleConnect: function( chromeConnection ){
+    //   console.info("connect", chromeConnection );
+    // },
 
     _handleDisconnect: function( chromeConnection ){
       console.info("panel disconnect", chromeConnection );
