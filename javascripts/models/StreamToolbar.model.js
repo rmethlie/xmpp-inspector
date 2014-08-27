@@ -7,10 +7,10 @@ define(['BaseModel', 'BaseCollection', 'lib/utils'], function(BaseModel, BaseCol
 
     urlsCursor: 0,
 
-    urls: new BaseCollection(),
+    urls: null
     
     initialize: function(){
-
+      this.urls = new BaseCollection();
     }
 
   });
