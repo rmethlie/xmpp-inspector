@@ -54,10 +54,6 @@ define(['BaseModel', 'BaseCollection', 'RequestListener'], function(BaseModel, B
       this.listenTo(this.requestListeners, "request:before", function(payload){
         this.sendToPanel(payload);
       });
-      
-      // this.requestListeners.on("request:before", function(payload){
-      //   this.sendToPanel(payload);
-      // }.bind(this));
     },
 
     sendToPanel: function( message ){
@@ -65,7 +61,7 @@ define(['BaseModel', 'BaseCollection', 'RequestListener'], function(BaseModel, B
       if( port.postMessage ){
         port.postMessage(message);
         console.info( "postmessage", this.attributes, message );
-      }else{
+      } else {
         console.error("could not send message to response listener" );
       }
     },
