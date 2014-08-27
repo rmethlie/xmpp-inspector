@@ -5,10 +5,11 @@ define(['BaseModel', 'BaseCollection', 'RequestListener'], function(BaseModel, B
   //  given point (event name) in the request lifecycle
   return BaseModel.extend({
     
-    requestListeners: new BaseCollection(),
+    requestListeners: null,
 
     initialize: function(options){
       console.log("[ChromeConnection] initialize");
+      this.requestListeners = new BaseCollection();
       this.setPort(options.port);
       this.addListeners();
     },
