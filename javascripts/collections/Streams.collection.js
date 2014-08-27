@@ -16,8 +16,6 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
     
     networkEvents: new NetworkEvents(),
 
-    // responseListeners: new ResponseListeners(),
-
     initialize: function(){
       console.log("[Streams] initialize");
       this.addListeners();
