@@ -171,7 +171,7 @@ define(["BaseView",
       this.getActiveUrl.set(urlParams);
 
       this.toggleUrlInput();
-      this.trigger("change:url");
+      this.trigger("change:url", urlParams);
     },
 
     toggleUrlInput: function(){
