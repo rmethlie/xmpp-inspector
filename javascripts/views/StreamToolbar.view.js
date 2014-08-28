@@ -162,13 +162,13 @@ define(["BaseView",
       e.preventDefault();
       e.stopPropagation();
       var urlParams = this.scrubPattern({
-        scheme  : this.$el.find("form .scheme").val() || this.model.get("scheme"),
-        host    : this.$el.find("form .host").val() || this.model.get("host"),
-        path    : this.$el.find("form .path").val() || this.model.get("path")        
+        scheme  : this.$el.find("form .scheme").val() || this.model.urls.last().get("scheme"),
+        host    : this.$el.find("form .host").val() || this.model.urls.last().get("host"),
+        path    : this.$el.find("form .path").val() || this.model.urls.last().get("path")        
       });
 
       this.$el.find(".url-pattern .output").html(urlParams.scheme + "://" + urlParams.host +"/" + urlParams.path);
-      this.getActiveUrl.set(urlParams);
+      this.getActiveUrl().set(urlParams);
 
       this.toggleUrlInput();
       this.trigger("change:url", urlParams);
@@ -202,8 +202,8 @@ define(["BaseView",
     },
     
     getActiveUrl: function(){
-      var index = this.model.urlsCursor;
-      return this.model.urls.at(index);
+      // var index = this.model.urlsCursor;
+      return this.model.urls.last();
     },
 
   });
