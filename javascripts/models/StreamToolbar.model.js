@@ -2,15 +2,21 @@ define(['BaseModel', 'BaseCollection', 'lib/utils'], function(BaseModel, BaseCol
   "use strict";
 
   return BaseModel.extend({
-    
-    // defaults : Utils.defaultListenerAttributes,
 
     urlsCursor: 0,
 
-    urls: null
+    urls: null,
     
     initialize: function(){
       this.urls = new BaseCollection();
+      this.listenTo(this.urls, "add", function(object){
+        console.log("[PGD] toolbar add", object);
+      });
+
+      this.listenTo(this.urls, "change", function(object){
+        console.log("[PGD] toolbar change", object);
+      });
+
     }
 
   });

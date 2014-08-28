@@ -34,6 +34,9 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
     initialize: function(){
       this.listenToRequestFinished();
       this.set("id", Utils.guidGen());
+      this.on("change", function(val){
+        console.log("[PGD] responseListener change", this);
+      });
     },
     
     // Description: Listen to finished network requests

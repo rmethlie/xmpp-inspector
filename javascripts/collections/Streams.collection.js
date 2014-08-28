@@ -42,6 +42,9 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
         this.handleRequestFinished(response);
       });
 
+      this.on("add", function(listener){
+        console.log("[PGD] new responseListener", listener);
+      });
     },
 
     _handleBackgroundEvent: function(event){
