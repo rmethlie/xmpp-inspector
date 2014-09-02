@@ -7,7 +7,7 @@ define(['BaseCollection', 'ChromeConnection', 'RequestListener', 'lib/utils'], f
     model: ChromeConnection,
 
     initialize: function(){
-      console.log("[RequestListeners] initialize");
+      console.log("[ChromeConnections] initialize");
       this.addListeners();
       window.RLC = this;
     },
@@ -15,7 +15,7 @@ define(['BaseCollection', 'ChromeConnection', 'RequestListener', 'lib/utils'], f
     addListeners: function(){      
       // listen for panel connections
       chrome.runtime.onConnect.addListener(function(port) {
-        console.log("[RequestListeners] Recvd 'onConnect' event", port );  
+        console.log("[ChromeConnections] Recvd 'onConnect' event", port );  
         if( !this.findWhere({id: port.name}) ) {
           this.add({id: port.name, port: port});
         }
