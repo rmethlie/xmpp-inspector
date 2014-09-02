@@ -1,10 +1,11 @@
 define(['BaseView',
+  'Streams',
   'text!templates/stream-data.template.html',
   'text!templates/stream-data-wrapper.template.html',
   'lib/codemirror-container',
   'lib/codemirror-searchable',
   'beautifier/beautify-html'],
-  function(BaseView, streamDataTemplate, streamDataWrapperTemplate, CodeMirror, cmSearchable, format) {
+  function(BaseView, Streams, streamDataTemplate, streamDataWrapperTemplate, CodeMirror, cmSearchable, format) {
   "use strict";
 
   return BaseView.extend({
@@ -27,7 +28,7 @@ define(['BaseView',
     networkEventMap: {},
 
     initialize: function(options){
-      console.log("[StreamView] initialize");
+      console.log("[StreamsView] initialize");
       
       if(!options)
         options = {};
@@ -35,6 +36,7 @@ define(['BaseView',
       _.extend(this, cmSearchable);
 
       this.inspectorView = options.inspectorView;
+      this.streams = new Streams();
       this.render();
       this.dataStream = CodeMirror.fromTextArea(document.getElementById("dataStream"), this.dataStreamConfig);
       this.initSearchable(this.dataStream);
@@ -44,7 +46,7 @@ define(['BaseView',
     addlisteners: function(options){
       var _this = this;
 
-      this.model.on( "request:sent", function(data){
+      this.streams.on( "request:sent", function(data){
         var prefix = this.requestSentPrefix;
         if (typeof(prefix) == "function") {
           prefix = prefix(data);
@@ -52,7 +54,7 @@ define(['BaseView',
         this.appendData(data, {prefix: prefix});
       }.bind(this));
 
-      this.model.on("request:finished", function(data){
+      this.streams.on("request:finished", function(data){
         var prefix = this.responseReceivedPrefix;
         if (typeof(prefix) == "function") {
           prefix = prefix(data);
@@ -175,6 +177,18 @@ define(['BaseView',
         default:
           this.$el.toggleClass("toolbar-expanded");
       }
+    },
+
+    addSource: function(params){
+      if(!params)
+        params = {};
+
+      this.streams.add(params);
+    },
+
+    update: function(attributes){
+      this.streams.sendToBackground(attributes);
+      this.streams.updateStream(attributes);
     }
 
   });

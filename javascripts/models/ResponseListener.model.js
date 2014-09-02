@@ -4,14 +4,15 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
   // Description: Listen for webRequests in the background and send message to dev tools extension
   return BaseModel.extend({
 
+    defaults : Utils.defaultListenerAttributes,
+
     generateNetworkRequestPattern: function(){
 
-      var stream = this.get("stream");
       var 
-      host = stream.get("host"),
-      scheme = stream.get("scheme"),
-      path = stream.get("path"),
-      pattern = null;
+        host = this.get("host"),
+        scheme = this.get("scheme"),
+        path = this.get("path"),
+        pattern = null;
 
       scheme = scheme.replace(/\*+/g, ".*");
 
@@ -32,6 +33,10 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
 
     initialize: function(){
       this.listenToRequestFinished();
+      this.set("id", Utils.guidGen());
+      this.on("change", function(val){
+        console.log("[PGD] responseListener change", this);
+      });
     },
     
     // Description: Listen to finished network requests
@@ -46,7 +51,7 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
           if( urlPattern.test( packet.request.url ) ){
             packet.getContent( function(contents){
               var guid = Utils.guidGen();
-              this.trigger("request:finished", {id: guid, type:'requestFinished', data: packet, body: contents} );
+              this.trigger("request:finished", {id: guid, streamId: this.get("id"), type:'requestFinished', data: packet, body: contents} );
             }.bind(this));
           }
         }catch( e ){

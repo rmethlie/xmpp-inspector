@@ -1,41 +1,34 @@
-define(['BaseModel', 'ResponseListener', 'lib/utils'], function(BaseModel, ResponseListener, Utils) {
+define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', 'BaseCollection', 'lib/utils'], 
+  function(BaseModel, NetworkEvents, ResponseListener, ResponseListeners, BaseCollection, Utils) {
   "use strict";
 
   // Description: Listen for webRequests in the background and send message to dev tools extension
-  return BaseModel.extend({
-
-    _connection: null,  //connection to background page
+  return BaseCollection.extend({
 
     defaults :{
-      scheme: "*", 
-      host: "*", 
-      path: "http-bind",
       tabId: chrome.devtools.inspectedWindow.tabId,
       backgroundConnectionName: "port:" + chrome.devtools.inspectedWindow.tabId,
     },
 
-    generateWebRequestFilter: function(){
-      return [ this.get("scheme") + "://" + this.get("host") +  "/*" + this.get("path") + "*" ];
-    },
-
+    _connection: null,  //connection to background page
+    
+    model: ResponseListener,
+    
+    networkEvents: null,
 
     initialize: function(){
-      console.log("[Stream] initialize");
-      this.responseListener = new ResponseListener({stream: this});
+      console.log("[Streams] initialize");
+      this.networkEvents = new NetworkEvents();
       this.addListeners();
     },
     
     addListeners: function(){
-      console.log("[Stream] addListeners");
+      console.log("[Streams] addListeners");
 
-<<<<<<< HEAD
       // init the connection
       this._connection = chrome.runtime.connect({name: this.webRequestManifest().name });
       this._connection.onMessage.addListener(this._handleBackgroundEvent.bind(this));
 
-      console.log("[PGD] add bg listener", this.webRequestManifest() );
-=======
->>>>>>> panel-connections
       this.sendToBackground({ 
         event: "add:listener", 
         data: this.webRequestManifest() 
@@ -45,11 +38,14 @@ define(['BaseModel', 'ResponseListener', 'lib/utils'], function(BaseModel, Respo
       this.on("stream:update", function(data){
         this.handleBeforeRequest(data);
       });
-
-      this.listenTo(this.responseListener, "request:finished", function(response){
+      
+      this.on("request:finished", function(response){
         this.handleRequestFinished(response);
       });
 
+      this.on("add", function(listener){
+        console.log("[PGD] new responseListener", listener);
+      });
     },
 
     _handleBackgroundEvent: function(event){
@@ -65,15 +61,17 @@ define(['BaseModel', 'ResponseListener', 'lib/utils'], function(BaseModel, Respo
     },
 
     handleRequestFinished: function(response){
-      this.trigger("request:finished", {id: response.id, body: response.body});
+      this.networkEvents.add(response);
     },
 
     handleBeforeRequest: function(data){
       var guid = Utils.guidGen();
+      this.networkEvents.add({id: guid, type:'beforeRequest', data: data, body: data.requestBody});
       this.trigger("request:sent", {id: guid, body: data.requestBody} );
     },
 
     webRequestManifest: function(){
+      console.info( "webRequestManifest");
       return {
         scheme  : this.get("scheme"),
         host    : this.get("host"),
@@ -92,6 +90,14 @@ define(['BaseModel', 'ResponseListener', 'lib/utils'], function(BaseModel, Respo
           console.error(e.stack);
         }
       }
+    },
+
+    updateStream: function(params){
+      // find the stream
+      // update it silently
+      var stream = this.findWhere({});
+      if(stream)
+        stream.set(params, {silent: true});
     }
 
   });

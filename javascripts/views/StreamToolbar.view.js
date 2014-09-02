@@ -27,7 +27,7 @@ define(["BaseView",
     initialize: function(options){
       console.info( "[TOOLBAR] Initialized.");
       this.inspectorView = options.inspectorView;
-      this.render(options);
+      this.render(options.urlPattern);
       this.addListeners();
 
     },
@@ -66,10 +66,12 @@ define(["BaseView",
     },
 
     render: function(defaults){
-      defaults = defaults || this.model.attributes;
-      this.$el.html(this.template({
-        filter: this.scrubPattern(defaults)
-      }));
+      defaults = defaults || this.model.urls.at(0);
+      var data = {
+          filter: this.scrubPattern(defaults) || Utils.defaultListenerAttributes
+        };
+
+      this.$el.html(this.template(data));
     },
 
     reload: function(){
@@ -160,15 +162,16 @@ define(["BaseView",
       e.preventDefault();
       e.stopPropagation();
       var urlParams = this.scrubPattern({
-        scheme  : this.$el.find("form .scheme").val() || this.model.get("scheme"),
-        host    : this.$el.find("form .host").val() || this.model.get("host"),
-        path    : this.$el.find("form .path").val() || this.model.get("path")        
+        scheme  : this.$el.find("form .scheme").val() || this.model.urls.last().get("scheme"),
+        host    : this.$el.find("form .host").val() || this.model.urls.last().get("host"),
+        path    : this.$el.find("form .path").val() || this.model.urls.last().get("path")        
       });
 
       this.$el.find(".url-pattern .output").html(urlParams.scheme + "://" + urlParams.host +"/" + urlParams.path);
-      this.model.set(urlParams);
+      this.getActiveUrl().set(urlParams);
 
       this.toggleUrlInput();
+      this.trigger("change:url", urlParams);
     },
 
     toggleUrlInput: function(){
@@ -176,6 +179,10 @@ define(["BaseView",
     },
 
     scrubPattern: function(params){
+      if(!params || !params.scheme || !params.host || !params.path){
+        return false;
+      }
+
       params.scheme = params.scheme.replace(/\*+/g, "*");
       if(params.scheme.length === 0)
         params.scheme = "*";
@@ -188,7 +195,16 @@ define(["BaseView",
       
       return params;
     },
+
+    addURL: function(attributes){
+      this.model.urls.add(attributes);
+      this.render(this.model.urls.last());
+    },
     
+    getActiveUrl: function(){
+      // var index = this.model.urlsCursor;
+      return this.model.urls.last();
+    },
 
   });
 });
