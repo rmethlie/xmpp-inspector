@@ -87,7 +87,7 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
       };
     },
 
-    sendToBackground: function( data ){
+    sendToBackground: function(data){
       if( this._connection && this._connection.postMessage ){
         try{
           this._connection.postMessage(data);
