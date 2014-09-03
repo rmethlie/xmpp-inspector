@@ -100,7 +100,7 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
     updateStream: function(params){
       // find the stream
       // update it silently
-      var stream = this.findWhere({});
+      var stream = this.last();
       if(stream)
         stream.set(params, {silent: true});
     }
