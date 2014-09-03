@@ -30,10 +30,10 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
       this._connection = chrome.runtime.connect({name: this.webRequestManifest().name });
       this._connection.onMessage.addListener(this._handleBackgroundEvent.bind(this));
 
-      this.sendToBackground({ 
-        event: "add:listener", 
-        data: this.webRequestManifest() 
-      });
+      // this.sendToBackground({ 
+      //   event: "add:listener", 
+      //   data: this.webRequestManifest() 
+      // });
 
       // Description: Handle the message sent from the background page
       this.on("stream:update", function(data){
