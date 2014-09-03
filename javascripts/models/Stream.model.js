@@ -28,14 +28,6 @@ define(['BaseModel', 'ResponseListener', 'lib/utils'], function(BaseModel, Respo
     addListeners: function(){
       console.log("[Stream] addListeners");
 
-<<<<<<< HEAD
-      // init the connection
-      this._connection = chrome.runtime.connect({name: this.webRequestManifest().name });
-      this._connection.onMessage.addListener(this._handleBackgroundEvent.bind(this));
-
-      console.log("[PGD] add bg listener", this.webRequestManifest() );
-=======
->>>>>>> panel-connections
       this.sendToBackground({ 
         event: "add:listener", 
         data: this.webRequestManifest() 
