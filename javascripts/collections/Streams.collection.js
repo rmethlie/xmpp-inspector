@@ -27,7 +27,7 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
       console.log("[Streams] addListeners");
 
       // init the connection
-      this._connection = chrome.runtime.connect({name: this.webRequestManifest().name });
+      this._connection = chrome.runtime.connect({name: this.backgroundConnectionName });
       this._connection.onMessage.addListener(this._handleBackgroundEvent.bind(this));
 
       // this.sendToBackground({ 
@@ -71,12 +71,16 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
       this.trigger("request:sent", {id: guid, body: data.requestBody} );
     },
 
-    webRequestManifest: function(){
+    webRequestManifest: function(index){
       console.info( "webRequestManifest");
+      if (!index){
+        index = this.length ? this.length - 1 : 0;
+      }
+      var listener = this.at(index);
       return {
-        scheme  : this.get("scheme"),
-        host    : this.get("host"),
-        path    : this.get("path"),
+        scheme  : listener.get("scheme"),
+        host    : listener.get("host"),
+        path    : listener.get("path"),
         types   : ["xmlhttprequest"],
         tabId   : this.tabId,
         name    : this.backgroundConnectionName
