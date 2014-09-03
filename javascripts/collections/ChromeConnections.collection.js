@@ -15,7 +15,7 @@ define(['BaseCollection', 'ChromeConnection', 'RequestListener', 'lib/utils'], f
     addListeners: function(){      
       // listen for panel connections
       chrome.runtime.onConnect.addListener(function(port) {
-        console.log("[ChromeConnections] Recvd 'onConnect' event", port );  
+        console.log("[ChromeConnections] Recvd 'onConnect' event");  
         if( !this.findWhere({id: port.name}) ) {
           this.add({id: port.name, port: port});
         }
