@@ -1,4 +1,4 @@
-define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkEvents, Utils) {
+define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
   "use strict";
 
   // Description: Listen for webRequests in the background and send message to dev tools extension
