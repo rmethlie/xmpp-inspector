@@ -4,9 +4,12 @@ define(["BaseView",
   "XMPPStreamView",
   "StreamToolbarView",
   "Streams",
+  "StreamsManager",
   'text!templates/inspector.template.html',
   'lib/utils'], 
-  function(BaseView, InspectorModel, ResponseListener, XMPPStreamView, StreamToolbarView, Streams, inspectorTemplate, Utils) {
+  function( BaseView, InspectorModel, ResponseListener, XMPPStreamView, StreamToolbarView, 
+    Streams, StreamsManager, inspectorTemplate, Utils ) {
+
   "use strict";
 
   return BaseView.extend({
@@ -35,6 +38,7 @@ define(["BaseView",
       this.renderStream(options);
       this.streamsView.streams.on("change:scheme change:host change:path", this.renderToolbar.bind(this) );
       this.renderToolbar(options);
+      this.renderStreamsManager();
     },
 
     renderToolbar: function(options){
@@ -57,6 +61,10 @@ define(["BaseView",
       });
     },
 
+    renderStreamsManager: function(){
+      this.streamsManager = new StreamsManager();
+    },
+    
     addListeners: function(){
 
       document.addEventListener("keydown", function(event){
