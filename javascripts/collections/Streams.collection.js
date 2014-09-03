@@ -2,13 +2,14 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
   function(BaseModel, NetworkEvents, ResponseListener, ResponseListeners, BaseCollection, Utils) {
   "use strict";
 
+  var inspectedTabId = chrome.devtools.inspectedWindow.tabId;
+
   // Description: Listen for webRequests in the background and send message to dev tools extension
   return BaseCollection.extend({
 
-    defaults :{
-      tabId: chrome.devtools.inspectedWindow.tabId,
-      backgroundConnectionName: "port:" + chrome.devtools.inspectedWindow.tabId,
-    },
+    tabId: inspectedTabId,
+
+    backgroundConnectionName: "port:" + inspectedTabId,
 
     _connection: null,  //connection to background page
     
@@ -77,8 +78,8 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
         host    : this.get("host"),
         path    : this.get("path"),
         types   : ["xmlhttprequest"],
-        tabId   : this.get("tabId"),
-        name    : this.get("backgroundConnectionName")
+        tabId   : this.tabId,
+        name    : this.backgroundConnectionName
       };
     },
 
