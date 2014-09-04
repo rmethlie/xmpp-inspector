@@ -192,7 +192,7 @@ define(['BaseView',
     },
 
     getSources: function(){
-      return this.model;
+      return this.streams;
     },
   });
 });

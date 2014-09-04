@@ -7,8 +7,8 @@ define(["BaseView", 'text!templates/streamsManager.template.html',], function(Ba
 
     template: _.template(streamsManagerTemplate),
 
-    initialize: function(){
-      this.render();
+    initialize: function(options){
+      this.render(options);
     },
 
     render: function(options){
