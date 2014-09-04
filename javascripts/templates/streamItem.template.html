@@ -1,0 +1,15 @@
+<form class="update-url-pattern hidden">
+<select class="scheme">
+  <option <% if(model.get("scheme") === "*") {%>selected <%} %> value="*">&lt;all&gt;</option>
+  <option <% if(model.get("scheme") === "http") {%>selected <%} %> value="http">http</option>
+  <option <% if(model.get("scheme") === "https") {%>selected <%} %> value="https">https</option>
+  <option <% if(model.get("scheme") === "file") {%>selected <%} %> value="file">file</option>
+  <option <% if(model.get("scheme") === "ftp") {%>selected <%} %> value="ftp">ftp</option>
+  <option <% if(model.get("scheme") === "chrome-extension") {%>selected <%} %> value="chrome-extension">chrome-extension</option>
+</select>
+://
+<input class="host" type="text" value="<%= model.get("host") %>"/>
+/
+<input class="path" type="text" value="<%= model.get("path") %>"/>
+<button type="submit">Go</button>
+</form>
