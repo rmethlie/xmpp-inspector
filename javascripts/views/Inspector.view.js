@@ -62,9 +62,11 @@ define(["BaseView",
     },
 
     renderStreamsManager: function(){
-      this.streamsManager = new StreamsManager();
+      this.streamsManager = new StreamsManager({
+        streams: this.streamsView.getSources()
+      });
     },
-    
+
     addListeners: function(){
 
       document.addEventListener("keydown", function(event){
