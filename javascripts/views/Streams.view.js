@@ -10,7 +10,7 @@ define(['BaseView',
 
   return BaseView.extend({
     
-    el: "#stream",
+    el: "#streams",
 
     template: _.template(streamDataTemplate),
 

@@ -32,14 +32,14 @@ TEXTAREA.xml-contents{
   zoom:1; /* For IE 6/7 (trigger hasLayout) */
 }
 
-#xmpp-stream {
+#streams {
   position: absolute;
   top: 2em;
   bottom: 0;
   width: 100%;
 }
 
-#xmpp-stream.toolbar-expanded {
+#streams.toolbar-expanded {
   top: 4em;
 }
 

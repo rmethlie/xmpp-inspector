@@ -3,7 +3,7 @@ define(["StreamsView"], function(StreamsView) {
 
   return StreamsView.extend({
     
-    el                      : "#xmpp-stream",
+    el                      : "#streams",
     requestSentPrefix       : function(){ return "<!-- " + new Date().toTimeString() + " request sent >>>>>>>>>>>> -->";},
     responseReceivedPrefix  : function(){ return "<!-- <<<<<<<<<<<< " + new Date().toTimeString() + " response received -->";}
   });
