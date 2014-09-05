@@ -10,7 +10,12 @@ define(["BaseView",
     el : "#stream-manager",
 
     template: _.template(streamsManagerTemplate),
+
     urlTemplate: _.template(itemTemplate),
+
+    events: {
+      "click .add-new .show": "showAddInput"
+    },
 
     initialize: function(options){
       this.render(options);
@@ -21,12 +26,12 @@ define(["BaseView",
         options = {};
 
       this.$el.html(this.template(options));
-      this.renderUrls(options);
+      var list = this.renderUrls(options);
+      this.$el.find("#stream-manager-list").append(list);
     },
 
     renderUrls: function(options){
-      var html = "";
-      // var streamsCount = options.sources.length;
+      var html = "hi";
       options.sources.each( function(stream){
         html += this.renderUrl({ model: stream });
       });
@@ -36,6 +41,11 @@ define(["BaseView",
       
     renderUrl: function(options){
       return this.urlTemplate(options);
+    },
+
+    showAddInput: function(e){
+      this.$el.find(".add-new .update-url-pattern").removeClass("hidden");
+      console.log("showAddInput");
     },
   });
 });

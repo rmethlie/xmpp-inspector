@@ -32,6 +32,11 @@ TEXTAREA.xml-contents{
   zoom:1; /* For IE 6/7 (trigger hasLayout) */
 }
 
+#stream-manager {
+  position: absolute;
+  top: 60px;
+}
+
 #streams {
   position: absolute;
   top: 2em;

@@ -1,3 +1,21 @@
 <div> this is my StreamManager
-  <ul id="#stream-manager-list"></ul>
+  <div class="add-new">
+    <a href="#add-new" class="show">Add Stream</a>
+    <form class="update-url-pattern hidden">
+      <select class="scheme">
+        <option value="*" selected>&lt;all&gt;</option>
+        <option value="http">http</option>
+        <option value="https">https</option>
+        <option value="file">file</option>
+        <option value="ftp">ftp</option>
+        <option value="chrome-extension">chrome-extension</option>
+      </select>
+      ://
+      <input class="host" type="text" value=""/>
+      /
+      <input class="path" type="text" value="*"/>
+      <button type="submit">Go</button>
+    </form>
+  </div>
+  <ul id="stream-manager-list"></ul>
 </div>
