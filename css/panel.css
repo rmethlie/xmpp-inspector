@@ -37,6 +37,7 @@ TEXTAREA.xml-contents{
   top: 2em;
   bottom: 0;
   width: 100%;
+  display:none;
 }
 
 #streams.toolbar-expanded {
