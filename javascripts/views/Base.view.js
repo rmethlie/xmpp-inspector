@@ -8,6 +8,15 @@ define(['backbone'], function(Backbone) {
       console.log("[BaseView] initialize");
     },
 
+    show: function(){
+      console.log("[BaseView] show");
+      this.$el.removeClass("hidden");
+    },
+
+    hide: function(){
+      console.log("[BaseView] hide");
+      this.$el.addClass("hidden");
+    },
 
   });
 });

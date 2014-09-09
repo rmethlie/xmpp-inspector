@@ -175,7 +175,8 @@ define(["BaseView",
     },
 
     toggleUrlInput: function(){
-      this.$el.find(".output, form").toggleClass("hidden");
+      this.inspectorView.streamsView.hide()
+      this.inspectorView.streamsManager.show()
     },
 
     scrubPattern: function(params){
