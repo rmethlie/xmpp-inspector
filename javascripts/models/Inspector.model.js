@@ -1,4 +1,4 @@
-define(["BaseModel"], function(BaseModel) {
+define(["BaseModel", 'Streams' ], function(BaseModel, Streams) {
   "use strict";
 
   // Description: A Packet instance represents the state of a request when at 
@@ -11,6 +11,11 @@ define(["BaseModel"], function(BaseModel) {
     
     initialize: function(){
       console.log("[Inspector] initialize");
+    },
+
+    loadUrlManifest: function(){
+      var manifest = JSON.parse(localStorage.getItem("urlManifest"));
+      return new Streams(manifest);
     }
 
   });

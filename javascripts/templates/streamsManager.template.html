@@ -1,4 +1,30 @@
 <div> this is my StreamManager
+  <%= sources.length %>
+  <ul>
+  <%
+  sources.forEach(function(source){
+    %>
+    <li>
+      <form class="update-url-pattern hidden">
+        <select class="scheme">
+          <option value="*" <% if(source.get('scheme') === "*"){ %> selected <%} %> >&lt;all&gt;</option>
+          <option value="http" <% if(source.get('scheme') === "http"){ %> selected <%} %> >http</option>
+          <option value="https" <% if(source.get('scheme') === "https"){ %> selected <%} %> >https</option>
+          <option value="file" <% if(source.get('scheme') === "file"){ %> selected <%} %> >file</option>
+          <option value="ftp" <% if(source.get('scheme') === "ftp"){ %> selected <%} %> >ftp</option>
+          <option value="chrome-extension" <% if(source.get('scheme') === "chrome-extension"){ %> selected <%} %> >chrome-extension</option>
+        </select>
+        ://
+        <input class="host" type="text" value="<%= source.get('host') %>"/>
+        /
+        <input class="path" type="text" value="<%= source.get('path') %>"/>
+        <button type="submit">Go</button>
+      </form>
+    </li>
+    <%
+  });
+  %>
+  </ul>
   <div class="add-new">
     <a href="#add-new" class="show">Add Stream</a>
     <form class="update-url-pattern hidden">

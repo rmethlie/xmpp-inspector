@@ -24,9 +24,10 @@ define(["BaseView",
 
     initialize: function(){
       this.model = new InspectorModel();
-      this.render();
+      var urlManifest = this.model.loadUrlManifest();
+      this.render({patterns: urlManifest});
       this.addListeners();
-      this.initDefaultStream();
+      // this.initDefaultStream();
     },
 
     render: function(options){
@@ -38,7 +39,7 @@ define(["BaseView",
       this.renderStream(options);
       this.streamsView.streams.on("change:scheme change:host change:path", this.renderToolbar.bind(this) );
       this.renderToolbar(options);
-      this.renderStreamsManager();
+      this.renderStreamsManager(options);
     },
 
     renderToolbar: function(options){
@@ -61,9 +62,11 @@ define(["BaseView",
       });
     },
 
-    renderStreamsManager: function(){
+    renderStreamsManager: function(options){
+      var sources;
+      sources = options.patterns ? options.patterns : this.streamsView.getSources()
       this.streamsManager = new StreamsManager({
-        sources: this.streamsView.getSources()
+        sources: sources
       });
     },
 
