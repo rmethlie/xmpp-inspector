@@ -35,8 +35,9 @@ define(['BaseView',
 
       _.extend(this, cmSearchable);
 
+      var patterns = options.patterns || [];
       this.inspectorView = options.inspectorView;
-      this.streams = new Streams();
+      this.streams = new Streams(patterns);
       this.render();
       this.dataStream = CodeMirror.fromTextArea(document.getElementById("dataStream"), this.dataStreamConfig);
       this.initSearchable(this.dataStream);

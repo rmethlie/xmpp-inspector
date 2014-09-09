@@ -56,17 +56,15 @@ define(["BaseView",
       this.toolbar.model.on( "toolbar:command", this._handleToolbarCommand.bind(this) );
     },
 
-    renderStream: function(){
-      this.streamsView = new XMPPStreamView({
-        inspectorView: this
-      });
+    renderStream: function(options){
+      options = options || {};
+      options.inspectorView = this;
+      this.streamsView = new XMPPStreamView(options);
     },
 
     renderStreamsManager: function(options){
-      var sources;
-      sources = options.patterns ? options.patterns : this.streamsView.getSources()
       this.streamsManager = new StreamsManager({
-        sources: sources
+        sources: this.streamsView.getSources()
       });
     },
 
@@ -88,6 +86,10 @@ define(["BaseView",
           return false;
         }
       }.bind(this), true);
+
+      this.listenTo(this.streamsManager, "streams:add", function(pattern){
+        // this.streamsView.addSource(pattern);
+      });
 
     },
 
