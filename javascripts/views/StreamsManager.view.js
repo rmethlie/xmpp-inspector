@@ -1,8 +1,9 @@
 define(["BaseView", 
+  'lib/utils',
   'text!templates/streamsManager.template.html', 
   'text!templates/streamItem.template.html'], 
 
-  function(BaseView, streamsManagerTemplate, itemTemplate) {
+  function(BaseView, Utils, streamsManagerTemplate, itemTemplate) {
   "use strict";
 
   return BaseView.extend({
@@ -19,13 +20,19 @@ define(["BaseView",
     },
 
     initialize: function(options){
+      if(!options)
+        options = {};
+
+      this.sources = options.sources
       this.render(options);
+      this.addListeners();
     },
 
     render: function(options){
       if(!options)
         options = {};
 
+      options.sources = options.sources || this.sources
       this.$el.html(this.template(options));
       var list = this.renderUrls(options);
       this.$el.find("#stream-manager-list").append(list);
@@ -33,7 +40,7 @@ define(["BaseView",
 
     renderUrls: function(options){
       var html = "";
-      options.sources.each( function(stream){
+      this.sources.each( function(stream){
         html += this.renderUrl({ model: stream });
       }.bind(this));
 
@@ -44,6 +51,12 @@ define(["BaseView",
       return this.urlTemplate(options);
     },
 
+    addListeners: function(){
+      this.listenTo(this.sources, "add", function(){
+        this.render();
+      });
+    },
+
     showAddInput: function(e){
       console.log("showAddInput");
       var $form = this.$el.find(".add-new .new-url-pattern");
@@ -52,15 +65,19 @@ define(["BaseView",
     },
 
     addStream: function(e){
+      Utils.stopEvent(e);
       if(!e.target)
         return;
+
       var $form  = $(e.target)
       var data = this.scrubPattern({
         scheme: $form.find('.scheme').val(),
         host: $form.find('.host').val(),
         path: $form.find('.path').val()
       });
-      this.trigger("stream:add", data);
+
+      if(data)
+        this.sources.add(data);
     },
 
     scrubPattern: function(params){
