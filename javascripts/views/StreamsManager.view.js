@@ -16,6 +16,7 @@ define(["BaseView",
 
     events: {
       "click .add-new .show": "showAddInput",
+      "click .close": "close",
       "submit .new-url-pattern": "addStream"
     },
 
@@ -23,7 +24,8 @@ define(["BaseView",
       if(!options)
         options = {};
 
-      this.sources = options.sources
+      this.sources = options.sources;
+      this.inspectorView = options.inspectorView;
       this.render(options);
       this.addListeners();
     },
@@ -97,5 +99,9 @@ define(["BaseView",
       
       return params;
     },
+
+    close: function(){
+      this.inspectorView.toggleManager();
+    }
   });
 });

@@ -64,7 +64,8 @@ define(["BaseView",
 
     renderStreamsManager: function(options){
       this.streamsManager = new StreamsManager({
-        sources: this.streamsView.getSources()
+        sources: this.streamsView.getSources(),
+        inspectorView: this
       });
     },
 
