@@ -32,12 +32,7 @@ TEXTAREA.xml-contents{
   zoom:1; /* For IE 6/7 (trigger hasLayout) */
 }
 
-#stream-manager {
-  position: absolute;
-  top: 60px;
-}
-
-#streams {
+#streams, #stream-manager {
   position: absolute;
   top: 2em;
   bottom: 0;
@@ -46,6 +41,16 @@ TEXTAREA.xml-contents{
 
 #streams.toolbar-expanded {
   top: 4em;
+}
+
+.container {
+  padding: 10px;
+}
+
+.container .close {
+  color: #999;
+  font-size: 1.25em;
+  margin-right: 10px;
 }
 
 /* Codemirror "Theme" */
