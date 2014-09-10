@@ -87,10 +87,6 @@ define(["BaseView",
         }
       }.bind(this), true);
 
-      this.listenTo(this.streamsManager, "streams:add", function(pattern){
-        // this.streamsView.addSource(pattern);
-      });
-
     },
 
     getState: function(){
