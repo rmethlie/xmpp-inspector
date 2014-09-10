@@ -15,7 +15,9 @@ define(["BaseModel", 'Streams' ], function(BaseModel, Streams) {
 
     loadUrlManifest: function(){
       var manifest = JSON.parse(localStorage.getItem("urlManifest"));
-      return new Streams(manifest);
+      if(!manifest)
+        manifest = [];
+      return manifest;
     }
 
   });
