@@ -175,8 +175,7 @@ define(["BaseView",
     },
 
     toggleUrlInput: function(){
-      this.inspectorView.streamsView.hide()
-      this.inspectorView.streamsManager.show()
+      this.inspectorView.toggleManager();
     },
 
     scrubPattern: function(params){
@@ -203,7 +202,6 @@ define(["BaseView",
     },
     
     getActiveUrl: function(){
-      // var index = this.model.urlsCursor;
       return this.model.urls.last();
     },
 

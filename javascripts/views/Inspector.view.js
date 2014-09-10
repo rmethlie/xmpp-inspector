@@ -85,6 +85,12 @@ define(["BaseView",
           this.cancelSearch();
           return false;
         }
+        // ESC cancels manage state
+        if(this.model.get("state") === "manage" && event.which === 27){
+          Utils.stopEvent(event);
+          this.toggleManager();
+          return false;
+        }
       }.bind(this), true);
 
     },
@@ -131,5 +137,16 @@ define(["BaseView",
       }
     },
 
+    toggleManager: function(){
+      if(this.model.get("state") === "manage"){
+        this.streamsManager.hide();
+        this.streamsView.show();
+        this.model.set("state", null);
+        return;
+      }
+      this.streamsView.hide();
+      this.streamsManager.show();
+      this.model.set("state", "manage");
+    }
   });
 });
