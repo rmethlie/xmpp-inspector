@@ -18,7 +18,7 @@ define(["BaseView",
       "click .close": "close",
       "click .add-new .show": "showAddInput",
       "submit .new-url-pattern": "addStream",
-      "click .edit-stream .show": "showEditStream",
+      "click .edit-stream .show": "toggleEditStream",
       "submit .update-url-pattern": "editStream"
     },
 
@@ -76,8 +76,8 @@ define(["BaseView",
       var $form  = $(e.target)
       var data = this.scrubPattern({
         scheme: $form.find('.scheme').val(),
-        host: $form.find('.host').val(),
-        path: $form.find('.path').val()
+        host  : $form.find('.host').val(),
+        path  : $form.find('.path').val()
       });
 
       if(data)
@@ -106,12 +106,36 @@ define(["BaseView",
       this.inspectorView.toggleManager();
     },
 
-    showEditStream: function(e){
-      console.log("showEditStream", e);
+    editStream: function(e){
+      Utils.stopEvent(e);
+      var index = e.target.getAttribute('data-index');
+      var $form = $(this.$el.find("form[data-index='" + index + "']")[0]);
+      var $link = $(this.$el.find("a.show[data-index='" + index + "']")[0]);
+
+      var urlParams = this.scrubPattern({
+        scheme: $form.find('.scheme').val(),
+        host  : $form.find('.host').val(),
+        path  : $form.find('.path').val()
+      });
+
+      if(urlParams){
+        $link.html(urlParams.scheme + "://" + urlParams.host +"/" + urlParams.path);
+        this.getActiveUrl().set(urlParams);
+        this.toggleUrlInput();
+        this.trigger("change:url", urlParams);
+      }else{
+        this.highlightError(index);
+      }
+
     },
 
-    editStream: function(e){
-      console.log("editStream", e);
+    highlightError: function(index){
+      console.log("highlightError", e);
+
+    },
+
+    toggleEditStream: function(e){
+      console.log("toggleEditStream", e);
     },
 
   });

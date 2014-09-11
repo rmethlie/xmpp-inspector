@@ -2,7 +2,7 @@
   <a href="#" class="show" data-index="<%= index %>">
     <%= model.get("scheme") %>://<%= model.get("host") %>/<%= model.get("path") %>
   </a>
-  <form class="update-url-pattern hidden">
+  <form class="update-url-pattern hidden" data-index="<%= index %>">
     <select class="scheme">
       <option <% if(model.get("scheme") === "*") {%>selected <%} %> value="*">&lt;all&gt;</option>
       <option <% if(model.get("scheme") === "http") {%>selected <%} %> value="http">http</option>
@@ -15,6 +15,7 @@
     <input class="host" type="text" value="<%= model.get("host") %>"/>
     /
     <input class="path" type="text" value="<%= model.get("path") %>"/>
+    <input class="index" type="hidden" value="<%= index %>"/>
     <button type="submit">Go</button>
   </form>
 </li>
