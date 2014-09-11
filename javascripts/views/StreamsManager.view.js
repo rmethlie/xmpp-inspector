@@ -15,8 +15,8 @@ define(["BaseView",
     urlTemplate: _.template(itemTemplate),
 
     events: {
-      "click .add-new .show": "showAddInput",
       "click .close": "close",
+      "click .add-new .show": "showAddInput",
       "submit .new-url-pattern": "addStream"
     },
 
