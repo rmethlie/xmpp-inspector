@@ -1,7 +1,7 @@
-<li>
-  <%= model.get("scheme") %>://
-  <%= model.get("host") %>/
-  <%= model.get("path") %>
+<li class="edit-stream">
+  <a href="#" class="show" data-index="<%= index %>">
+    <%= model.get("scheme") %>://<%= model.get("host") %>/<%= model.get("path") %>
+  </a>
   <form class="update-url-pattern hidden">
     <select class="scheme">
       <option <% if(model.get("scheme") === "*") {%>selected <%} %> value="*">&lt;all&gt;</option>

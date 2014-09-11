@@ -17,7 +17,9 @@ define(["BaseView",
     events: {
       "click .close": "close",
       "click .add-new .show": "showAddInput",
-      "submit .new-url-pattern": "addStream"
+      "submit .new-url-pattern": "addStream",
+      "click .edit-stream .show": "showEditStream",
+      "submit .update-url-pattern": "editStream"
     },
 
     initialize: function(options){
@@ -42,8 +44,8 @@ define(["BaseView",
 
     renderUrls: function(options){
       var html = "";
-      this.sources.each( function(stream){
-        html += this.renderUrl({ model: stream });
+      this.sources.each( function(stream, index){
+        html += this.renderUrl({ model: stream, index: index });
       }.bind(this));
 
       return html;
@@ -102,6 +104,15 @@ define(["BaseView",
 
     close: function(){
       this.inspectorView.toggleManager();
-    }
+    },
+
+    showEditStream: function(e){
+      console.log("showEditStream", e);
+    },
+
+    editStream: function(e){
+      console.log("editStream", e);
+    },
+
   });
 });
