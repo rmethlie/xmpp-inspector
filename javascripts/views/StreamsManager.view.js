@@ -16,6 +16,8 @@ define(["BaseView",
 
     events: {
       "click .close": "close",
+      "click .cancel": "cancelEditStream",
+      "click .delete": "deleteStream",
       "click .add-new .show": "showAddInput",
       "submit .new-url-pattern": "addStream",
       "click .edit-stream .show": "toggleEditStream",
@@ -36,8 +38,8 @@ define(["BaseView",
       if(!options)
         options = {};
 
-      options.sources = options.sources || this.sources
-      this.$el.html(this.template(options));
+      // options.sources = options.sources || this.sources;
+      this.$el.html(this.template({sources: this.sources}));
       var list = this.renderUrls(options);
       this.$el.find("#stream-manager-list").append(list);
     },
@@ -56,7 +58,7 @@ define(["BaseView",
     },
 
     addListeners: function(){
-      this.listenTo(this.sources, "add", function(){
+      this.listenTo(this.sources, "add remove", function(){
         this.render();
       });
     },
@@ -120,8 +122,8 @@ define(["BaseView",
 
       if(urlParams){
         $link.html(urlParams.scheme + "://" + urlParams.host +"/" + urlParams.path);
-        this.getActiveUrl().set(urlParams);
-        this.toggleUrlInput();
+        this.sources.at(index).set(urlParams);
+        this.toggleEditStream(e);
         this.trigger("change:url", urlParams);
       }else{
         this.highlightError(index);
@@ -129,14 +131,40 @@ define(["BaseView",
 
     },
 
-    highlightError: function(index){
-      console.log("highlightError", e);
+    highlightError: function(){
+      console.log("highlightError");
 
+    },
+
+    cancelEditStream: function(e){
+      this.toggleEditStream(e);
+      this.toggleEditStream(e);
     },
 
     toggleEditStream: function(e){
-      console.log("toggleEditStream", e);
+      console.log("toggleEditStream");      
+      var index =  e.target.getAttribute("data-index");
+      var $form = $(this.$el.find("form[data-index='" + index + "']")[0]);
+      var $link = $(this.$el.find("a.show[data-index='" + index + "']")[0]);
+      if($link.hasClass("hidden")){
+        $link.removeClass("hidden");
+        $form.addClass("hidden");
+      } else {
+        $link.addClass("hidden");
+        $form.removeClass("hidden");
+      }
+
     },
+
+    deleteStream: function(e){
+      var index =  e.target.getAttribute("data-index");
+      var stream = this.sources.at(index);
+      this.sources.sendToBackground({ 
+        event: "remove:listener", 
+        data: this.sources.webRequestManifest(index)
+      });
+      this.sources.remove(stream);
+    }
 
   });
 });
