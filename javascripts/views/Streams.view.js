@@ -189,7 +189,6 @@ define(['BaseView',
 
     update: function(attributes){
       this.streams.sendToBackground(attributes);
-      this.streams.updateStream(attributes);
     },
 
     getSources: function(){

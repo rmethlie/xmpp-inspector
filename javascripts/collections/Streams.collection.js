@@ -30,8 +30,6 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
       this._connection = chrome.runtime.connect({name: this.backgroundConnectionName });
       this._connection.onMessage.addListener(this._handleBackgroundEvent.bind(this));
 
-
-
       // Description: Handle the message sent from the background page
       this.on("stream:update", function(data){
         this.handleBeforeRequest(data);
@@ -42,11 +40,19 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
       });
 
       this.on("add", function(listener){
-        console.log("[PGD] new responseListener", listener);
+        console.log("add responseListener", listener);
         this.sendToBackground({ 
           event: "add:listener", 
           data: this.webRequestManifest() 
         });
+      });
+
+      this.on("reset", function(listener){
+        console.log("reset", listener);
+      });
+
+      this.on("remove", function(listener){
+        console.log("remove responseListener", listener);
       });
     },
 
