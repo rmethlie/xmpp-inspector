@@ -8,8 +8,8 @@ define(['BaseCollection'], function(BaseCollection) {
       this.on("add remove reset", this.save);
     },
 
-    save: function(){
-      localStorage.set("bookmarks", this.toJSON());
+    save: function(data){
+      localStorage.set("bookmarks", data.toJSON());
     },
 
   });

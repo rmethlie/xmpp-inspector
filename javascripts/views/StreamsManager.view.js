@@ -62,9 +62,9 @@ define(["BaseView",
     },
 
     addListeners: function(){
-      this.listenTo(this.sources, "add remove reset", function(source){
+      this.listenTo(this.sources, "add remove reset", function(model, collection){
         this.render();
-        this.bookmarks.save();
+        this.bookmarks.save(collection);
       });
     },
 
