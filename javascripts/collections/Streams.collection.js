@@ -43,7 +43,7 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
         console.log("add responseListener", listener);
         this.sendToBackground({ 
           event: "add:listener", 
-          data: this.webRequestManifest() 
+          data: this.webRequestManifest(listener) 
         });
       });
 
@@ -51,8 +51,12 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
         console.log("reset", listener);
       });
 
-      this.on("remove", function(listener){
+      this.on("remove", function(listener, collection, options){
         console.log("remove responseListener", listener);
+        this.sendToBackground({ 
+          event: "remove:listener", 
+          data: this.webRequestManifest(listener)
+        });
       });
     },
 
@@ -78,12 +82,12 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
       this.trigger("request:sent", {id: guid, body: data.requestBody} );
     },
 
-    webRequestManifest: function(index){
+    webRequestManifest: function(listener){
       console.info( "webRequestManifest");
-      if (!index){
-        index = this.length ? this.length - 1 : 0;
-      }
-      var listener = this.at(index);
+      // if (!index){
+      //   index = this.length ? this.length - 1 : 0;
+      // }
+      // var listener = this.at(index);
       return {
         scheme  : listener.get("scheme"),
         host    : listener.get("host"),

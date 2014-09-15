@@ -20,11 +20,12 @@ define(["BaseView",
     events: {
       "click .close": "close",
       "click .cancel": "cancelEditStream",
-      "click .delete": "deleteStream",
+      "click .delete": "deleteBookmark",
       "click .add-new .show": "showAddInput",
-      "submit .new-url-pattern": "addStream",
+      "submit .new-url-pattern": "addBookmark",
       "click .edit-stream .show": "toggleEditStream",
-      "submit .update-url-pattern": "editStream"
+      "submit .update-url-pattern": "editStream",
+      "click .enable-bookmark": "toggleBookmarkState"
     },
 
     initialize: function(options){
@@ -62,24 +63,24 @@ define(["BaseView",
     },
 
     addListeners: function(){
-      this.listenTo(this.sources, "add remove", function(model, collection, eventData){
+      this.listenTo(this.bookmarks, "add remove reset", function(bookmark, collection, eventData){
         this.render();
-        if(eventData.add){
-          this.bookmarks.add({
-            scheme: model.get("scheme"),
-            host  : model.get("host"),
-            path  : model.get("path")
-          });
-        }
+        // if(eventData.add){
+        //   this.sources.add({
+        //     scheme: bookmark.get("scheme"),
+        //     host  : bookmark.get("host"),
+        //     path  : bookmark.get("path")
+        //   });
+        // }
 
-        if(eventData.remove){
-          var bookmarkModel = this.bookmarks.findWhere({
-            scheme: model.get("scheme"),
-            host  : model.get("host"),
-            path  : model.get("path")
-          });
-          this.bookmarks.remove(bookmarkModel);
-        }
+        // if(eventData.remove){
+        //   var stream = this.bookmarks.findWhere({
+        //     scheme: bookmark.get("scheme"),
+        //     host  : bookmark.get("host"),
+        //     path  : bookmark.get("path")
+        //   });
+        //   this.bookmarks.remove(stream);
+        // }
       });
     },
 
@@ -90,7 +91,7 @@ define(["BaseView",
       $form.find('.scheme').focus();
     },
 
-    addStream: function(e){
+    addBookmark: function(e){
       Utils.stopEvent(e);
       if(!e.target)
         return;
@@ -103,7 +104,7 @@ define(["BaseView",
       });
 
       if(data)
-        this.sources.add(data);
+        this.bookmarks.add(data);
     },
 
     scrubPattern: function(params){
@@ -175,14 +176,44 @@ define(["BaseView",
 
     },
 
-    deleteStream: function(e){
+    deleteBookmark: function(e){
       var index =  e.target.getAttribute("data-index");
-      var stream = this.sources.at(index);
-      this.sources.sendToBackground({ 
-        event: "remove:listener", 
-        data: this.sources.webRequestManifest(index)
-      });
+      var bookmark = this.bookmarks.at(index);
+      if(bookmark){
+        this.bookmarks.remove(bookmark);
+        this.deleteStream(bookmark.toJSON());
+      }
+    },
+
+    deleteStream: function(attributes){
+      var stream = this.sources.findWhere({
+          scheme: attributes.scheme,
+          host  : attributes.host,
+          path  : attributes.path
+        });
+      
       this.sources.remove(stream);
+    },
+
+    toggleBookmarkState: function(e){
+      var index =  e.target.getAttribute("data-index");
+      var bookmark = this.bookmarks.at(index);
+      if (e.target.checked) {
+        // this.sources.add(bookmark.toJSON());        
+        this.sources.add({
+          scheme: bookmark.get("scheme"),
+          host  : bookmark.get("host"),
+          path  : bookmark.get("path")
+        });
+
+      } else {
+        var stream = this.sources.findWhere({
+          scheme: bookmark.get("scheme"),
+          host  : bookmark.get("host"),
+          path  : bookmark.get("path")
+        });
+        this.sources.remove(stream);
+      }
     },
 
   });
