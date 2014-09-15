@@ -1,9 +1,10 @@
 define(["BaseView", 
   'lib/utils',
+  'Bookmarks',
   'text!templates/streamsManager.template.html', 
   'text!templates/streamItem.template.html'], 
 
-  function(BaseView, Utils, streamsManagerTemplate, itemTemplate) {
+  function(BaseView, Utils, Bookmarks, streamsManagerTemplate, itemTemplate) {
   "use strict";
 
   return BaseView.extend({
@@ -13,6 +14,8 @@ define(["BaseView",
     template: _.template(streamsManagerTemplate),
 
     urlTemplate: _.template(itemTemplate),
+
+    bookmarks: null,
 
     events: {
       "click .close": "close",
@@ -27,7 +30,8 @@ define(["BaseView",
     initialize: function(options){
       if(!options)
         options = {};
-
+      
+      this.bookmarks = new Bookmarks();
       this.sources = options.sources;
       this.inspectorView = options.inspectorView;
       this.render(options);
@@ -58,8 +62,9 @@ define(["BaseView",
     },
 
     addListeners: function(){
-      this.listenTo(this.sources, "add remove", function(){
+      this.listenTo(this.sources, "add remove reset", function(source){
         this.render();
+        this.bookmarks.save();
       });
     },
 
@@ -133,7 +138,6 @@ define(["BaseView",
 
     highlightError: function(){
       console.log("highlightError");
-
     },
 
     cancelEditStream: function(e){
