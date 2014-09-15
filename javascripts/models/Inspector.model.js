@@ -8,9 +8,12 @@ define(["BaseModel", 'Streams' ], function(BaseModel, Streams) {
     default: {
       state: null
     },
+
+    bookmarks: null,
     
     initialize: function(){
       console.log("[Inspector] initialize");
+      this.bookmarks = new Bookmarks();
     },
 
     loadUrlManifest: function(){
@@ -18,7 +21,8 @@ define(["BaseModel", 'Streams' ], function(BaseModel, Streams) {
       if(!manifest)
         manifest = [];
       return manifest;
-    }
+    },
+
 
   });
 });
