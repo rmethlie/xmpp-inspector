@@ -2,9 +2,9 @@ define(["BaseView",
   'lib/utils',
   'Bookmarks',
   'text!templates/streamsManager.template.html', 
-  'text!templates/streamItem.template.html'], 
+  'text!templates/bookmark.template.html'], 
 
-  function(BaseView, Utils, Bookmarks, streamsManagerTemplate, itemTemplate) {
+  function(BaseView, Utils, Bookmarks, streamsManagerTemplate, bookmarkTemplate) {
   "use strict";
 
   return BaseView.extend({
@@ -13,7 +13,7 @@ define(["BaseView",
 
     template: _.template(streamsManagerTemplate),
 
-    urlTemplate: _.template(itemTemplate),
+    bookmarkTemplate: _.template(bookmarkTemplate),
 
     bookmarks: null,
 
@@ -44,27 +44,42 @@ define(["BaseView",
 
       // options.sources = options.sources || this.sources;
       this.$el.html(this.template({sources: this.sources}));
-      var list = this.renderUrls(options);
+      var list = this.renderBookmarks(options);
       this.$el.find("#stream-manager-list").append(list);
     },
 
-    renderUrls: function(options){
+    renderBookmarks: function(options){
       var html = "";
-      this.sources.each( function(stream, index){
-        html += this.renderUrl({ model: stream, index: index });
+      this.bookmarks.each( function(bookmark, index){
+        html += this.renderBookmark({ model: bookmark, index: index });
       }.bind(this));
 
       return html;
     },
       
-    renderUrl: function(options){
-      return this.urlTemplate(options);
+    renderBookmark: function(options){
+      return this.bookmarkTemplate(options);
     },
 
     addListeners: function(){
-      this.listenTo(this.sources, "add remove reset", function(model, collection){
+      this.listenTo(this.sources, "add remove", function(model, collection, eventData){
         this.render();
-        this.bookmarks.save(collection);
+        if(eventData.add){
+          this.bookmarks.add({
+            scheme: model.get("scheme"),
+            host  : model.get("host"),
+            path  : model.get("path")
+          });
+        }
+
+        if(eventData.remove){
+          var bookmarkModel = this.bookmarks.findWhere({
+            scheme: model.get("scheme"),
+            host  : model.get("host"),
+            path  : model.get("path")
+          });
+          this.bookmarks.remove(bookmarkModel);
+        }
       });
     },
 
@@ -168,7 +183,7 @@ define(["BaseView",
         data: this.sources.webRequestManifest(index)
       });
       this.sources.remove(stream);
-    }
+    },
 
   });
 });

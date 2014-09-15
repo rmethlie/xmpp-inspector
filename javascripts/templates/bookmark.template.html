@@ -1,5 +1,5 @@
 <li class="edit-stream">
-  <a href="#" class="delete fa fa-trash icon" data-index="<%= index %>"></a>
+  <input class="enabled" type="checkbox"/>
   <a href="#" class="show" data-index="<%= index %>">
     <%= model.get("scheme") %>://<%= model.get("host") %>/<%= model.get("path") %>
   </a>
@@ -20,4 +20,5 @@
     <button type="submit">Go</button>
     <button class="cancel">Cancel</button>
   </form>
+  <a href="#" class="delete fa fa-trash icon" data-index="<%= index %>"></a>
 </li>

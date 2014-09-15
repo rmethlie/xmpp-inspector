@@ -5,11 +5,17 @@ define(['BaseCollection'], function(BaseCollection) {
     
     initialize: function(){
       console.log("[BaseCollection] initialize");
+      this.load();
+
       this.on("add remove reset", this.save);
     },
 
-    save: function(data){
-      localStorage.set("bookmarks", data.toJSON());
+    save: function(){
+      localStorage.setItem("bookmarks", JSON.stringify(this.toJSON()));
+    },
+
+    load: function(){
+      this.add( JSON.parse(localStorage.getItem("bookmarks")) );
     },
 
   });
