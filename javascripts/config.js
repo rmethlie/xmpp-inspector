@@ -21,7 +21,6 @@ require.config({
         ResponseListeners: "collections/ResponseListeners.collection",
         RequestListeners: "collections/RequestListeners.collection",
         ChromeConnections: "collections/ChromeConnections.collection",
-        BaseCollection: "collections/Base.collection",
         NetworkEvent: "models/NetworkEvent.model",
         NetworkEvents: "collections/NetworkEvents.collection",
         StreamToolbarModel: "/javascripts/models/StreamToolbar.model",
@@ -33,6 +32,6 @@ require.config({
         StreamContainer: "lib/codemirror-container",
         BackgroundPage: "models/BackgroundPage.model",
         ChromeConnection: "models/ChromeConnection.model",
-        Bookmarks: "collections/Bookmarks.collections"
+        Bookmarks: "collections/Bookmarks.collection"
     }
 });

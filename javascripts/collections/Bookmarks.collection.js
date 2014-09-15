@@ -1,7 +1,7 @@
 define(['BaseCollection'], function(BaseCollection) {
   "use strict";
      
-  return BaseCollection.Collection.extend({
+  return BaseCollection.extend({
     
     initialize: function(){
       console.log("[BaseCollection] initialize");
