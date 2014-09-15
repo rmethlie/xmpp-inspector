@@ -31,12 +31,23 @@ define(['BaseModel', 'BaseCollection', 'RequestListener'], function(BaseModel, B
 
 
     onMessage: function(event,data) {
-      console.log("[ChromeConnection] onMessage", event, ":",data );
+      console.log("[ChromeConnection] onMessage", event, ":", data );
 
       switch(event){
         case "add:listener":
           console.log("add:listener", data );
           this.requestListeners.add( new RequestListener(data)); // manifest
+          break;
+
+        case "remove:listener":
+          console.log("remove:listener", data );
+          var listener = this.requestListeners.findWhere({
+            scheme: data.scheme,
+            host  : data.host,
+            path  : data.path
+          });
+
+          this.requestListeners.remove(listener);
           break;
 
         case "change:protocol":
