@@ -43,7 +43,8 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
         data:{
           state:"beforeRequest", 
           info: info,
-          requestBody: content
+          requestBody: content,
+          format: this.get("format")
         }
       });
     },

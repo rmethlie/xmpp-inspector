@@ -1,13 +1,13 @@
 define(["BaseView",
   "InspectorModel",
   "ResponseListener",
-  "XMPPStreamView",
+  "StreamsView",
   "StreamToolbarView",
   "Streams",
   "StreamsManager",
   'text!templates/inspector.template.html',
   'lib/utils'], 
-  function( BaseView, InspectorModel, ResponseListener, XMPPStreamView, StreamToolbarView, 
+  function( BaseView, InspectorModel, ResponseListener, StreamsView, StreamToolbarView, 
     Streams, StreamsManager, inspectorTemplate, Utils ) {
 
   "use strict";
@@ -56,7 +56,7 @@ define(["BaseView",
     renderStream: function(options){
       options = options || {};
       options.inspectorView = this;
-      this.streamsView = new XMPPStreamView(options);
+      this.streamsView = new StreamsView(options);
     },
 
     renderStreamsManager: function(options){

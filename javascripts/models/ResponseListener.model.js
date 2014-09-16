@@ -51,7 +51,14 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
           if( urlPattern.test( packet.request.url ) ){
             packet.getContent( function(contents){
               var guid = Utils.guidGen();
-              this.trigger("request:finished", {id: guid, streamId: this.get("id"), type:'requestFinished', data: packet, body: contents} );
+              this.trigger("request:finished", {
+                id        : guid, 
+                streamId  : this.get("id"), 
+                type      :'requestFinished', 
+                data      : packet, 
+                body      : contents,
+                format    : this.get("format")
+              });
             }.bind(this));
           }
         }catch( e ){

@@ -12,6 +12,10 @@ define(['BaseView',
     
     el: "#streams",
 
+    requestSentPrefix       : function(){ return new Date().toTimeString(); },
+
+    responseReceivedPrefix  : function(){ return new Date().toTimeString(); },
+
     template: _.template(streamDataTemplate),
 
     dataStreamConfig: {
