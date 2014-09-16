@@ -61,7 +61,7 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
     },
 
     _handleBackgroundEvent: function(event){
-      console.info( "[responselistener] handle background event", event );
+      console.info( "[streams] handle background event", event );
 
       if( event.event ){
         // event

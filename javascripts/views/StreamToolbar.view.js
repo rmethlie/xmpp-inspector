@@ -65,13 +65,8 @@ define(["BaseView",
 
     },
 
-    render: function(defaults){
-      defaults = defaults || this.model.urls.at(0);
-      var data = {
-          filter: this.scrubPattern(defaults) || Utils.defaultListenerAttributes
-        };
-
-      this.$el.html(this.template(data));
+    render: function(){
+      this.$el.html(this.template());
     },
 
     reload: function(){

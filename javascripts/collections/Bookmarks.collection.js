@@ -1,8 +1,10 @@
-define(['BaseCollection'], function(BaseCollection) {
+define(['BaseCollection', 'Bookmark'], function(BaseCollection, Bookmark) {
   "use strict";
      
   return BaseCollection.extend({
     
+    model: Bookmark,
+
     initialize: function(){
       console.log("[BaseCollection] initialize");
       this.load();
@@ -11,7 +13,17 @@ define(['BaseCollection'], function(BaseCollection) {
     },
 
     save: function(){
-      localStorage.setItem("bookmarks", JSON.stringify(this.toJSON()));
+      var saveData = "";
+      this.each(function(bookmark){
+        saveData += JSON.stringify({
+          format: bookmark.get("format"),
+          scheme: bookmark.get("scheme"),
+          host  : bookmark.get("host"),
+          path  : bookmark.get("path")
+        });
+      });
+
+      localStorage.setItem("bookmarks", saveData);
     },
 
     load: function(){

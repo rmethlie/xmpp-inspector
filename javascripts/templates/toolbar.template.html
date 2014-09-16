@@ -11,28 +11,9 @@
     </div>
 
     <div class="button url-pattern" data-button-id="url-pattern">
-      <i class="fa fa-link icon"></i><div class="label">URL: 
-        <span class="pattern">
-          <span class="output"><%= filter.scheme %>://<%= filter.host %>/<%= filter.path %></span>
-        </span>
+      <i class="fa fa-bookmark icon"></i><div class="label">Bookmarks 
       </div>
-    </div>
-      <form class="update-url-pattern hidden">
-        <select class="scheme">
-          <option <% if(filter.scheme === "*") {%>selected <%} %> value="*">&lt;all&gt;</option>
-          <option <% if(filter.scheme === "http") {%>selected <%} %> value="http">http</option>
-          <option <% if(filter.scheme === "https") {%>selected <%} %> value="https">https</option>
-          <option <% if(filter.scheme === "file") {%>selected <%} %> value="file">file</option>
-          <option <% if(filter.scheme === "ftp") {%>selected <%} %> value="ftp">ftp</option>
-          <option <% if(filter.scheme === "chrome-extension") {%>selected <%} %> value="chrome-extension">chrome-extension</option>
-        </select>
-        ://
-        <input class="host" type="text" value="<%= filter.host %>"/>
-        /
-        <input class="path" type="text" value="<%= filter.path %>"/>
-        <button type="submit">Go</button>
-      </form>
-    
+    </div>    
   </div>
   
   <div class="sub-bar hidden">

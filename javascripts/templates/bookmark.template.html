@@ -1,5 +1,5 @@
 <li class="edit-stream">
-  <input class="enable-bookmark" type="checkbox" data-index="<%= index %>" />
+  <input class="enable-bookmark" type="checkbox" data-index="<%= index %>" <% if(model.get("enable")){%> checked <%} %> />
   <span class="format" <%= model.get("format") %>><%= model.get("format") %></span>
   <a href="#" class="show" data-index="<%= index %>"><%= model.get("scheme") %>://<%= model.get("host") %>/<%= model.get("path") %></a>
   

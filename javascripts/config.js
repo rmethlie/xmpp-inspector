@@ -32,6 +32,7 @@ require.config({
         StreamContainer: "lib/codemirror-container",
         BackgroundPage: "models/BackgroundPage.model",
         ChromeConnection: "models/ChromeConnection.model",
-        Bookmarks: "collections/Bookmarks.collection"
+        Bookmarks: "collections/Bookmarks.collection",
+        Bookmark: "models/Bookmark.model"
     }
 });

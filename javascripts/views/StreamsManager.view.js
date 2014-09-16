@@ -31,6 +31,8 @@ define(["BaseView",
     initialize: function(options){
       if(!options)
         options = {};
+
+      this.render = _.debounce(this.render, 100);
       
       this.bookmarks = new Bookmarks();
       this.sources = options.sources;
@@ -44,7 +46,7 @@ define(["BaseView",
         options = {};
 
       // options.sources = options.sources || this.sources;
-      this.$el.html(this.template({sources: this.sources}));
+      this.$el.html(this.template({}));
       var list = this.renderBookmarks(options);
       this.$el.find("#stream-manager-list").append(list);
     },
@@ -63,38 +65,8 @@ define(["BaseView",
     },
 
     addListeners: function(){
-      this.listenTo(this.bookmarks, "change:scheme change:host change:path  change:format", function(bookmark){
-        console.log("change", bookmark);
-        var stream = this.sources.findWhere({
-          scheme: bookmark.changed.scheme || bookmark.get("scheme"),
-          host  : bookmark.changed.host || bookmark.get("host"),
-          path  : bookmark.changed.path || bookmark.get("path")
-        });
-
-        if(stream){
-
-        }
-        // this.trigger("change:url", urlParams); // todo: update stream based on bookmarks
-      });
-
-      this.listenTo(this.bookmarks, "add remove reset", function(){
+      this.listenTo(this.bookmarks, "add remove reset", function(bookmark){
         this.render();
-        // if(eventData.add){
-        //   this.sources.add({
-        //     scheme: bookmark.get("scheme"),
-        //     host  : bookmark.get("host"),
-        //     path  : bookmark.get("path")
-        //   });
-        // }
-
-        // if(eventData.remove){
-        //   var stream = this.bookmarks.findWhere({
-        //     scheme: bookmark.get("scheme"),
-        //     host  : bookmark.get("host"),
-        //     path  : bookmark.get("path")
-        //   });
-        //   this.bookmarks.remove(stream);
-        // }
       });
     },
 
@@ -103,22 +75,6 @@ define(["BaseView",
       var $form = this.$el.find(".add-new .new-url-pattern");
       $form.removeClass("hidden");
       $form.find('.scheme').focus();
-    },
-
-    addBookmark: function(e){
-      Utils.stopEvent(e);
-      if(!e.target)
-        return;
-
-      var $form  = $(e.target)
-      var data = this.scrubPattern({
-        scheme: $form.find('.scheme').val(),
-        host  : $form.find('.host').val(),
-        path  : $form.find('.path').val()
-      });
-
-      if(data)
-        this.bookmarks.add(data);
     },
 
     scrubPattern: function(params){
@@ -145,26 +101,15 @@ define(["BaseView",
 
     editBookmark: function(e){
       Utils.stopEvent(e);
-      var index = parseInt(e.target.getAttribute('data-index'));
+      var index = e.target.getAttribute("data-index");
       var $form = $(this.$el.find("form[data-index='" + index + "']")[0]);
-      var $link = $(this.$el.find("a.show[data-index='" + index + "']")[0]);
+      var options = {
+        index  : index,
+        enable : this.bookmarks.at(index).get("enable")
+      };
 
-      var urlParams = this.scrubPattern({
-        scheme: $form.find('.scheme').val(),
-        host  : $form.find('.host').val(),
-        path  : $form.find('.path').val()
-      });
-
-      if(urlParams){
-        $link.html(urlParams.scheme + "://" + urlParams.host +"/" + urlParams.path);
-        var bookmark = this.bookmarks.at(index);
-        urlParams.format = $form.find('.format').val();
-        bookmark.set(urlParams);
-        this.toggleEditStream(e);
-      }else{
-        this.highlightError(index);
-      }
-
+      this.deleteBookmark(e);
+      this.addBookmark(e, options);
     },
 
     highlightError: function(){
@@ -172,7 +117,6 @@ define(["BaseView",
     },
 
     cancelEditStream: function(e){
-      this.toggleEditStream(e);
       this.toggleEditStream(e);
     },
 
@@ -191,6 +135,31 @@ define(["BaseView",
 
     },
 
+    addBookmark: function(e, options){
+      Utils.stopEvent(e);
+      if(!e.target)
+        return;
+
+      if(!options)
+        options = {};
+
+      var $form  = $(e.target);
+      var data = this.scrubPattern({
+        format: $form.find('.format').val(),
+        scheme: $form.find('.scheme').val(),
+        host  : $form.find('.host').val(),
+        path  : $form.find('.path').val()
+      });
+
+      if(data){
+        var index = options.index || this.bookmarks.length;
+        data.enable = options.enable;
+        this.bookmarks.add(data, {at: index});
+        if(options.enable)
+          this.sources.add(data);
+      }
+    },
+
     deleteBookmark: function(e){
       var index =  e.target.getAttribute("data-index");
       var bookmark = this.bookmarks.at(index);
@@ -202,6 +171,7 @@ define(["BaseView",
 
     deleteStream: function(attributes){
       var stream = this.sources.findWhere({
+          format: attributes.format,
           scheme: attributes.scheme,
           host  : attributes.host,
           path  : attributes.path
@@ -213,8 +183,8 @@ define(["BaseView",
     toggleBookmarkState: function(e){
       var index =  e.target.getAttribute("data-index");
       var bookmark = this.bookmarks.at(index);
+      bookmark.set("enable", !bookmark.get("enable"));
       if (e.target.checked) {
-        // this.sources.add(bookmark.toJSON());        
         this.sources.add({
           format  : bookmark.get("format"),
           scheme  : bookmark.get("scheme"),
