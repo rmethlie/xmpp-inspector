@@ -39,6 +39,10 @@ TEXTAREA.xml-contents{
   width: 100%;
 }
 
+#stream-manager .add-new{ 
+  padding-left: 40px
+}
+
 #streams.toolbar-expanded {
   top: 4em;
 }

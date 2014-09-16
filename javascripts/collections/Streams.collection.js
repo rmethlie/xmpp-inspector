@@ -92,6 +92,7 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
         scheme  : listener.get("scheme"),
         host    : listener.get("host"),
         path    : listener.get("path"),
+        format  : listener.get("format"),
         types   : ["xmlhttprequest"],
         tabId   : this.tabId,
         name    : this.backgroundConnectionName

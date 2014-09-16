@@ -24,7 +24,7 @@ define(["BaseView",
       "click .add-new .show": "showAddInput",
       "submit .new-url-pattern": "addBookmark",
       "click .edit-stream .show": "toggleEditStream",
-      "submit .update-url-pattern": "editStream",
+      "submit .update-url-pattern": "editBookmark",
       "click .enable-bookmark": "toggleBookmarkState"
     },
 
@@ -63,7 +63,21 @@ define(["BaseView",
     },
 
     addListeners: function(){
-      this.listenTo(this.bookmarks, "add remove reset", function(bookmark, collection, eventData){
+      this.listenTo(this.bookmarks, "change:scheme change:host change:path  change:format", function(bookmark){
+        console.log("change", bookmark);
+        var stream = this.sources.findWhere({
+          scheme: bookmark.changed.scheme || bookmark.get("scheme"),
+          host  : bookmark.changed.host || bookmark.get("host"),
+          path  : bookmark.changed.path || bookmark.get("path")
+        });
+
+        if(stream){
+
+        }
+        // this.trigger("change:url", urlParams); // todo: update stream based on bookmarks
+      });
+
+      this.listenTo(this.bookmarks, "add remove reset", function(){
         this.render();
         // if(eventData.add){
         //   this.sources.add({
@@ -129,9 +143,9 @@ define(["BaseView",
       this.inspectorView.toggleManager();
     },
 
-    editStream: function(e){
+    editBookmark: function(e){
       Utils.stopEvent(e);
-      var index = e.target.getAttribute('data-index');
+      var index = parseInt(e.target.getAttribute('data-index'));
       var $form = $(this.$el.find("form[data-index='" + index + "']")[0]);
       var $link = $(this.$el.find("a.show[data-index='" + index + "']")[0]);
 
@@ -143,9 +157,10 @@ define(["BaseView",
 
       if(urlParams){
         $link.html(urlParams.scheme + "://" + urlParams.host +"/" + urlParams.path);
-        this.sources.at(index).set(urlParams);
+        var bookmark = this.bookmarks.at(index);
+        urlParams.format = $form.find('.format').val();
+        bookmark.set(urlParams);
         this.toggleEditStream(e);
-        this.trigger("change:url", urlParams);
       }else{
         this.highlightError(index);
       }
@@ -201,16 +216,18 @@ define(["BaseView",
       if (e.target.checked) {
         // this.sources.add(bookmark.toJSON());        
         this.sources.add({
-          scheme: bookmark.get("scheme"),
-          host  : bookmark.get("host"),
-          path  : bookmark.get("path")
+          format  : bookmark.get("format"),
+          scheme  : bookmark.get("scheme"),
+          host    : bookmark.get("host"),
+          path    : bookmark.get("path")
         });
 
       } else {
         var stream = this.sources.findWhere({
-          scheme: bookmark.get("scheme"),
-          host  : bookmark.get("host"),
-          path  : bookmark.get("path")
+          format  : bookmark.get("format"),
+          scheme  : bookmark.get("scheme"),
+          host    : bookmark.get("host"),
+          path    : bookmark.get("path")
         });
         this.sources.remove(stream);
       }

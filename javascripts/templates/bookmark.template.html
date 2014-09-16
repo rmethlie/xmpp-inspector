@@ -1,9 +1,14 @@
 <li class="edit-stream">
   <input class="enable-bookmark" type="checkbox" data-index="<%= index %>" />
-  <a href="#" class="show" data-index="<%= index %>">
-    <%= model.get("scheme") %>://<%= model.get("host") %>/<%= model.get("path") %>
-  </a>
+  <span class="format" <%= model.get("format") %>><%= model.get("format") %></span>
+  <a href="#" class="show" data-index="<%= index %>"><%= model.get("scheme") %>://<%= model.get("host") %>/<%= model.get("path") %></a>
+  
   <form class="update-url-pattern hidden" data-index="<%= index %>">
+    <select class="format">
+      <option value="text">text</option>
+      <option value="json">JSON</option>
+      <option value="xml">XML</option>
+    </select>
     <select class="scheme">
       <option <% if(model.get("scheme") === "*") {%>selected <%} %> value="*">&lt;all&gt;</option>
       <option <% if(model.get("scheme") === "http") {%>selected <%} %> value="http">http</option>

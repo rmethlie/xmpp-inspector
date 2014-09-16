@@ -49,9 +49,9 @@ define(["BaseView",
 
       options.inspectorView = this;
       this.toolbar = new StreamToolbarView(options);
-      this.listenTo(this.toolbar, "change:url", function(data){
-        this.streamsView.update( data );        
-      });
+      // this.listenTo(this.toolbar, "change:url", function(data){
+      //   this.streamsView.update( data );        
+      // });
 
       this.toolbar.model.on( "toolbar:command", this._handleToolbarCommand.bind(this) );
     },
