@@ -45,6 +45,19 @@
         }
       });
   }
+
+  function getJSON(){
+    $.ajax({
+        url: "/json/",
+        type: "POST",
+        processData: false,
+        data: "{isJSON: true}",
+        success: function(){
+          var timestamp = new Date().getTime();
+          $("#output").html("updated: " + timestamp);
+        }
+      });
+  }
   </script>
 </body>
 </html>
