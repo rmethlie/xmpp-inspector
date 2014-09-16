@@ -27,7 +27,6 @@ define(["BaseView",
       var urlManifest = this.model.loadUrlManifest();
       this.render({patterns: urlManifest});
       this.addListeners();
-      // this.initDefaultStream();
     },
 
     render: function(options){
@@ -40,6 +39,8 @@ define(["BaseView",
       this.streamsView.streams.on("change:scheme change:host change:path", this.renderToolbar.bind(this) );
       this.renderToolbar(options);
       this.renderStreamsManager(options);
+      this.toggleManager();
+
     },
 
     renderToolbar: function(options){
@@ -49,10 +50,6 @@ define(["BaseView",
 
       options.inspectorView = this;
       this.toolbar = new StreamToolbarView(options);
-      // this.listenTo(this.toolbar, "change:url", function(data){
-      //   this.streamsView.update( data );        
-      // });
-
       this.toolbar.model.on( "toolbar:command", this._handleToolbarCommand.bind(this) );
     },
 
@@ -110,13 +107,13 @@ define(["BaseView",
       this.trigger("search:cancel");      
     },
 
-    initDefaultStream: function(){
-      var params = Utils.defaultListenerAttributes;
-      params.name = "default";
+    // initDefaultStream: function(){
+    //   var params = Utils.defaultListenerAttributes;
+    //   params.name = "default";
 
-      this.streamsView.addSource(params);
-      this.toolbar.addURL(params);
-    },
+    //   this.streamsView.addSource(params);
+    //   this.toolbar.addURL(params);
+    // },
 
     _handleToolbarCommand: function( command ){
       switch( command.name ){
