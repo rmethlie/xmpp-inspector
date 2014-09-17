@@ -13,16 +13,14 @@ define(['BaseCollection', 'Bookmark'], function(BaseCollection, Bookmark) {
     },
 
     save: function(){
-      var saveData = "";
+      var saveData = [];
       this.each(function(bookmark){
-        saveData += JSON.stringify({
-          format: bookmark.get("format"),
-          scheme: bookmark.get("scheme"),
-          host  : bookmark.get("host"),
-          path  : bookmark.get("path")
-        });
+        var attributes = _.clone(bookmark.attributes);
+        attributes.enable =  false;
+        saveData.push(attributes);
       });
 
+      saveData = JSON.stringify( saveData );
       localStorage.setItem("bookmarks", saveData);
     },
 

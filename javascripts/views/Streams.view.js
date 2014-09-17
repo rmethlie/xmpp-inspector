@@ -224,7 +224,7 @@ define(['BaseView',
         else
           options.prefix = options.prefix + "\n";
 
-        content = options.prefix + content
+        content = options.prefix + content;
       }
       return content;
     },
