@@ -130,17 +130,18 @@ define(['BaseView',
       }
 
       if(content){
-        content = format.html_beautify(content);
+        content = this.format(content, options);
+        // content = format.html_beautify(content);
         
-        if(options.prefix){
-          if(lastLine.number > 0)
-            options.prefix = "\n\n" + options.prefix + "\n";
-          else
-            options.prefix = options.prefix + "\n";
+        // if(options.prefix){
+        //   if(lastLine.number > 0)
+        //     options.prefix = "\n\n" + options.prefix + "\n";
+        //   else
+        //     options.prefix = options.prefix + "\n";
 
-          this.dataStream.replaceRange(options.prefix, {line: Infinity, ch: lastLine.charCount});
-          lastLine = this.getLastLineInfo();
-        }
+        //   this.dataStream.replaceRange(options.prefix, {line: Infinity, ch: lastLine.charCount});
+        //   lastLine = this.getLastLineInfo();
+        // }
 
         this.dataStream.replaceRange(content, {line: Infinity, ch: lastLine.charCount});
         this.networkEventMap["line:" + lastLine.number] = data.id;
@@ -198,5 +199,47 @@ define(['BaseView',
     getSources: function(){
       return this.streams;
     },
+
+    format: function(content, options){
+      if(!options.format)
+        options.format = "text";
+
+      // content = format.html_beautify(content);
+      switch(options.format.toLowerCase()){
+        case "text":
+          break;
+        case "xml":
+          content = this.formatAsXML(content);
+          break;
+        case "json":
+          content = this.formatAsJSON(content);
+          break;
+        default:
+          console.warn(options.format, "not a recognized format");
+      }
+        
+      if(options.prefix){
+        if(this.getLastLineInfo().number > 0)
+          options.prefix = "\n\n" + options.prefix + "\n";
+        else
+          options.prefix = options.prefix + "\n";
+
+        content = options.prefix + content
+      }
+      return content;
+    },
+
+    formatAsXML: function(content){
+      return format.html_beautify(content);
+    },
+
+    formatAsJSON: function(content){
+      try{
+        content = JSON.stringify(JSON.parse(content));
+      } catch(e){
+        console.warn("Could not parse as JSON");
+      }
+      return content;
+    }
   });
 });
