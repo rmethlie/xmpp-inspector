@@ -49,6 +49,10 @@ define(["BaseView",
       this.$el.html(this.template({}));
       var list = this.renderBookmarks(options);
       this.$el.find("#stream-manager-list").append(list);
+
+      if(!this.bookmarks.length){
+        this.showAddInput();
+      }
     },
 
     renderBookmarks: function(options){
@@ -74,7 +78,7 @@ define(["BaseView",
       console.log("showAddInput");
       var $form = this.$el.find(".add-new .new-url-pattern");
       $form.removeClass("hidden");
-      $form.find('.scheme').focus();
+      $form.find('.host').focus();
     },
 
     scrubPattern: function(params){
