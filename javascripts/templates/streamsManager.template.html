@@ -1,8 +1,13 @@
 <div class="container">
   <h4><a href="#" title="Close" class="close"><i class="fa fa-times-circle icon"></i></a>Manage Bookmarks</h4>
   <div class="add-new">
-    <a href="#add-new" class="show">Add Stream</a>
+    <a href="#add-new" class="show">Add Stream</a> 
     <form class="new-url-pattern hidden">
+      <select class="format">
+        <option value="text">text</option>
+        <option value="json" selected >JSON</option>
+        <option value="xml">XML</option>
+      </select>
       <select class="scheme">
         <option value="*" selected>&lt;all&gt;</option>
         <option value="http">http</option>

@@ -5,9 +5,9 @@
   
   <form class="update-url-pattern hidden" data-index="<%= index %>">
     <select class="format">
-      <option value="text">text</option>
-      <option value="json">JSON</option>
-      <option value="xml">XML</option>
+      <option value="text" <% if(model.get("format") === "text") {%>selected <%} %>>text</option>
+      <option value="json" <% if(model.get("format") === "json") {%>selected <%} %>>JSON</option>
+      <option value="xml" <% if(model.get("format") === "xml") {%>selected <%} %>>XML</option>
     </select>
     <select class="scheme">
       <option <% if(model.get("scheme") === "*") {%>selected <%} %> value="*">&lt;all&gt;</option>
