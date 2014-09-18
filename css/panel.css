@@ -43,12 +43,28 @@ TEXTAREA.xml-contents{
   padding-left: 40px
 }
 
+#stream-manager-list li {
+  margin-bottom: 5px
+}
+
 #streams.toolbar-expanded {
   top: 4em;
 }
 
+.edit-stream .format {
+  display: inline-block;
+  padding: 2px 5px;
+  border-radius: 10%;
+  font-weight: bold;
+  width: 40px;
+  text-align: center;
+}
+.edit-stream .format.text { background-color: #ccc}
+.edit-stream .format.json { background-color: #66B3E6}
+.edit-stream .format.xml { background-color: #FCC219 }
+
 .container {
-  padding: 10px;
+  padding: 10px 10px 10px 40px;
 }
 
 .container .close {
