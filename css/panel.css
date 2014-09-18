@@ -139,6 +139,10 @@ TEXTAREA.xml-contents{
   white-space: nowrap;
 }
 
+.show {
+  cursor: pointer;
+}
+
 .toolbar .url-pattern .output:hover{
   color: #006;
 }
