@@ -25,7 +25,8 @@ define(["BaseView",
       "submit .new-url-pattern": "addBookmark",
       "click .edit-stream .show": "toggleEditStream",
       "submit .update-url-pattern": "editBookmark",
-      "click .enable-bookmark": "toggleBookmarkState"
+      "click .enable-bookmark": "toggleBookmarkState",
+      "click .done": "close"
     },
 
     initialize: function(options){
@@ -208,7 +209,6 @@ define(["BaseView",
         });
         this.sources.remove(stream);
       }
-    },
-
+    }
   });
 });
