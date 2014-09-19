@@ -129,11 +129,14 @@ define(["BaseView",
       var index =  e.target.getAttribute("data-index");
       var $form = $(this.$el.find("form[data-index='" + index + "']")[0]);
       var $link = $(this.$el.find("a.show[data-index='" + index + "']")[0]);
+      var $formatTag = $(this.$el.find(".format.tag[data-index='" + index + "']")[0]);
       if($link.hasClass("hidden")){
         $link.removeClass("hidden");
+        $formatTag.removeClass("hidden");
         $form.addClass("hidden");
       } else {
         $link.addClass("hidden");
+        $formatTag.addClass("hidden");
         $form.removeClass("hidden");
       }
 

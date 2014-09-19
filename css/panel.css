@@ -1,6 +1,6 @@
 
 
-BODY{
+BODY, TD{
   font-family: Menlo, monospace;
   font-size: 11px;
   margin: 0;
@@ -43,25 +43,46 @@ TEXTAREA.xml-contents{
   padding-left: 40px
 }
 
-#stream-manager-list li {
-  margin-bottom: 5px
+#stream-manager-list {
+  margin-top: 20px
+}
+
+#stream-manager-list td, 
+#stream-manager-list th {
+  font-size: .7em;
+  padding: 5px;
+  margin: 0 0 5px 0;
+  vertical-align: middle;
+}
+#stream-manager-list th {
+  text-align: left;
+  
 }
 
 #streams.toolbar-expanded {
   top: 4em;
 }
 
-.edit-stream .format {
+.edit-stream .tag.format {
   display: inline-block;
   padding: 2px 5px;
   border-radius: 10%;
   font-weight: bold;
+  font-size: 1em;
   width: 40px;
   text-align: center;
 }
 .edit-stream .format.text { background-color: #ccc}
 .edit-stream .format.json { background-color: #66B3E6}
 .edit-stream .format.xml { background-color: #FCC219 }
+.edit-stream a { color: #333; font-weight: bold;}
+.edit-stream a:hover { color: #00E;}
+.edit-stream a.delete { 
+  font-weight: normal; 
+  text-decoration: none; 
+  font-size: 1.2em;
+}
+
 
 .container {
   padding: 10px 10px 10px 40px;
