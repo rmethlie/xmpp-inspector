@@ -160,7 +160,7 @@ define(["BaseView",
 
       if(data){
         var index = options.index || this.bookmarks.length;
-        data.enable = options.enable;
+        data.enable = true;
         this.bookmarks.add(data, {at: index});
         if(options.enable)
           this.sources.add(data);
