@@ -95,23 +95,28 @@ TEXTAREA.xml-contents{
 }
 
 /* Codemirror "Theme" */
-.cm-s-xmpp.CodeMirror {
+.cm-s-streams.CodeMirror {
   font-family: Menlo, monospace;
   font-size: 11px;
   height: auto;
   line-height: 1.3em;
 }
 
-.cm-s-xmpp.CodeMirror .cm-comment {
+.cm-s-streams.CodeMirror .cm-comment {
   color: #afafaf;
   font-style: italic;
 }
 
 
-.cm-s-xmpp.CodeMirror .cm-searching {
+.cm-s-streams.CodeMirror .cm-searching {
   border: solid 1px rgb(244, 0, 95);
   background: none;
   border-radius: 3px;
+}
+
+.cm-s-streams.CodeMirror .cm-delimit, .cm-s-streams.CodeMirror .prefix.direction {
+  color: #ccc;
+  font-style: italic;
 }
 
 .CodeMirror-selected  { 

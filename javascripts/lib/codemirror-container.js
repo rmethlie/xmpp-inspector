@@ -13,16 +13,18 @@ define([
     return CodeMirror.multiplexingMode(
       CodeMirror.getMode(config, "text/plain"),
       {
-        open        : "start:xml", 
+        open        : "start:xml",
         close       : "end:xml",
         mode        : CodeMirror.getMode(config, "text/html"),
-        delimStyle  : "delimit"
+        delimStyle  : "delimit",
+        innerStyle  : "mode-xml"
       },
       {
-        open        : "start:json", 
+        open        : "start:json",
         close       : "end:json",
         mode        : CodeMirror.getMode(config, "application/json"),
-        delimStyle  : "delimit"
+        delimStyle  : "delimit",
+        innerStyle  : "mode-json"
       }
       // .. more multiplexed styles can follow here
     );

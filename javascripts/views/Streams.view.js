@@ -151,6 +151,23 @@ define(['BaseView',
       }
 
       if(content){
+        var prefix = options.prefix;
+        
+        if(prefix){
+          if(this.getLastLineInfo().number > 0)
+            prefix = "\n\n" +  prefix + "\n";
+          else
+            prefix = prefix + "\n";
+
+          var markFrom = {line: lastLine.number, ch: lastLine.charCount};
+          this.dataStream.replaceRange(prefix, {line: Infinity, ch: lastLine.charCount});
+          lastLine = this.getLastLineInfo();
+          var markTo = {line: lastLine.number, ch: lastLine.charCount};
+
+          this.dataStream.markText( markFrom, markTo, {className: "prefix direction"});
+        }
+
+
         content = this.format(content, url, options);
 
         this.dataStream.replaceRange(content, {line: Infinity, ch: lastLine.charCount});
@@ -230,20 +247,8 @@ define(['BaseView',
       
       var startModeDelimiter = "start:" + mode  + " ";
       var endModeDelimiter = "end:" + mode  + " ";
-      var prefix = options.prefix;
-      var postfix = "\n" + endModeDelimiter + "\n";
-      // new Date().toTimeString()
-      if(prefix){
-        if(this.getLastLineInfo().number > 0)
-          prefix = "\n\n" +  prefix + "\n"  + startModeDelimiter + "\n";
-        else
-          prefix = prefix + "\n"  + startModeDelimiter + "\n";
-
-      } else {
-        prefix = "\n" + startModeDelimiter + "\n";
-      }
       
-      content = prefix + content + postfix;
+      content = startModeDelimiter + "\n" + content + "\n" + endModeDelimiter + "\n";
 
       return content;
     },
