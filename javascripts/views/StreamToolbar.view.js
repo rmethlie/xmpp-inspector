@@ -14,12 +14,12 @@ define(["BaseView",
 
     events: {
       "click .button.reload"  : "reload",
-      "click .button.copy"   : "copy",
-      "click .button.find"   : "startSearch",
+      "click .button.copy"    : "copy",
+      "click .button.find"    : "startSearch",
       "click .button.clear"   : "clear",
-      "click .button.options" : "options",
-      "click .button.show-sub-bar" : "toggleSubbar",
-      "click .url-pattern .label" : "toggleUrlInput",
+      "click .button.options"       : "options",
+      "click .button.show-sub-bar"  : "toggleSubbar",
+      "click .url-pattern .label"   : "toggleUrlInput",
       "click .update-url-pattern  [type='submit']" : "updateUrlPattern",
       "click .search .cancel" : "cancelSearch",
     },
@@ -159,7 +159,7 @@ define(["BaseView",
       var urlParams = this.scrubPattern({
         scheme  : this.$el.find("form .scheme").val() || this.model.urls.last().get("scheme"),
         host    : this.$el.find("form .host").val() || this.model.urls.last().get("host"),
-        path    : this.$el.find("form .path").val() || this.model.urls.last().get("path")        
+        path    : this.$el.find("form .path").val() || this.model.urls.last().get("path")
       });
 
       this.$el.find(".url-pattern .output").html(urlParams.scheme + "://" + urlParams.host +"/" + urlParams.path);
