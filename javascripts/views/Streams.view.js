@@ -4,17 +4,30 @@ define(['BaseView',
   'text!templates/stream-data-wrapper.template.html',
   'lib/codemirror-container',
   'lib/codemirror-searchable',
-  'beautifier/beautify-html'],
-  function(BaseView, Streams, streamDataTemplate, streamDataWrapperTemplate, CodeMirror, cmSearchable, format) {
+  'beautifier/beautify-html',
+  'lib/utils'],
+  function(BaseView, Streams, streamDataTemplate, streamDataWrapperTemplate, CodeMirror, cmSearchable, format, Utils) {
   "use strict";
 
   return BaseView.extend({
     
     el: "#streams",
 
-    requestSentPrefix       : function(){ return new Date().toTimeString(); },
+    requestSentPrefix       : function(data){
+      var output = "";
+      var arrows = ">>>>>>>>>>>>>>>";
+      output = data.url + " " + new Date().toTimeString() + " " + arrows;
 
-    responseReceivedPrefix  : function(){ return new Date().toTimeString(); },
+      return output;
+    },
+
+    responseReceivedPrefix  : function(data){
+      var output = "";
+      var arrows = "<<<<<<<<<<<<<<<";
+      output = arrows + " " + data.url + " " + new Date().toTimeString();
+
+      return output;
+    },
 
     template: _.template(streamDataTemplate),
 
@@ -23,7 +36,7 @@ define(['BaseView',
       lineNumbers: true,
       lineWrapping: true,
       readOnly: true,
-      theme: "xmpp default", // apply our modifications to the default CodeMirror theme.
+      theme: "streams default", // apply our modifications to the default CodeMirror theme.
       styleSelectedText: true,
       styleActiveLine: false
     },
@@ -51,20 +64,27 @@ define(['BaseView',
     addlisteners: function(options){
       var _this = this;
 
-      this.streams.on( "request:sent", function(data){
+      this.listenTo(this.streams, "request:sent", function(data){
         var prefix = this.requestSentPrefix;
         if (typeof(prefix) == "function") {
           prefix = prefix(data);
         }
-        this.appendData(data, {prefix: prefix});
+        this.appendData(data, {prefix: prefix, format: data.format, url: data.url});
       }.bind(this));
 
-      this.streams.on("request:finished", function(data){
+      this.listenTo(this.streams, "request:finished", function(data){
         var prefix = this.responseReceivedPrefix;
+        var guid = Utils.guidGen();
+
         if (typeof(prefix) == "function") {
-          prefix = prefix(data);
+          prefix = prefix({
+            id: guid,
+            body: data.body,
+            format: data.format,
+            url: data.data.request.url
+          });
         }
-        this.appendData(data, {prefix: prefix});
+        this.appendData(data, {prefix: prefix, format: data.format, url: data.data.request.url });
       }.bind(this));
 
       this.listenTo(this.inspectorView, "search:submit", function(options){
@@ -121,6 +141,7 @@ define(['BaseView',
       if(!options)
         options = {};
       var content = data.body;
+      var url = options.url;
       var scollToBottom = false;
       var lastLine = this.getLastLineInfo();
 
@@ -130,18 +151,7 @@ define(['BaseView',
       }
 
       if(content){
-        content = this.format(content, options);
-        // content = format.html_beautify(content);
-        
-        // if(options.prefix){
-        //   if(lastLine.number > 0)
-        //     options.prefix = "\n\n" + options.prefix + "\n";
-        //   else
-        //     options.prefix = options.prefix + "\n";
-
-        //   this.dataStream.replaceRange(options.prefix, {line: Infinity, ch: lastLine.charCount});
-        //   lastLine = this.getLastLineInfo();
-        // }
+        content = this.format(content, url, options);
 
         this.dataStream.replaceRange(content, {line: Infinity, ch: lastLine.charCount});
         this.networkEventMap["line:" + lastLine.number] = data.id;
@@ -200,12 +210,12 @@ define(['BaseView',
       return this.streams;
     },
 
-    format: function(content, options){
+    format: function(content, url, options){
       if(!options.format)
         options.format = "text";
 
-      // content = format.html_beautify(content);
-      switch(options.format.toLowerCase()){
+      var mode = options.format.toLowerCase();
+      switch(mode){
         case "text":
           break;
         case "xml":
@@ -217,15 +227,24 @@ define(['BaseView',
         default:
           console.warn(options.format, "not a recognized format");
       }
-        
-      if(options.prefix){
+      
+      var startModeDelimiter = "start:" + mode  + " ";
+      var endModeDelimiter = "end:" + mode  + " ";
+      var prefix = options.prefix;
+      var postfix = "\n" + endModeDelimiter + "\n";
+      // new Date().toTimeString()
+      if(prefix){
         if(this.getLastLineInfo().number > 0)
-          options.prefix = "\n\n" + options.prefix + "\n";
+          prefix = "\n\n" +  prefix + "\n"  + startModeDelimiter + "\n";
         else
-          options.prefix = options.prefix + "\n";
+          prefix = prefix + "\n"  + startModeDelimiter + "\n";
 
-        content = options.prefix + content;
+      } else {
+        prefix = "\n" + startModeDelimiter + "\n";
       }
+      
+      content = prefix + content + postfix;
+
       return content;
     },
 

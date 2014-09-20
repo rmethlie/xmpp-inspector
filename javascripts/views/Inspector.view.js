@@ -6,8 +6,8 @@ define(["BaseView",
   "Streams",
   "StreamsManager",
   'text!templates/inspector.template.html',
-  'lib/utils'], 
-  function( BaseView, InspectorModel, ResponseListener, StreamsView, StreamToolbarView, 
+  'lib/utils'],
+  function( BaseView, InspectorModel, ResponseListener, StreamsView, StreamToolbarView,
     Streams, StreamsManager, inspectorTemplate, Utils ) {
 
   "use strict";
@@ -104,7 +104,7 @@ define(["BaseView",
 
     cancelSearch: function(){
       this.model.set("state", null);
-      this.trigger("search:cancel");      
+      this.trigger("search:cancel");
     },
 
     // initDefaultStream: function(){
