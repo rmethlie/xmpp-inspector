@@ -19,7 +19,7 @@ define(["BaseView",
       "click .button.clear"   : "clear",
       "click .button.options"       : "options",
       "click .button.show-sub-bar"  : "toggleSubbar",
-      "click .url-pattern .label"   : "toggleUrlInput",
+      "click .url-pattern .label"   : "toggleBookmarkManager",
       "click .update-url-pattern  [type='submit']" : "updateUrlPattern",
       "click .search .cancel" : "cancelSearch",
     },
@@ -135,7 +135,8 @@ define(["BaseView",
 
     toggleSubbar: function(state){
       if(!state)
-        state = null
+        state = null;
+      
       switch(state){
         case "show":
           this.$el.find(".sub-bar").removeClass("hidden");
@@ -143,7 +144,7 @@ define(["BaseView",
         case "hide":
           this.$el.find(".sub-bar").addClass("hidden");
           break;
-        default: 
+        default:
           this.$el.find(".sub-bar").toggleClass("hidden");
         
       }
@@ -165,11 +166,11 @@ define(["BaseView",
       this.$el.find(".url-pattern .output").html(urlParams.scheme + "://" + urlParams.host +"/" + urlParams.path);
       this.getActiveUrl().set(urlParams);
 
-      this.toggleUrlInput();
+      this.toggleBookmarkManager();
       this.trigger("change:url", urlParams);
     },
 
-    toggleUrlInput: function(){
+    toggleBookmarkManager: function(){
       this.inspectorView.toggleManager();
     },
 
