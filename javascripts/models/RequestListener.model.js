@@ -39,9 +39,9 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
       if(info.requestBody)
         content = Utils.ArrayBufferToString(info.requestBody.raw[0].bytes);
       this.trigger("request:before", {
-        event: "stream:update", 
+        event: "stream:update",
         data:{
-          state:"beforeRequest", 
+          state:"beforeRequest",
           info: info,
           requestBody: content,
           format: this.get("format")
@@ -49,11 +49,11 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
       });
     },
 
-    onCompleted: function(info) {    
+    onCompleted: function(info) {
 
       console.info( "oncompleted", info );
       this.sendToResponseListener({
-        event: "stream:update", 
+        event: "stream:update",
         data: {
           state:"completed",
           info: info
