@@ -5,8 +5,8 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
   return BaseModel.extend({
 
     defaults: {
-      scheme: "*", 
-      host: "*", 
+      scheme: "*",
+      host: "*",
       path: "http-bind",
       types: ["xmlhttprequest"],
       tabId: -1
@@ -24,7 +24,7 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
     },
 
     generateWebRequestFilter: function(){
-      return [this.get("scheme")+"://"+this.get("host")+"/*"+this.get("path")+"*"];
+      return [this.get("scheme")+"://"+this.get("host")+"/"+this.get("path")];
     },
 
     onBeforeRequest: function(info) {

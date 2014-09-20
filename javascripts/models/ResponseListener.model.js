@@ -8,7 +8,7 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
 
     generateNetworkRequestPattern: function(){
 
-      var 
+      var
         host = this.get("host"),
         scheme = this.get("scheme"),
         path = this.get("path"),
@@ -24,7 +24,7 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
       
       pattern = scheme + ":\/\/" + host;
       if(path.length){
-        pattern += "\/*" + path + "*";
+        pattern += "\/" + path;
       }
 
       return pattern;
