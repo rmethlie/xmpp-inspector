@@ -16,7 +16,7 @@ define(['BaseView',
     requestSentPrefix       : function(data){
       var output = "";
       var arrows = ">>>>>>>>>>>>>>>";
-      output = data.url + " " + new Date().toTimeString() + " " + arrows;
+      output = "sent: " + data.url + " " + new Date().toTimeString() + " " + arrows;
 
       return output;
     },
@@ -24,7 +24,7 @@ define(['BaseView',
     responseReceivedPrefix  : function(data){
       var output = "";
       var arrows = "<<<<<<<<<<<<<<<";
-      output = arrows + " " + data.url + " " + new Date().toTimeString();
+      output = arrows + " received: " + data.url + " " + new Date().toTimeString();
 
       return output;
     },
