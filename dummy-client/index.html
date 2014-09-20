@@ -19,18 +19,6 @@
   <script type="text/javascript" src="jquery-1.11.0.min.js"></script>
   <script type="text/javascript">
   $(document).ready(function(){
-    // window.timer = setInterval(function(){
-    //   $.ajax({
-    //     url: "/nhttp-bind/",
-    //     type: "POST",
-    //     processData: false,
-    //     data: "<data>This is my POST data</data>",
-    //     success: function(){
-    //       var timestamp = new Date().getTime();
-    //       $("#output").html("updated: " + timestamp);
-    //     }
-    //   });
-    // }, 5000);
 
   });
   function test(){
@@ -51,7 +39,7 @@
         url: "/json/",
         type: "POST",
         processData: false,
-        data: "{isJSON: true}",
+        data: JSON.stringify({isJSON: true}),
         success: function(){
           var timestamp = new Date().getTime();
           $("#output").html("updated: " + timestamp);
