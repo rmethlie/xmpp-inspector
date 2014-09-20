@@ -147,7 +147,8 @@ TEXTAREA.xml-contents{
 
 
 .toolbar .main-bar, .toolbar .sub-bar {
-  display: table-row;
+  display: inline-block;
+  margin-left: 20px;
   float: left;
   clear:both;
   overflow: hidden;
