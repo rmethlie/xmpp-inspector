@@ -18,7 +18,6 @@ define(["BaseView",
     bookmarks: null,
 
     events: {
-      "click .close": "close",
       "click .cancel": "cancelEditStream",
       "click .delete": "deleteBookmark",
       "click .add-new .show": "showAddInput",
@@ -101,7 +100,7 @@ define(["BaseView",
     },
 
     close: function(){
-      this.inspectorView.showOnly("streams");
+      this.inspectorView.showStreams();
     },
 
     editBookmark: function(e){
