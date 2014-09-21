@@ -8,15 +8,36 @@ define(['backbone'], function(Backbone) {
       console.log("[BaseView] initialize");
     },
 
-    show: function(){
+    show: function(name){
       console.log("[BaseView] show");
-      this.$el.removeClass("hidden");
+      if(name)
+        this.children[name].show();
+      else
+        this.$el.removeClass("hidden");
     },
 
-    hide: function(){
+    hide: function(name){
       console.log("[BaseView] hide");
-      this.$el.addClass("hidden");
+      if(name)
+        this.children[name].show();
+      else
+        this.$el.addClass("hidden");
     },
+
+    children: [],
+
+    showOnly: function(name){
+      var subViews = this.children;
+
+      for(var view in subViews){
+        if(view === name){
+          subViews[view].$el.removeClass("hidden");
+        } else {
+          subViews[view].$el.addClass("hidden");
+        }
+      }
+
+    }
 
   });
 });
