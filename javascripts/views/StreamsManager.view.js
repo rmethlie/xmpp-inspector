@@ -78,6 +78,7 @@ define(["BaseView",
       console.log("showAddInput");
       var $form = this.$el.find(".add-new .new-url-pattern");
       $form.removeClass("hidden");
+      this.$el.find(".add-new .show").addClass("hidden");
       $form.find('.host').focus();
     },
 
@@ -125,7 +126,7 @@ define(["BaseView",
     },
 
     toggleEditStream: function(e){
-      console.log("toggleEditStream");      
+      console.log("toggleEditStream");
       var index =  e.target.getAttribute("data-index");
       var $form = $(this.$el.find("form[data-index='" + index + "']")[0]);
       var $link = $(this.$el.find("a.show[data-index='" + index + "']")[0]);
@@ -149,6 +150,9 @@ define(["BaseView",
 
       if(!options)
         options = {};
+
+      this.$el.find(".add-new .show").removeClass("hidden");
+      this.$el.find(".add-new .new-url-pattern").addClass("hidden");
 
       var $form  = $(e.target);
       var data = this.scrubPattern({

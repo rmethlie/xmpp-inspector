@@ -88,8 +88,7 @@ define(["BaseView",
         // ESC cancels manage state
         if(this.model.get("state") === "manage" && event.which === 27){
           Utils.stopEvent(event);
-          this.showOnly("streams");
-          this.model.set("state", null);
+          this.showStreams();
           return false;
         }
       }.bind(this), true);
