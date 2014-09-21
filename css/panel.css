@@ -119,6 +119,20 @@ TEXTAREA.xml-contents{
   font-style: italic;
 }
 
+.cm-mode-json.cm-property {
+  color: #333 !important;
+  font-weight: bold;
+}
+
+.cm-s-default .cm-mode-json.cm-string {
+  color: #069;
+  font-style: italic;
+}
+
+.cm-s-default .cm-mode-json.cm-atom {
+  color: #F29A3F;
+}
+
 .CodeMirror-selected  { 
   background-color: rgb(179, 212, 253) !important; 
 }
