@@ -133,6 +133,8 @@ define(["BaseView",
     showBookmarkManager: function(){
       this.showOnly("manager");
       this.model.set("state", "manage");
+      this.toolbar.$el.find(".button.streams").removeClass("active");
+      this.toolbar.$el.find(".button.url-pattern").addClass("active");
     },
 
     hideBookmarkManager: function(){
@@ -143,6 +145,8 @@ define(["BaseView",
     showStreams: function(){
       this.showOnly("streams");
       this.model.set("state", null);
+      this.toolbar.$el.find(".button.streams").addClass("active");
+      this.toolbar.$el.find(".button.url-pattern").removeClass("active");
     },
 
     hideStreams: function(){

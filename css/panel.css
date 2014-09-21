@@ -158,6 +158,10 @@ TEXTAREA.xml-contents{
   padding: inherit 5px;
 }
 
+.toolbar .button.active {
+  color: #00f;
+}
+
 .toolbar .button, .toolbar form {
   display: table-cell;
   height: 2em;
@@ -168,10 +172,6 @@ TEXTAREA.xml-contents{
 
 .show {
   cursor: pointer;
-}
-
-.toolbar .url-pattern .output:hover{
-  color: #006;
 }
 
 .toolbar .url-pattern .output:hover{
