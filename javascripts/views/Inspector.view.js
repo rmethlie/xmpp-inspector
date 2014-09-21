@@ -57,6 +57,7 @@ define(["BaseView",
       options = options || {};
       options.inspectorView = this;
       this.streamsView = new StreamsView(options);
+      this.children["streams"] = this.streamsView;
     },
 
     renderStreamsManager: function(options){
@@ -64,6 +65,7 @@ define(["BaseView",
         sources: this.streamsView.getSources(),
         inspectorView: this
       });
+      this.children["manager"] = this.streamsManager;
     },
 
     addListeners: function(){
@@ -86,7 +88,8 @@ define(["BaseView",
         // ESC cancels manage state
         if(this.model.get("state") === "manage" && event.which === 27){
           Utils.stopEvent(event);
-          this.toggleManager();
+          this.showOnly("streams");
+          this.model.set("state", null);
           return false;
         }
       }.bind(this), true);
@@ -106,14 +109,6 @@ define(["BaseView",
       this.model.set("state", null);
       this.trigger("search:cancel");
     },
-
-    // initDefaultStream: function(){
-    //   var params = Utils.defaultListenerAttributes;
-    //   params.name = "default";
-
-    //   this.streamsView.addSource(params);
-    //   this.toolbar.addURL(params);
-    // },
 
     _handleToolbarCommand: function( command ){
       switch( command.name ){
@@ -136,20 +131,17 @@ define(["BaseView",
     },
 
     showBookmarkManager: function(){
-      this.streamsView.hide();
-      this.streamsManager.show();
+      this.showOnly("manager");
       this.model.set("state", "manage");
     },
 
     hideBookmarkManager: function(){
-      this.streamsManager.hide();
-      this.streamsView.show();
+      this.children["manager"].hide();
       this.model.set("state", null);
     },
 
     showStreams: function(){
-      this.streamsView.show();
-      this.streamsManager.hide();
+      this.showOnly("manager");
     },
 
     hideStreams: function(){

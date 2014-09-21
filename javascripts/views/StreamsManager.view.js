@@ -101,7 +101,7 @@ define(["BaseView",
     },
 
     close: function(){
-      this.inspectorView.toggleManager();
+      this.inspectorView.showOnly("streams");
     },
 
     editBookmark: function(e){
