@@ -13,14 +13,14 @@ define(["BaseView",
     template: _.template(toolbarTemplate),
 
     events: {
+      "click .button.streams"  : "showStreams",
+      "click .button.url-pattern"   : "showBookmarkManager",
       "click .button.reload"  : "reload",
       "click .button.copy"    : "copy",
       "click .button.find"    : "startSearch",
       "click .button.clear"   : "clear",
       "click .button.options"       : "options",
       "click .button.show-sub-bar"  : "toggleSubbar",
-      "click .url-pattern .label"   : "showBookmarkManager",
-      "click .streams .label"   : "showStreams",
       "click .update-url-pattern  [type='submit']" : "updateUrlPattern",
       "click .search .cancel" : "cancelSearch",
     },
@@ -80,7 +80,7 @@ define(["BaseView",
       var input = this.$el.find("#searchInput");
       input.focus().select();
       var query = input.val();
-      
+
       // if a query is already in the bar search for it automatically
       if(query.length)
         this.submitSearch();

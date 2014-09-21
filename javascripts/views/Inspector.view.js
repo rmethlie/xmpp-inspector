@@ -141,7 +141,8 @@ define(["BaseView",
     },
 
     showStreams: function(){
-      this.showOnly("manager");
+      this.showOnly("streams");
+      this.model.set("state", null);
     },
 
     hideStreams: function(){
