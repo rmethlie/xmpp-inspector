@@ -1,8 +1,8 @@
-define(["BaseView", 
+define(["BaseView",
   'lib/utils',
   'Bookmarks',
-  'text!templates/streamsManager.template.html', 
-  'text!templates/bookmark.template.html'], 
+  'text!templates/streamsManager.template.html',
+  'text!templates/bookmark.template.html'],
 
   function(BaseView, Utils, Bookmarks, streamsManagerTemplate, bookmarkTemplate) {
   "use strict";
