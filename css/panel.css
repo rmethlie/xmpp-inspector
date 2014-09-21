@@ -199,13 +199,8 @@ TEXTAREA.xml-contents{
   display: inline-block;
 }
 
-.toolbar .button:hover{
-  color: rgba( 0, 0, 0, 0.95);
-}
-
-
-.toolbar .button:hover .icon{
-  color: rgba( 0, 0, 0, 0.95)
+.toolbar .button:hover, .toolbar .button:hover .icon{
+  color: #00f;
 }
 
 
