@@ -19,7 +19,8 @@ define(["BaseView",
       "click .button.clear"   : "clear",
       "click .button.options"       : "options",
       "click .button.show-sub-bar"  : "toggleSubbar",
-      "click .url-pattern .label"   : "toggleBookmarkManager",
+      "click .url-pattern .label"   : "showBookmarkManager",
+      "click .streams .label"   : "showStreams",
       "click .update-url-pattern  [type='submit']" : "updateUrlPattern",
       "click .search .cancel" : "cancelSearch",
     },
@@ -78,8 +79,8 @@ define(["BaseView",
       this.$el.find(".sub-bar .search").removeClass("hidden");
       var input = this.$el.find("#searchInput");
       input.focus().select();
-      var query = input.val()
-
+      var query = input.val();
+      
       // if a query is already in the bar search for it automatically
       if(query.length)
         this.submitSearch();
@@ -136,7 +137,7 @@ define(["BaseView",
     toggleSubbar: function(state){
       if(!state)
         state = null;
-      
+
       switch(state){
         case "show":
           this.$el.find(".sub-bar").removeClass("hidden");
@@ -170,8 +171,12 @@ define(["BaseView",
       this.trigger("change:url", urlParams);
     },
 
-    toggleBookmarkManager: function(){
-      this.inspectorView.toggleManager();
+    showBookmarkManager: function(){
+      this.inspectorView.showBookmarkManager();
+    },
+
+    showStreams: function(){
+      this.inspectorView.showStreams();
     },
 
     scrubPattern: function(params){

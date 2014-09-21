@@ -135,16 +135,33 @@ define(["BaseView",
       }
     },
 
-    toggleManager: function(){
-      if(this.model.get("state") === "manage"){
-        this.streamsManager.hide();
-        this.streamsView.show();
-        this.model.set("state", null);
-        return;
-      }
+    showBookmarkManager: function(){
       this.streamsView.hide();
       this.streamsManager.show();
       this.model.set("state", "manage");
+    },
+
+    hideBookmarkManager: function(){
+      this.streamsManager.hide();
+      this.streamsView.show();
+      this.model.set("state", null);
+    },
+
+    showStreams: function(){
+      this.streamsView.show();
+      this.streamsManager.hide();
+    },
+
+    hideStreams: function(){
+      this.streamsView.hide();
+    },
+
+    toggleManager: function(){
+      if(this.model.get("state") === "manage"){
+        this.hideBookmarkManager();
+        return;
+      }
+      this.showBookmarkManager();
     }
   });
 });
