@@ -18,14 +18,15 @@ define(["BaseView",
     bookmarks: null,
 
     events: {
-      "click .cancel": "cancelEditStream",
+      "click .done": "close",
       "click .delete": "deleteBookmark",
+      "click .cancel": "cancelEditStream",
       "click .add-new .show": "showAddInput",
       "submit .new-url-pattern": "addBookmark",
-      "click .edit-stream .show": "toggleEditStream",
       "submit .update-url-pattern": "editBookmark",
+      "click .edit-stream .show": "toggleEditStream",
       "click .enable-bookmark": "toggleBookmarkState",
-      "click .done": "close"
+      "click .select-all-bookmarks": "toggleAllBookmarks"
     },
 
     initialize: function(options){
@@ -194,24 +195,45 @@ define(["BaseView",
     toggleBookmarkState: function(e){
       var index =  e.target.getAttribute("data-index");
       var bookmark = this.bookmarks.at(index);
-      bookmark.set("enable", !bookmark.get("enable"));
       if (e.target.checked) {
-        this.sources.add({
-          format  : bookmark.get("format"),
-          scheme  : bookmark.get("scheme"),
-          host    : bookmark.get("host"),
-          path    : bookmark.get("path")
-        });
-
+        this.enableBookmark(bookmark);
       } else {
-        var stream = this.sources.findWhere({
-          format  : bookmark.get("format"),
-          scheme  : bookmark.get("scheme"),
-          host    : bookmark.get("host"),
-          path    : bookmark.get("path")
-        });
-        this.sources.remove(stream);
+        this.disableBookmark(bookmark);        
       }
-    }
+    },
+
+    enableBookmark: function(bookmark){
+      bookmark.set("enable", true);
+      this.sources.add({
+        format  : bookmark.get("format"),
+        scheme  : bookmark.get("scheme"),
+        host    : bookmark.get("host"),
+        path    : bookmark.get("path")
+      });
+    },
+
+    disableBookmark: function(bookmark){
+      bookmark.set("enable", false);
+      var stream = this.sources.findWhere({
+        format  : bookmark.get("format"),
+        scheme  : bookmark.get("scheme"),
+        host    : bookmark.get("host"),
+        path    : bookmark.get("path")
+      });
+      this.sources.remove(stream);
+    },
+
+    toggleAllBookmarks: function(e){
+      var checkAll = false;
+      if(e.target.checked)
+        checkAll = true;
+
+      this.$el.find(".enable-bookmark[type='checkbox']")
+      .each(function(index, box){
+        box.checked = checkAll;
+        var bookmark = this.bookmarks.at(index);
+        this.enableBookmark(bookmark);
+      }.bind(this));
+    },
   });
 });
