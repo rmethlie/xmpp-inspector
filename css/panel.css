@@ -34,7 +34,7 @@ TEXTAREA.xml-contents{
 
 #streams, #stream-manager {
   position: absolute;
-  top: 2em;
+  top: 2.9em;
   bottom: 0;
   width: 100%;
 }
@@ -44,7 +44,7 @@ TEXTAREA.xml-contents{
 }
 
 #stream-manager-list {
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 #stream-manager-list td, 
@@ -142,12 +142,25 @@ TEXTAREA.xml-contents{
   background-color: rgb(244, 0, 95) !important;
 }
 
+.show {
+  cursor: pointer;
+}
+
+.divider {
+  float: left;
+  background-color: #ccc;
+  margin: 3px 2px;
+  width: 1px;
+  height: 16px;
+}
+
 .toolbar-wrapper {
   position: relative;
 }
 
 .toolbar {
-  display: table;
+  display: inline-block;
+  height: 2.9em;
   overflow: hidden;
   background-color: #fff;
   border-bottom: solid 1px #ddd;
@@ -162,31 +175,24 @@ TEXTAREA.xml-contents{
 
 .toolbar .main-bar, .toolbar .sub-bar {
   display: inline-block;
-  margin-left: 20px;
+  margin: 3px 0 0 20px;
   float: left;
   clear:both;
   overflow: hidden;
-  height: 2em;
 }
 .toolbar .sub-bar{
   padding: inherit 5px;
 }
 
-.toolbar .button.active {
-  color: #00f;
-}
 
 .toolbar .button, .toolbar form {
-  display: table-cell;
-  height: 2em;
-  overflow: hidden;
+  display: block;
   cursor: pointer;
+  float: left;
   white-space: nowrap;
+  color: #4b4b4b;
 }
 
-.show {
-  cursor: pointer;
-}
 
 .toolbar .url-pattern .output:hover{
   color: #006;
@@ -198,23 +204,43 @@ TEXTAREA.xml-contents{
   top: 0;
 }
 
-.toolbar .button{
+.toolbar .button {
   font-size: 8pt;
-  padding: 5px 0 5px 5px;
+  font-family: 'Lucida Grande', sans-serif;
+  padding: 6px 4px 6px 3px;
+  margin: 0 5px 0 2px;
   white-space: nowrap;
+
+}
+
+.toolbar .button.page{
+  border: solid 1px #fff;
+  border-radius: 8px;
+}
+
+.toolbar .button.page.active, .toolbar .button.page.active:hover {
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.298039);
+  text-shadow: rgba(0, 0, 0, 0.4) 0px 1px 0px;
 }
 
 .toolbar .button .icon{
-  margin-right: 5px;
+  margin: 0 5px 0 2px;
 }
 
 .toolbar .button .label{
-  margin-right: 10px;
   display: inline-block;
 }
 
-.toolbar .button:hover, .toolbar .button:hover .icon{
-  color: #00f;
+
+.toolbar .button.action:hover{
+  color: #000;
+}
+
+.toolbar .button.page:hover{
+  color: #fff;
+  background: rgba(0, 0, 0, 0.2);
+  text-shadow: rgba(0, 0, 0, 0.2) 0 1px 0;
 }
 
 
