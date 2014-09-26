@@ -37,14 +37,6 @@ define(["BaseView",
 
       var $searchInput = $(this.$el.find("#searchInput")[0]);
 
-      this.listenTo(this.inspectorView, "search:init", function(){
-        this.showSearchBar();
-      });
-
-      this.listenTo(this.inspectorView, "search:cancel", function(){
-        this.hideSearchBar();
-      });
-
       this.$el.find(".search form").on("submit", function(e){
         Utils.stopEvent(e.originalEvent);
       }.bind(this));
@@ -72,24 +64,6 @@ define(["BaseView",
 
     reload: function(){
       document.location.reload();
-    },
-
-    showSearchBar: function(){
-      this.toggleSubbar("show");
-      this.$el.find(".sub-bar .search").removeClass("hidden");
-      var input = this.$el.find("#searchInput");
-      input.focus().select();
-      var query = input.val();
-
-      // if a query is already in the bar search for it automatically
-      if(query.length)
-        this.submitSearch();
-
-    },
-
-    hideSearchBar: function(){
-      this.$el.find(".sub-bar .search").addClass("hidden");
-      this.toggleSubbar("hide");
     },
 
     submitSearch: function(e){

@@ -101,7 +101,13 @@ define(["BaseView",
 
     initSearch: function(){
       this.model.set("state", "search");
-      this.trigger("search:init");
+      var input = this.$el.find("#searchInput");
+      input.focus().select();
+      var query = input.val();
+
+      // if a query is already in the bar search for it automatically
+      if(query.length)
+        this.toolbar.submitSearch();
     },
 
     cancelSearch: function(){
