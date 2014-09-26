@@ -193,6 +193,11 @@ TEXTAREA.xml-contents{
   color: #4b4b4b;
 }
 
+.toolbar form {
+  display: inline-block;
+  float: none;
+  margin: 0;
+}
 
 .toolbar .url-pattern .output:hover{
   color: #006;
@@ -211,6 +216,9 @@ TEXTAREA.xml-contents{
   margin: 0 5px 0 2px;
   white-space: nowrap;
 
+}
+.toolbar .button.find {
+  padding-top: 0;
 }
 
 .toolbar .button.page{
