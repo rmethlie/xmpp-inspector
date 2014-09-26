@@ -67,7 +67,7 @@ define([], function() {
          (code >= 106 && code <= 111) ||
           (code >= 186 && code <= 192) ||
             (code >= 219 && code <= 222) ||
-              (code === 13) || // enter
+              // (code === 13) || // enter
                 (code === 8) || // backspace
                   (code === 32) || // space
                     (code === 9) // tab
