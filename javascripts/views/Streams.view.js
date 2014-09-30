@@ -38,7 +38,8 @@ define(['BaseView',
       readOnly: true,
       theme: "streams default", // apply our modifications to the default CodeMirror theme.
       styleSelectedText: true,
-      styleActiveLine: false
+      styleActiveLine: false,
+      gutters: ["CodeMirror-linenumbers", "CodeMirror-streamcolor"]
     },
 
     // map the line number in the data stream to the networkEvent stored in the model
@@ -167,11 +168,17 @@ define(['BaseView',
           this.dataStream.markText( markFrom, markTo, {className: "prefix direction"});
         }
 
-
         content = this.format(content, url, options);
 
         this.dataStream.replaceRange(content, {line: Infinity, ch: lastLine.charCount});
         this.networkEventMap["line:" + lastLine.number] = data.id;
+      }
+
+
+      var lastLineNumber = this.dataStream.lastLine();
+      for(var i = markFrom.line; i <= lastLineNumber; i++){
+        this.dataStream.addLineClass(i, "wrap", "test-class");
+        // this.dataStream.setGutterMarker(i, "CodeMirror-streamcolor", insert dom node here);
       }
 
       if(scollToBottom){
