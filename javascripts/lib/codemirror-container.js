@@ -4,7 +4,7 @@ define([
   'codemirror/addon/fold/foldcode',
   'codemirror/addon/fold/foldgutter',
   'codemirror/addon/fold/xml-fold',
-  'codemirror/addon/fold/indent-fold',
+  'codemirror/addon/fold/brace-fold',
   'codemirror/mode/xml/xml',
   'codemirror/mode/javascript/javascript',
   'codemirror/addon/selection/mark-selection',
