@@ -261,7 +261,7 @@ define(['BaseView',
 
     formatAsJSON: function(content){
       try{
-        content = JSON.stringify(JSON.parse(content), null, "  ");
+        content = JSON.stringify(JSON.parse(content), null, "    ");
       } catch(e){
         console.warn("Could not parse as JSON");
       }
