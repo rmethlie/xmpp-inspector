@@ -38,7 +38,9 @@ define(['BaseView',
       readOnly: true,
       theme: "streams default", // apply our modifications to the default CodeMirror theme.
       styleSelectedText: true,
-      styleActiveLine: false
+      styleActiveLine: false,
+      foldGutter: true,
+      gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     },
 
     // map the line number in the data stream to the networkEvent stored in the model
