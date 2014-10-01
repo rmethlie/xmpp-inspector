@@ -137,8 +137,8 @@ TEXTAREA.xml-contents{
   background-color: rgb(179, 212, 253) !important; 
 }
 
-.CodeMirror-streamcolor  { 
-  width: 30px;
+.CodeMirror .test-class {
+  border-left: solid 3px blue;
 }
 
 .searching .cm-searching.CodeMirror-selectedtext { 
