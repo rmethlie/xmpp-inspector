@@ -144,12 +144,12 @@ define(['BaseView',
         options = {};
       var content = data.body;
       var url = options.url;
-      var scollToBottom = false;
+      var scrollToBottom = false;
       var lastLine = this.getLastLineInfo();
 
       // if the user is already at  the bottom of the stream scroll to the bottom after appending the new content
       if(this.isAtBottom()){
-        scollToBottom = true;
+        scrollToBottom = true;
       }
 
       if(content){
@@ -169,14 +169,13 @@ define(['BaseView',
           this.dataStream.markText( markFrom, markTo, {className: "prefix direction"});
         }
 
-
         content = this.format(content, url, options);
 
         this.dataStream.replaceRange(content, {line: Infinity, ch: lastLine.charCount});
         this.networkEventMap["line:" + lastLine.number] = data.id;
       }
 
-      if(scollToBottom){
+      if(scrollToBottom === true){
         this.dataStream.scrollIntoView({line: this.dataStream.lastLine(), ch: 1});
       }
     },
