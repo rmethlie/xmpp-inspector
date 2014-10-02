@@ -118,7 +118,10 @@ define(['BaseView',
 
     isAtBottom: function(){
       var scrollInfo = this.dataStream.getScrollInfo();
-      if(scrollInfo.clientHeight + scrollInfo.top === scrollInfo.height)
+      var offsetFromBottom = Math.abs(
+        (scrollInfo.clientHeight + scrollInfo.top) - scrollInfo.height
+      );
+      if(offsetFromBottom <= 35) // this is equal to ~2 lines
         return true;
       else
         return false;
