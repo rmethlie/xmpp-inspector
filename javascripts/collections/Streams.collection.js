@@ -53,6 +53,7 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
 
       this.on("remove", function(listener, collection, options){
         console.log("remove responseListener", listener);
+        listener.stopListening();
         this.sendToBackground({
           event: "remove:listener",
           data: this.webRequestManifest(listener)
