@@ -27,7 +27,7 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
         pattern += "\/" + path;
       }
 
-      return pattern;
+      return "^" + pattern + "$";
 
     },
 
