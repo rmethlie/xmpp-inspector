@@ -1,15 +1,25 @@
-define(['backbone', 'ExternalListener', 'underscore', 'lib/utils'], function(Backbone, ExternalListener, _, Utils) {
+define(['ExternalListener'], function(ExternalListener) {
   "use strict";
   return Backbone.Collection.extend({
     model: ExternalListener,
-    initialize: function( listeners, options ){
-      console.info( "[ExternalListeners] Initialized.");
-      this.requestListeners = options.requestListeners;
-      this.requestListeners.on("add", function( requestListener ){
-        console.info( "[ExternalListeners] Detected new request listener.");
-        requestListener.on("stream:update", this.onStreamEvent.bind(this));
+    initialize: function( chromeConnections, options ){
+      console.log( "[ExternalListeners] Initialized.");
+      this.chromeConnections = options.chromeConnections;
+      this.chromeConnections.on("add", function( chromeConnection ){
+        console.log( "[ExternalListeners] Detected new request listener.");
+        chromeConnection.on("stream:update", this.onStreamEvent.bind(this));
       }.bind(this));
       this.listen();
+    },
+
+    list: function( filter ){
+      // filter inspector rules based on 'filter' properties
+      filter = filter || {}
+
+      _.each( this.chromeConnections.models, function( chromeConnection ){
+        console.log( 'connection', chromeConnection );
+      });
+
     },
 
     listen: function(){
@@ -26,13 +36,37 @@ define(['backbone', 'ExternalListener', 'underscore', 'lib/utils'], function(Bac
         port.onDisconnect.addListener(function(){
           this.remove(externalListener);
         }.bind(this));
+        
+        // listen for external messages.  mainly for registration.
+        port.onMessage.addListener(this.onExternalMessage.bind(this));
+      
+        console.log( '[ExternalListeners] Added listener:', port.name+".", "Requesting permission.");
 
       }.bind(this));
-      console.info( "[ExternalListeners] Listening...");
+      console.log( "[ExternalListeners] Listening...");
+    },
+
+    onExternalMessage: function( message ){
+
+      switch( message.event ){
+
+        case "register:external":
+          console.log( '[ExternalListeners] Registration request.' );
+          _.each( this.chromeConnections.models, function(chromeConnection){
+            if( chromeConnection.sendToPanel ){
+              console.log( '[ExternalListeners] Sending register request to', chromeConnection.id );
+              chromeConnection.sendToPanel(message);
+            }
+          });
+        break;
+
+        default:
+          console.warn('[ExternalListeners] Unknown external message type:', message.type);
+      }
     },
 
     onStreamEvent: function( event ){
-      console.info( "[ExternalListeners] Stream event.", event );
+      console.log( "[ExternalListeners] Stream event.", event );
       _.each( this.models, function( externalListener ){
         var
         port = externalListener.get("port");
@@ -40,6 +74,12 @@ define(['backbone', 'ExternalListener', 'underscore', 'lib/utils'], function(Bac
           port.postMessage(event);
         }
       })
+    },
+
+
+    register: function( listener ){
+
+
     }
   });
 });
