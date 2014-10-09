@@ -8,15 +8,19 @@ require.config({
         codemirror: "bower_components/codemirror/",
         beautifier: "bower_components/js-beautify/js/lib",
         Utils: "lib/utils",
+        BaseCollection: "collections/Base.collection",
         BaseModel: "models/Base.model",
         BaseView: "views/Base.view",
         Packet: "models/Packet.model",
-        Stream: "models/Stream.model",
-        StreamView: "views/Stream.view",
+        Streams: "collections/Streams.collection",
+        StreamsView: "views/Streams.view",
+        StreamsManager: "views/StreamsManager.view",
         ResponseListener: "models/ResponseListener.model",
         XMPPStreamView: "views/XMPPStream.view",
         RequestListener: "models/RequestListener.model",
+        ResponseListeners: "collections/ResponseListeners.collection",
         RequestListeners: "collections/RequestListeners.collection",
+        ChromeConnections: "collections/ChromeConnections.collection",
         NetworkEvent: "models/NetworkEvent.model",
         NetworkEvents: "collections/NetworkEvents.collection",
         StreamToolbarModel: "/javascripts/models/StreamToolbar.model",
@@ -29,5 +33,8 @@ require.config({
         BackgroundPage: "models/BackgroundPage.model",
         ExternalListeners: "collections/ExternalListeners.collection",
         ExternalListener: "models/ExternalListener.model"
+        ChromeConnection: "models/ChromeConnection.model",
+        Bookmarks: "collections/Bookmarks.collection",
+        Bookmark: "models/Bookmark.model"
     }
 });

@@ -1,0 +1,7 @@
+{
+  "name": "generic-http-server",
+  "number": 12345,
+  "boolean": true,
+  "description": "Simple http server used for quickly spinning up sites to preview dev code",
+  "version": "0.0.1","dependencies": {"express": "3.x"}
+}

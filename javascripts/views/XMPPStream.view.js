@@ -1,9 +1,9 @@
-define(["StreamView"], function(StreamView) {
+define(["StreamsView"], function(StreamsView) {
   "use strict";
 
-  return StreamView.extend({
+  return StreamsView.extend({
     
-    el                      : "#xmpp-stream",
+    el                      : "#streams",
     requestSentPrefix       : function(){ return "<!-- " + new Date().toTimeString() + " request sent >>>>>>>>>>>> -->";},
     responseReceivedPrefix  : function(){ return "<!-- <<<<<<<<<<<< " + new Date().toTimeString() + " response received -->";}
   });

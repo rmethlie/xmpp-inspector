@@ -1,8 +1,8 @@
 
 require(["config"], function() {
-  require(['RequestListeners','ExternalListeners'], function(RequestListeners,ExternalListeners) {
+  require(['ChromeConnections','ExternalListeners'], function(RequestListeners,ExternalListeners) {
       var 
-      requestListeners = new RequestListeners(),
+      chromeConnections = new ChromeConnections(),
       externalListeners = new ExternalListeners([],{requestListeners:requestListeners});
   });
 });

@@ -1,4 +1,4 @@
-define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'lib/utils'], function(BaseModel, NetworkEvents, ResponseListener, Utils) {
+define(['BaseModel', 'ResponseListener', 'lib/utils'], function(BaseModel, ResponseListener, Utils) {
   "use strict";
 
   // Description: Listen for webRequests in the background and send message to dev tools extension
@@ -13,8 +13,6 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'lib/utils'], function
       tabId: chrome.devtools.inspectedWindow.tabId,
       backgroundConnectionName: "port:" + chrome.devtools.inspectedWindow.tabId,
     },
-    
-    networkEvents: new NetworkEvents(),
 
     generateWebRequestFilter: function(){
       return [ this.get("scheme") + "://" + this.get("host") +  "/*" + this.get("path") + "*" ];
@@ -30,10 +28,6 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'lib/utils'], function
     addListeners: function(){
       console.log("[Stream] addListeners");
 
-      // init the connection
-      this._connection = chrome.runtime.connect({name: this.webRequestManifest().name });
-      this._connection.onMessage.addListener(this._handleBackgroundEvent.bind(this));
-
       this.sendToBackground({ 
         event: "add:listener", 
         data: this.webRequestManifest() 
@@ -42,10 +36,6 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'lib/utils'], function
       // Description: Handle the message sent from the background page
       this.on("stream:update", function(data){
         this.handleBeforeRequest(data);
-      });
-
-      this.on("tab:updated:complete", function(data){
-        this.handleTabUpdated(data);
       });
 
       this.listenTo(this.responseListener, "request:finished", function(response){
@@ -67,22 +57,15 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'lib/utils'], function
     },
 
     handleRequestFinished: function(response){
-      this.networkEvents.add(response);
       this.trigger("request:finished", {id: response.id, body: response.body});
     },
 
     handleBeforeRequest: function(data){
       var guid = Utils.guidGen();
-      this.networkEvents.add({id: guid, type:'beforeRequest', data: data, body: data.requestBody});
       this.trigger("request:sent", {id: guid, body: data.requestBody} );
     },
 
-    handleTabUpdated: function(data) {
-      this.trigger("tab:updated");
-    },
-
     webRequestManifest: function(){
-      console.info( "WRFilter", this.generateWebRequestFilter() )
       return {
         scheme  : this.get("scheme"),
         host    : this.get("host"),

@@ -5,59 +5,31 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
   return BaseModel.extend({
 
     defaults: {
-      scheme: "*", 
-      host: "*", 
+      scheme: "*",
+      host: "*",
       path: "http-bind",
       types: ["xmlhttprequest"],
       tabId: -1
     },
+
     port: null,
+    
     requestHandlers: {},
 
     _responseListener: null,
 
     initialize: function(){
       console.log("[RequestListener] init");
+      this.addListeners();
     },
 
     generateWebRequestFilter: function(){
-      //["*://*/*http-bind*"]
-      return [this.get("scheme")+"://"+this.get("host")+"/*"+this.get("path")+"*"];
+      return [this.get("scheme")+"://"+this.get("host")+"/"+this.get("path")];
     },
-
-    setPort: function( port ){
-
-      this.port = port;
-
-      this.on("change:host change:scheme change:path", function( model ){
-        this.removeListeners();
-        this.addListeners();
-      }.bind(this))
-
-      // handle messages
-      port.onMessage.addListener( function( message ){
-        console.info( "RAW MEssage", message );
-        if( typeof message.event === "undefined" ){
-          this.set( message );
-        }else{
-          this.onMessage( message.event, message.data );
-        }
-      }.bind(this)); 
-
-
-      this.id = port["name"];
-      return this;
-    },
-
-    // onChangeURLs: function( update ){
-
-    //   if( update.change.urls ){
-
-    //   }
-    // },
 
     onBeforeRequest: function(info) {
 
+      console.info( "[PGD] onBeforeRequest", info.tabId );
       var content = "";
       // note: requestBody.raw[0].bytes is an ArrayBuffer type object 
       //  but it becomes a regular object when passed to the devtools extension page.
@@ -66,12 +38,13 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
       //  for details.
       if(info.requestBody)
         content = Utils.ArrayBufferToString(info.requestBody.raw[0].bytes);
-      this.sendToResponseListener({
-        event: "stream:update", 
+      this.trigger("request:before", {
+        event: "stream:update",
         data:{
-          state:"beforeRequest", 
+          state:"beforeRequest",
           info: info,
-          requestBody: content
+          requestBody: content,
+          format: this.get("format")
         }
       });
       
@@ -83,11 +56,11 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
       })
     },
 
-    onCompleted: function(info) {    
+    onCompleted: function(info) {
 
       console.info( "oncompleted", info );
       this.sendToResponseListener({
-        event: "stream:update", 
+        event: "stream:update",
         data: {
           state:"completed",
           info: info
@@ -104,8 +77,6 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
     addListeners: function(){
       console.log("[StreamListener] addListeners");
       this.listenToBeforeRequest();
-      //this.listenToSendHeaders();
-      this.listenToCompleted();
     },
 
     removeListeners: function(){
@@ -136,72 +107,6 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
           ["requestBody"]
       );
     },
-    
-    // listenToSendHeaders: function(){
-    //   // get request headers (after everyone has had a chance to change them)
-    //   var _this = this;
-    //   this.onSendHeaders = chrome.webRequest.onSendHeaders.addListener(
-    //       function(info) {
-    //       },
-    //       // filters
-    //       {
-    //         urls  : this.generateWebRequestFilter(),
-    //         types : this.get("types"),
-    //         tabId : this.get("tabId")
-    //       }, 
-    //       ["requestHeaders"]
-    //   );
-    // },
-    
-    listenToCompleted: function(){
-      // get response headers, http status & response
-      // chrome.webRequest.onResponseStarted.addListener()
-      this.requestHandlers["onCompleted"] = this.onCompleted.bind(this);
-
-      chrome.webRequest.onCompleted.addListener(
-          this.requestHandlers["onCompleted"],
-          // filters
-          {
-            urls  : this.generateWebRequestFilter(),
-            types : this.get("types"),
-            tabId : this.get("tabId")
-          },
-          ["responseHeaders"]
-      );
-    },
-
-    sendToResponseListener: function( message ){
-      console.info( this.port );
-      if( this.port.postMessage ){
-        this.port.postMessage(message);
-        console.info( "postmessage", message );
-      }else{
-        console.error("could not send message to response listener" );
-        debugger;
-      }
-    },
-
-
-    onMessage: function(event,data) {
-      console.log("[RequestListener] onMessage", event, ":",data );
-
-      switch(event){
-        case "add:listener":
-          console.log("add:listener", data );
-          this.set(data); // manifest
-          this.addListeners();
-          break;
-
-        case "change:protocol":
-          this.set(data);
-        break;
-        case "copy:text":
-          console.log("copy:text");
-          Utils.copyText(data);
-          break;
-      }
-    }
-
 
   });
 });

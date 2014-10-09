@@ -1,6 +1,6 @@
 
 chrome.devtools.panels.create(
-  "XMPP",
+  "Streams",
   null,
   "panel.html",
   function(extensionPanel){
