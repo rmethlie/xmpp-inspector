@@ -108,8 +108,7 @@ define(["BaseView",
     editBookmark: function(e){
       Utils.stopEvent(e);
       var index = e.target.getAttribute("data-index");
-      var $form = $(this.$el.find("form[data-index='" + index + "']")[0]);
-      var checkbox = $(this.$el.find("input.enable-bookmark[data-index='" + index + "']")[0]);
+      var checkbox = $(this.$el.find("input.enable-bookmark[data-index='" + index + "']"))[0];
       var options = {
         index  : index,
         enable : checkbox.checked
