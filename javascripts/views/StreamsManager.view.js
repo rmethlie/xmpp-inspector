@@ -167,7 +167,9 @@ define(["BaseView",
         var index = options.index || this.bookmarks.length;
         data.enable = true;
         this.bookmarks.add(data, {at: index});
-        if(options.enable)
+        // Add the source by default unless it is explicitly set to false
+        // undefined and other "falsey" values will add the source
+        if(options.enable !== false)
           this.sources.add(data);
       }
     },
