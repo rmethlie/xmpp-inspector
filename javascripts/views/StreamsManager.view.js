@@ -165,7 +165,7 @@ define(["BaseView",
 
       if(data){
         var index = options.index || this.bookmarks.length;
-        data.enable = true;
+        data.enable = !options.enable ? false : true;
         this.bookmarks.add(data, {at: index});
         // Add the source by default unless it is explicitly set to false
         // undefined and other "falsey" values will add the source
