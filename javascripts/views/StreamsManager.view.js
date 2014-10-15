@@ -22,7 +22,7 @@ define(["BaseView",
       "click .delete": "deleteBookmark",
       "click .cancel": "cancelEditStream",
       "click .add-new .show": "showAddInput",
-      "submit .new-url-pattern": "addBookmark",
+      "submit .new-url-pattern": "addEnabledBookmark",
       "submit .update-url-pattern": "editBookmark",
       "click .edit-stream .show": "toggleEditStream",
       "click .enable-bookmark": "toggleBookmarkState",
@@ -142,6 +142,10 @@ define(["BaseView",
         $form.removeClass("hidden");
       }
 
+    },
+
+    addEnabledBookmark: function(e){
+      this.addBookmark(e, {enable: true});
     },
 
     addBookmark: function(e, options){
