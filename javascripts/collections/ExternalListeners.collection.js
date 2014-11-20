@@ -50,7 +50,7 @@ define(['ExternalListener'], function(ExternalListener) {
 
       switch( message.event ){
 
-        case "register:external":
+        case "external:register":
           console.log( '[ExternalListeners] Registration request.' );
           _.each( this.chromeConnections.models, function(chromeConnection){
             if( chromeConnection.sendToPanel ){

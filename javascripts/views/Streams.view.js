@@ -59,7 +59,7 @@ define(['BaseView',
       var patterns = options.patterns || [];
       this.inspectorView = options.inspectorView;
       this.streams = new Streams(patterns);
-      this.streams.on('register:external', this.promptRegisterExternal.bind(this));
+      this.streams.on('external:register', this.promptRegisterExternal.bind(this));
       this.render();
       this.dataStream = CodeMirror.fromTextArea(document.getElementById("dataStream"), this.dataStreamConfig);
       this.initSearchable(this.dataStream);
