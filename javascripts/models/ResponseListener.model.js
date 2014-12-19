@@ -1,17 +1,18 @@
-define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkEvents, Utils) {
+define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
   "use strict";
 
   // Description: Listen for webRequests in the background and send message to dev tools extension
   return BaseModel.extend({
 
+    defaults : Utils.defaultListenerAttributes,
+
     generateNetworkRequestPattern: function(){
 
-      var stream = this.get("stream");
-      var 
-      host = stream.get("host"),
-      scheme = stream.get("scheme"),
-      path = stream.get("path"),
-      pattern = null;
+      var
+        host = this.get("host"),
+        scheme = this.get("scheme"),
+        path = this.get("path"),
+        pattern = null;
 
       scheme = scheme.replace(/\*+/g, ".*");
 
@@ -23,14 +24,22 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
       
       pattern = scheme + ":\/\/" + host;
       if(path.length){
-        pattern += "\/*" + path + "*";
+        pattern += "\/" + path;
       }
 
-      return pattern;
+      return "^" + pattern + "$";
 
     },
 
     initialize: function(){
+      this.set("id", Utils.guidGen());
+      this.on("change", function(val){
+        console.log("[PGD] responseListener change", this);
+      });
+      // Create a bound version of this function to preserve 'this' context
+      //    when executing on the response for a listener and to reference it 
+      //    later when removing it. You can't unbind an anonymous function.
+      this.onRequestFinished = this.onRequestFinished.bind(this);
       this.listenToRequestFinished();
     },
     
@@ -38,24 +47,35 @@ define(['BaseModel', 'NetworkEvents', 'lib/utils'], function(BaseModel, NetworkE
     // todo: clean up listeners in devtools on close that are not in the background?
     // !!!: Losing content when going from external debug window to nested
     listenToRequestFinished: function(){
-
-      chrome.devtools.network.onRequestFinished.addListener(function(packet){
-        try{
-          console.info( "WRPattern Response", this.generateNetworkRequestPattern() );
-          var urlPattern = new RegExp( this.generateNetworkRequestPattern(), "ig");
-          if( urlPattern.test( packet.request.url ) ){
-            packet.getContent( function(contents){
-              var guid = Utils.guidGen();
-              this.trigger("request:finished", {id: guid, type:'requestFinished', data: packet, body: contents} );
-            }.bind(this));
-          }else{
-            console.info( "failed", packet.request.url );
-          }
-        }catch( e ){
-          console.error( e.stack, true );
-        }
-      }.bind(this));
+      chrome.devtools.network.onRequestFinished.addListener(this.onRequestFinished);
     },
+
+    onRequestFinished: function(packet){
+      try{
+        console.info( "WRPattern Response" );
+        var urlPattern = new RegExp( this.generateNetworkRequestPattern(), "ig");
+        if( urlPattern.test( packet.request.url ) ){
+          packet.getContent( function(contents){
+            var guid = Utils.guidGen();
+            this.trigger("request:finished", {
+              id        : guid, 
+              streamId  : this.get("id"), 
+              type      :'requestFinished', 
+              data      : packet, 
+              body      : contents,
+              format    : this.get("format")
+            });
+          }.bind(this));
+        }
+      }catch( e ){
+        console.error( e.stack, true );
+      }
+    },
+
+    stopListening: function(){
+      console.log("[RespsonseListener] stopListening");
+      chrome.devtools.network.onRequestFinished.removeListener(this.onRequestFinished);
+    }
 
   });
 });

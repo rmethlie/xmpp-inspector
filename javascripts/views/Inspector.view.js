@@ -1,11 +1,15 @@
 define(["BaseView",
   "InspectorModel",
   "ResponseListener",
-  "XMPPStreamView",
+  "StreamsView",
   "StreamToolbarView",
-  "Stream",
+  "Streams",
+  "StreamsManager",
   'text!templates/inspector.template.html',
-  'lib/utils'], function(BaseView, InspectorModel, ResponseListener, XMPPStreamView, StreamToolbarView, Stream, inspectorTemplate, Utils) {
+  'lib/utils'],
+  function( BaseView, InspectorModel, ResponseListener, StreamsView, StreamToolbarView,
+    Streams, StreamsManager, inspectorTemplate, Utils ) {
+
   "use strict";
 
   return BaseView.extend({
@@ -20,15 +24,23 @@ define(["BaseView",
 
     initialize: function(){
       this.model = new InspectorModel();
-      this.render();
+      var urlManifest = this.model.loadUrlManifest();
+      this.render({patterns: urlManifest});
       this.addListeners();
     },
 
-    render: function(){
+    render: function(options){
+      if(!options){
+        options = {};
+      }
+      
       this.$el.html(this.template({}));
-      this.renderStream();
-      this.stream.model.on("change:scheme change:host change:path", this.renderToolbar.bind(this) );
-      this.renderToolbar(this.stream.model.defaults)
+      this.renderStream(options);
+      this.streamsView.streams.on("change:scheme change:host change:path", this.renderToolbar.bind(this) );
+      this.renderToolbar(options);
+      this.renderStreamsManager(options);
+      this.toggleManager();
+
     },
 
     renderToolbar: function(options){
@@ -36,27 +48,24 @@ define(["BaseView",
         options = {};
       }
 
-      if( this.toolbar ){
-        // sync
-        this.toolbar.model.set(options);
-        return;
-      }
-
       options.inspectorView = this;
       this.toolbar = new StreamToolbarView(options);
-      this.toolbar.model.on("change",function(data){
-        this.stream.model.sendToBackground( data.changed );
-        this.stream.model.set(data.changed,{silent:true});
-      }.bind(this));
-
       this.toolbar.model.on( "toolbar:command", this._handleToolbarCommand.bind(this) );
     },
 
-    renderStream: function(){
-      this.stream = new XMPPStreamView({
-        model: new Stream(),
+    renderStream: function(options){
+      options = options || {};
+      options.inspectorView = this;
+      this.streamsView = new StreamsView(options);
+      this.children["streams"] = this.streamsView;
+    },
+
+    renderStreamsManager: function(options){
+      this.streamsManager = new StreamsManager({
+        sources: this.streamsView.getSources(),
         inspectorView: this
       });
+      this.children["manager"] = this.streamsManager;
     },
 
     addListeners: function(){
@@ -76,6 +85,12 @@ define(["BaseView",
           this.cancelSearch();
           return false;
         }
+        // ESC cancels manage state
+        if(this.model.get("state") === "manage" && event.which === 27){
+          Utils.stopEvent(event);
+          this.showStreams();
+          return false;
+        }
       }.bind(this), true);
 
     },
@@ -86,27 +101,33 @@ define(["BaseView",
 
     initSearch: function(){
       this.model.set("state", "search");
-      this.trigger("search:init");
+      var input = this.$el.find("#searchInput");
+      input.focus().select();
+      var query = input.val();
+
+      // if a query is already in the bar search for it automatically
+      if(query.length)
+        this.toolbar.submitSearch();
     },
 
     cancelSearch: function(){
       this.model.set("state", null);
-      this.trigger("search:cancel");      
+      this.trigger("search:cancel");
     },
 
     _handleToolbarCommand: function( command ){
       switch( command.name ){
         case "clear":
-          this.stream.clear();
+          this.streamsView.clear();
           break;
         case "copy":
-          this.stream.copy();
+          this.streamsView.copy();
           break;
         case "url-pattern-update":
-          this.stream.model.updateFilter(command.pattern);
+          this.streamsView.model.updateFilter(command.pattern);
           break;
         case "toggle-subbar":
-          this.stream.toggleForSubbar(command.state);
+          this.streamsView.toggleForSubbar(command.state);
           break;
 
         default:
@@ -114,5 +135,35 @@ define(["BaseView",
       }
     },
 
+    showBookmarkManager: function(){
+      this.showOnly("manager");
+      this.model.set("state", "manage");
+      this.toolbar.$el.find(".button.streams").removeClass("active");
+      this.toolbar.$el.find(".button.url-pattern").addClass("active");
+    },
+
+    hideBookmarkManager: function(){
+      this.children["manager"].hide();
+      this.model.set("state", null);
+    },
+
+    showStreams: function(){
+      this.showOnly("streams");
+      this.model.set("state", null);
+      this.toolbar.$el.find(".button.streams").addClass("active");
+      this.toolbar.$el.find(".button.url-pattern").removeClass("active");
+    },
+
+    hideStreams: function(){
+      this.streamsView.hide();
+    },
+
+    toggleManager: function(){
+      if(this.model.get("state") === "manage"){
+        this.hideBookmarkManager();
+        return;
+      }
+      this.showBookmarkManager();
+    }
   });
 });

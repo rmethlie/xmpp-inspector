@@ -2,12 +2,12 @@ define(['BaseCollection', 'ChromeConnection', 'RequestListener', 'lib/utils'], f
   "use strict";
 
 
-  return Backbone.Collection.extend({
+  return BaseCollection.extend({
     
     model: ChromeConnection,
 
     initialize: function(){
-      console.log("[RequestListeners] initialize");
+      console.log("[ChromeConnections] initialize");
       this.addListeners();
       window.RLC = this;
     },
@@ -15,16 +15,12 @@ define(['BaseCollection', 'ChromeConnection', 'RequestListener', 'lib/utils'], f
     addListeners: function(){      
       // listen for panel connections
       chrome.runtime.onConnect.addListener(function(port) {
-        console.log("[RequestListeners] Recvd 'onConnect' event", port );  
+        console.log("[ChromeConnections] Recvd 'onConnect' event");  
         if( !this.findWhere({id: port.name}) ) {
           this.add({id: port.name, port: port});
         }
-        // this.add(new RequestListener().setPort(port));
-
       }.bind(this));
 
-      // this.on("add", this._handleConnect.bind(this));
-      this.on("remove", this._handleDisconnect.bind(this));
       // when the tab has completed its connection workflow, do
       chrome.tabs.onUpdated.addListener(function(responseListenerId, changeInfo) {
         var responseListener = null;
@@ -41,14 +37,19 @@ define(['BaseCollection', 'ChromeConnection', 'RequestListener', 'lib/utils'], f
       chrome.tabs.onRemoved.addListener(function(responseListenerId, isWindowClosing) {
         console.log("TAB closing", responseListenerId, "TODO: removelisteners and port");
         // !!!: remove all the listeners from that tab
-        this.remove({id: "port:"+responseListenerId});
+        var params = {id: "port:" + responseListenerId};
+        var connection = this.findWhere(params);
+        if(connection){
+          connection.removeWebRequestListeners();
+          this.remove(params);
+        }
       }.bind(this));
 
     },
 
-    // _handleConnect: function( chromeConnection ){
-    //   console.info("connect", chromeConnection );
-    // },
+    _handleConnect: function( chromeConnection ){
+      console.info("connect", chromeConnection );
+    },
 
     _handleDisconnect: function( chromeConnection ){
       console.info("panel disconnect", chromeConnection );
@@ -56,7 +57,6 @@ define(['BaseCollection', 'ChromeConnection', 'RequestListener', 'lib/utils'], f
         console.error( "No chromeConnection found to call removeListeners().");
         return;
       }
-      // chromeConnection.removeWRListeners();
     }
 
 

@@ -4,6 +4,12 @@ define([], function() {
   // Description: Listen for webRequests in the background and send message to dev tools extension
   return {
 
+    defaultListenerAttributes: {
+      scheme: "*", 
+      host: "*", 
+      path: "http-bind"
+    },
+
     guidGen: function () {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
             var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
@@ -61,7 +67,7 @@ define([], function() {
          (code >= 106 && code <= 111) ||
           (code >= 186 && code <= 192) ||
             (code >= 219 && code <= 222) ||
-              (code === 13) || // enter
+              // (code === 13) || // enter
                 (code === 8) || // backspace
                   (code === 32) || // space
                     (code === 9) // tab

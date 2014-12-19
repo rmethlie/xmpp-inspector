@@ -17,6 +17,11 @@ app.post('/nhttp-bind/', function(req, res) {
   res.sendfile(__dirname + '/sample.xml');
 });
 
+app.post('/json/', function(req, res) {
+  // console.log(req.route.path);
+  res.sendfile(__dirname + '/sample.json');
+});
+
 app.get('/', function(req, res) {
   console.log(req.route.path);
   res.sendfile(__dirname + '/index.html');

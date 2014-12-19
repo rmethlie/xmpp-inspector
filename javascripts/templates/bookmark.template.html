@@ -1,0 +1,37 @@
+<tr class="edit-stream">
+  <td><%= index %>: </td>
+  <td>
+    <input class="enable-bookmark" type="checkbox" data-index="<%= index %>" <% if(model.get("enable") === true){%> checked <%} %> />
+  </td>
+  <td>
+    <span class="tag format <%= model.get("format") %> show" data-index="<%= index %>"><%= model.get("format") %></span>
+  </td>
+  <td>
+    <a href="#" class="show" data-index="<%= index %>"><%= model.get("scheme") %>://<%= model.get("host") %>/<%= model.get("path") %></a>
+    <form class="update-url-pattern hidden" data-index="<%= index %>">
+      <select class="format">
+        <option value="text" <% if(model.get("format") === "text") {%>selected <%} %>>text</option>
+        <option value="json" <% if(model.get("format") === "json") {%>selected <%} %>>JSON</option>
+        <option value="xml" <% if(model.get("format") === "xml") {%>selected <%} %>>XML</option>
+      </select>
+      <select class="scheme">
+        <option <% if(model.get("scheme") === "*") {%>selected <%} %> value="*">&lt;all&gt;</option>
+        <option <% if(model.get("scheme") === "http") {%>selected <%} %> value="http">http</option>
+        <option <% if(model.get("scheme") === "https") {%>selected <%} %> value="https">https</option>
+        <option <% if(model.get("scheme") === "file") {%>selected <%} %> value="file">file</option>
+        <option <% if(model.get("scheme") === "ftp") {%>selected <%} %> value="ftp">ftp</option>
+        <option <% if(model.get("scheme") === "chrome-extension") {%>selected <%} %> value="chrome-extension">chrome-extension</option>
+      </select>
+      ://
+      <input class="host" type="text" value="<%= model.get("host") %>"/>
+      /
+      <input class="path" type="text" value="<%= model.get("path") %>"/>
+      <input class="index" type="hidden" value="<%= index %>"/>
+      <button type="submit">Go</button>
+      <button class="cancel">Cancel</button>
+    </form>
+  </td>
+  <td>
+    <a href="#" class="delete fa fa-trash icon" data-index="<%= index %>"></a>
+  </td>
+</tr>

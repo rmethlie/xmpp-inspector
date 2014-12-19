@@ -1,6 +1,6 @@
 
 
-BODY{
+BODY, TD{
   font-family: Menlo, monospace;
   font-size: 11px;
   margin: 0;
@@ -32,35 +32,105 @@ TEXTAREA.xml-contents{
   zoom:1; /* For IE 6/7 (trigger hasLayout) */
 }
 
-#xmpp-stream {
+#streams, #stream-manager {
   position: absolute;
-  top: 2em;
+  top: 2.9em;
   bottom: 0;
   width: 100%;
 }
 
-#xmpp-stream.toolbar-expanded {
+#stream-manager .add-new{ 
+  padding-left: 40px
+}
+
+#stream-manager-list {
+  margin-top: 30px;
+}
+
+#stream-manager-list td, 
+#stream-manager-list th {
+  font-size: .7em;
+  padding: 5px;
+  margin: 0 0 5px 0;
+  vertical-align: middle;
+}
+#stream-manager-list th {
+  text-align: left;
+  
+}
+
+#streams.toolbar-expanded {
   top: 4em;
 }
 
+.edit-stream .tag.format {
+  display: inline-block;
+  padding: 2px 5px;
+  border-radius: 10%;
+  font-weight: bold;
+  font-size: 1em;
+  width: 40px;
+  text-align: center;
+}
+.edit-stream .format.text { background-color: #ccc}
+.edit-stream .format.json { background-color: #66B3E6}
+.edit-stream .format.xml { background-color: #FCC219 }
+.edit-stream a { color: #333; font-weight: bold;}
+.edit-stream a:hover { color: #00E;}
+.edit-stream a.delete { 
+  font-weight: normal; 
+  text-decoration: none; 
+  font-size: 1.2em;
+}
+
+
+.container {
+  padding: 10px 10px 10px 40px;
+}
+
+.container .close {
+  color: #999;
+  font-size: 1.25em;
+  margin-right: 10px;
+}
+
 /* Codemirror "Theme" */
-.cm-s-xmpp.CodeMirror {
+.cm-s-streams.CodeMirror {
   font-family: Menlo, monospace;
   font-size: 11px;
   height: auto;
   line-height: 1.3em;
 }
 
-.cm-s-xmpp.CodeMirror .cm-comment {
+.cm-s-streams.CodeMirror .cm-comment {
   color: #afafaf;
   font-style: italic;
 }
 
 
-.cm-s-xmpp.CodeMirror .cm-searching {
+.cm-s-streams.CodeMirror .cm-searching {
   border: solid 1px rgb(244, 0, 95);
   background: none;
   border-radius: 3px;
+}
+
+.cm-s-streams.CodeMirror .cm-delimit, .cm-s-streams.CodeMirror .prefix.direction {
+  color: #ccc;
+  font-style: italic;
+}
+
+.cm-mode-json.cm-property {
+  color: #333 !important;
+  font-weight: bold;
+}
+
+.cm-s-default .cm-mode-json.cm-string {
+  color: #069;
+  font-style: italic;
+}
+
+.cm-s-default .cm-mode-json.cm-atom {
+  color: #F29A3F;
 }
 
 .CodeMirror-selected  { 
@@ -72,12 +142,47 @@ TEXTAREA.xml-contents{
   background-color: rgb(244, 0, 95) !important;
 }
 
+.CodeMirror-foldmarker {
+  color: blue;
+  text-shadow: #b9f 1px 1px 2px, #b9f -1px -1px 2px, #b9f 1px -1px 2px, #b9f -1px 1px 2px;
+  font-family: arial;
+  line-height: .3;
+  cursor: pointer;
+}
+.CodeMirror-foldgutter {
+  width: .7em;
+}
+.CodeMirror-foldgutter-open,
+.CodeMirror-foldgutter-folded {
+  cursor: pointer;
+}
+.CodeMirror-foldgutter-open:after {
+  content: "\25BE";
+}
+.CodeMirror-foldgutter-folded:after {
+  content: "\25B8";
+}
+
+
+.show {
+  cursor: pointer;
+}
+
+.divider {
+  float: left;
+  background-color: #ccc;
+  margin: 3px 2px;
+  width: 1px;
+  height: 16px;
+}
+
 .toolbar-wrapper {
   position: relative;
 }
 
 .toolbar {
-  display: table;
+  display: inline-block;
+  height: 2.9em;
   overflow: hidden;
   background-color: #fff;
   border-bottom: solid 1px #ddd;
@@ -91,26 +196,29 @@ TEXTAREA.xml-contents{
 
 
 .toolbar .main-bar, .toolbar .sub-bar {
-  display: table-row;
+  display: inline-block;
+  margin: 3px 0 0 20px;
   float: left;
   clear:both;
   overflow: hidden;
-  height: 2em;
 }
 .toolbar .sub-bar{
   padding: inherit 5px;
 }
 
+
 .toolbar .button, .toolbar form {
-  display: table-cell;
-  height: 2em;
-  overflow: hidden;
+  display: block;
   cursor: pointer;
+  float: left;
   white-space: nowrap;
+  color: #4b4b4b;
 }
 
-.toolbar .url-pattern .output:hover{
-  color: #006;
+.toolbar form {
+  display: inline-block;
+  float: none;
+  margin: 0;
 }
 
 .toolbar .url-pattern .output:hover{
@@ -123,28 +231,46 @@ TEXTAREA.xml-contents{
   top: 0;
 }
 
-.toolbar .button{
+.toolbar .button {
   font-size: 8pt;
-  padding: 5px 0 5px 5px;
+  font-family: 'Lucida Grande', sans-serif;
+  padding: 6px 4px 6px 3px;
+  margin: 0 5px 0 2px;
   white-space: nowrap;
+
+}
+.toolbar .button.find {
+  padding-top: 0;
+}
+
+.toolbar .button.page{
+  border: solid 1px #fff;
+  border-radius: 8px;
+}
+
+.toolbar .button.page.active, .toolbar .button.page.active:hover {
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.298039);
+  text-shadow: rgba(0, 0, 0, 0.4) 0px 1px 0px;
 }
 
 .toolbar .button .icon{
-  margin-right: 5px;
+  margin: 0 5px 0 2px;
 }
 
 .toolbar .button .label{
-  margin-right: 10px;
   display: inline-block;
 }
 
-.toolbar .button:hover{
-  color: rgba( 0, 0, 0, 0.95);
+
+.toolbar .button.action:hover{
+  color: #000;
 }
 
-
-.toolbar .button:hover .icon{
-  color: rgba( 0, 0, 0, 0.95)
+.toolbar .button.page:hover{
+  color: #fff;
+  background: rgba(0, 0, 0, 0.2);
+  text-shadow: rgba(0, 0, 0, 0.2) 0 1px 0;
 }
 
 
