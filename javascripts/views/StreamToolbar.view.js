@@ -1,7 +1,8 @@
 define(["BaseView",
   "StreamToolbarModel",
+  "views/Plugins.view",
   'text!templates/toolbar.template.html',
-  'lib/utils'], function(BaseView, StreamToolbarModel, toolbarTemplate, Utils) {
+  'lib/utils'], function(BaseView, StreamToolbarModel, PluginsView, toolbarTemplate, Utils) {
   "use strict";
 
   return BaseView.extend({
@@ -11,6 +12,8 @@ define(["BaseView",
     el: ".toolbar-wrapper",
 
     template: _.template(toolbarTemplate),
+
+    pluginsView: null,
 
     events: {
       "click .button.streams"  : "showStreams",
@@ -60,6 +63,12 @@ define(["BaseView",
 
     render: function(){
       this.$el.html(this.template());
+      this.renderPluginsMenu();
+    },
+
+    renderPluginsMenu: function(){
+      this.pluginsView = new PluginsView();
+      this.pluginsView.render();
     },
 
     reload: function(){

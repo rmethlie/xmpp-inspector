@@ -1,4 +1,4 @@
-define(['BaseCollection', 'Plugin'], function(BaseCollection, Plugin) {
+define(['BaseCollection', 'models/Plugin.model'], function(BaseCollection, Plugin) {
   "use strict";
      
   return BaseCollection.extend({

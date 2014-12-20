@@ -3,28 +3,26 @@ define([
   "collections/Plugins.collection",
   "text!templates/plugins.template.html"
   ],
-  function( BaseView, InspectorModel, ResponseListener, StreamsView, StreamToolbarView,
-    Streams, StreamsManager, inspectorTemplate, Utils ) {
+  function( BaseView, Plugins, pluginTemplate) {
 
   "use strict";
 
   return BaseView.extend({
 
-    el: ".button .plugins li",
+    el: "#plugin-menu",
 
     toolbar: null,
 
     plugins: null,
 
-    template: _.template(inspectorTemplate),
+    template: _.template(pluginTemplate),
 
     initialize: function(){
       console.log("[PluginsView] initialize");
-
     },
 
     render: function(options){
-
+      this.$el.html("Plugins rendered");
     },
 
     addListeners: function(){
