@@ -240,7 +240,7 @@ TEXTAREA.xml-contents{
 
 }
 .toolbar .button.find {
-  padding-top: 0;
+  padding-top: 3px;
 }
 
 .toolbar .button.page{
