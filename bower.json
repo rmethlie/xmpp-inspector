@@ -14,7 +14,7 @@
     "codemirror": "~4.0.3",
     "js-beautify": "~1.4.2",
     "font-awesome": "~4.2.0",
-    "qTip2": "~2.2.1"
+    "qtip2": "~2.2.1"
   },
   "devDependencies": {}
 }
