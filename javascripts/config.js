@@ -7,6 +7,7 @@ require.config({
         text: "bower_components/requirejs-text/text",
         codemirror: "bower_components/codemirror/",
         beautifier: "bower_components/js-beautify/js/lib",
+        qtip: "bower_components/qtip2/jquery.qtip",
         views: "views/",
         models: "models/",
         collections: "collections/",

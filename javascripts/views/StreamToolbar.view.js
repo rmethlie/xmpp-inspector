@@ -2,7 +2,9 @@ define(["BaseView",
   "StreamToolbarModel",
   "views/Plugins.view",
   'text!templates/toolbar.template.html',
-  'lib/utils'], function(BaseView, StreamToolbarModel, PluginsView, toolbarTemplate, Utils) {
+  'lib/utils',
+  "lib/jquery-plugins",
+  ], function(BaseView, StreamToolbarModel, PluginsView, toolbarTemplate, Utils, $) {
   "use strict";
 
   return BaseView.extend({
@@ -69,6 +71,12 @@ define(["BaseView",
     renderPluginsMenu: function(){
       this.pluginsView = new PluginsView();
       this.pluginsView.render();
+      this.bindPluginMenu();
+    },
+
+    bindPluginMenu: function(){
+      var elTrigger = $('.action.plugins');
+      elTrigger.qtip();
     },
 
     reload: function(){
