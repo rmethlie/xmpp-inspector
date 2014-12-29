@@ -52,7 +52,7 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
 
     onRequestFinished: function(packet){
       try{
-        console.info( "WRPattern Response", this.generateNetworkRequestPattern() );
+        console.info( "WRPattern Response" );
         var urlPattern = new RegExp( this.generateNetworkRequestPattern(), "ig");
         if( urlPattern.test( packet.request.url ) ){
           packet.getContent( function(contents){

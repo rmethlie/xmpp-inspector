@@ -22,7 +22,7 @@ define(["BaseView",
       "click .delete": "deleteBookmark",
       "click .cancel": "cancelEditStream",
       "click .add-new .show": "showAddInput",
-      "submit .new-url-pattern": "addBookmark",
+      "submit .new-url-pattern": "addEnabledBookmark",
       "submit .update-url-pattern": "editBookmark",
       "click .edit-stream .show": "toggleEditStream",
       "click .enable-bookmark": "toggleBookmarkState",
@@ -108,10 +108,10 @@ define(["BaseView",
     editBookmark: function(e){
       Utils.stopEvent(e);
       var index = e.target.getAttribute("data-index");
-      var $form = $(this.$el.find("form[data-index='" + index + "']")[0]);
+      var checkbox = $(this.$el.find("input.enable-bookmark[data-index='" + index + "']"))[0];
       var options = {
         index  : index,
-        enable : this.bookmarks.at(index).get("enable")
+        enable : checkbox.checked
       };
 
       this.deleteBookmark(e);
@@ -144,6 +144,10 @@ define(["BaseView",
 
     },
 
+    addEnabledBookmark: function(e){
+      this.addBookmark(e, {enable: true});
+    },
+
     addBookmark: function(e, options){
       Utils.stopEvent(e);
       if(!e.target)
@@ -165,9 +169,11 @@ define(["BaseView",
 
       if(data){
         var index = options.index || this.bookmarks.length;
-        data.enable = true;
+        data.enable = !options.enable ? false : true;
         this.bookmarks.add(data, {at: index});
-        if(options.enable)
+        // Add the source by default unless it is explicitly set to false
+        // undefined and other "falsey" values will add the source
+        if(options.enable !== false)
           this.sources.add(data);
       }
     },

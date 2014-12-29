@@ -1,7 +1,7 @@
 <tr class="edit-stream">
   <td><%= index %>: </td>
   <td>
-    <input class="enable-bookmark" type="checkbox" data-index="<%= index %>" <% if(model.get("enable")){%> checked <%} %> />
+    <input class="enable-bookmark" type="checkbox" data-index="<%= index %>" <% if(model.get("enable") === true){%> checked <%} %> />
   </td>
   <td>
     <span class="tag format <%= model.get("format") %> show" data-index="<%= index %>"><%= model.get("format") %></span>
