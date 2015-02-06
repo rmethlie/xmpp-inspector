@@ -262,7 +262,6 @@ TEXTAREA.xml-contents{
   display: inline-block;
 }
 
-
 .toolbar .button.action:hover{
   color: #000;
 }
@@ -284,7 +283,6 @@ TEXTAREA.xml-contents{
   border: solid #aaa 1px;
   border-radius: 5px;
   background: white;
-
 }
 
 .register-external .title{

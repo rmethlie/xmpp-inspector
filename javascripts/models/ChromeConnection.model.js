@@ -81,12 +81,6 @@ define(['BaseModel', 'BaseCollection', 'RequestListener'], function(BaseModel, B
       this.requestListeners.forEach(function(listener){
         listener.removeListeners();
       });
-    },
-
-    toJSON: function(){
-      return {
-        test: "test 123"
-      }
     }
 
   

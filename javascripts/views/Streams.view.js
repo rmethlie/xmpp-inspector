@@ -5,9 +5,8 @@ define(['BaseView',
   'lib/codemirror-container',
   'lib/codemirror-searchable',
   'beautifier/beautify-html',
-  'lib/utils',
-  'text!templates/register-external.template.html'],
-  function(BaseView, Streams, streamDataTemplate, streamDataWrapperTemplate, CodeMirror, cmSearchable, format, Utils, registerExternalTemplate) {
+  'lib/utils'],
+  function(BaseView, Streams, streamDataTemplate, streamDataWrapperTemplate, CodeMirror, cmSearchable, format, Utils) {
   "use strict";
 
   return BaseView.extend({
@@ -31,7 +30,6 @@ define(['BaseView',
     },
 
     template: _.template(streamDataTemplate),
-    registerExternalTemplate: _.template(registerExternalTemplate),
 
     dataStreamConfig: {
       mode: "streams",
@@ -59,17 +57,12 @@ define(['BaseView',
       var patterns = options.patterns || [];
       this.inspectorView = options.inspectorView;
       this.streams = new Streams(patterns);
-      this.streams.on('external:register', this.promptRegisterExternal.bind(this));
       this.render();
       this.dataStream = CodeMirror.fromTextArea(document.getElementById("dataStream"), this.dataStreamConfig);
       this.initSearchable(this.dataStream);
       this.addlisteners(options);
     },
-
-    alreadyRegistered: function( external ){
-      return false;  // always prompt for now.
-    },
-
+    
     addlisteners: function(options){
       var _this = this;
 
@@ -275,14 +268,6 @@ define(['BaseView',
         console.warn("Could not parse as JSON");
       }
       return content;
-    },
-
-    promptRegisterExternal: function( external ){
-      if( this.alreadyRegistered(external) ){
-        // always prompt for now
-      }else{
-        this.$el.append( this.registerExternalTemplate(external) );
-      }
     }
   });
 });
