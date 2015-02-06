@@ -22,7 +22,7 @@ define(['BaseModel', 'BaseCollection', 'RequestListener'], function(BaseModel, B
           //todo: map the intended attribute update to the listener
           this.set( message );
         }else{
-          this.onMessage( message.event, message.data );
+          this.onMessage( message );
         }
       }.bind(this)); 
 
@@ -30,33 +30,37 @@ define(['BaseModel', 'BaseCollection', 'RequestListener'], function(BaseModel, B
     },
 
 
-    onMessage: function(event,data) {
-      console.log("[ChromeConnection] onMessage", event, ":", data );
+    onMessage: function(message) {
+      console.log("[ChromeConnection] onMessage", message );
 
-      switch(event){
+      switch(message.event){
         case "add:listener":
-          console.log("add:listener", data );
-          this.requestListeners.add( new RequestListener(data)); // manifest
+          console.log("add:listener", message.data );
+          this.requestListeners.add( new RequestListener(message.data)); // manifest
           break;
 
         case "remove:listener":
-          console.log("remove:listener", data );
+          console.log("remove:listener", message.data );
           var listener = this.requestListeners.findWhere({
-            scheme: data.scheme,
-            host  : data.host,
-            path  : data.path
+            scheme: message.data.scheme,
+            host  : message.data.host,
+            path  : message.data.path
           });
 
           this.requestListeners.remove(listener);
           break;
 
         case "change:protocol":
-          this.requestListeners.findWhere({id: data.id}).set(data);
+          this.requestListeners.findWhere({id: message.data.id}).set(message.data);
           break;
         
         case "copy:text":
           console.log("copy:text");
-          Utils.copyText(data);
+          Utils.copyText(message.data);
+          break;
+
+        case 'request:finished':
+          this.trigger('request:finished', message );
           break;
       }
     },
@@ -65,6 +69,9 @@ define(['BaseModel', 'BaseCollection', 'RequestListener'], function(BaseModel, B
       this.listenTo(this.requestListeners, "request:before", function(payload){
         this.sendToPanel(payload);
       });
+      this.listenTo(this.requestListeners, 'stream:update', function( payload ){
+        this.trigger( 'stream:update', payload );
+      })
     },
 
     sendToPanel: function( message ){

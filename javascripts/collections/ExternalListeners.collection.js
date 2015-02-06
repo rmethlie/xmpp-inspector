@@ -5,11 +5,22 @@ define(['ExternalListener'], function(ExternalListener) {
     initialize: function( chromeConnections, options ){
       console.log( "[ExternalListeners] Initialized.");
       this.chromeConnections = options.chromeConnections;
-      this.chromeConnections.on("add", function( chromeConnection ){
-        console.log( "[ExternalListeners] Detected new request listener.");
-        chromeConnection.on("stream:update", this.onStreamEvent.bind(this));
-      }.bind(this));
+      this.chromeConnections.on({
+        'add'     : this.onChromeConnectionAdded.bind(this),
+        'remove'  : this.onChromeConnectionRemoved.bind(this)
+      });
       this.listen();
+    },
+
+    onChromeConnectionAdded: function( connection ){
+      console.log( "[ExternalListeners] Detected new request listener.", connection );
+      connection.on({
+        'request:finished': this.onStreamEvent.bind(this)
+      });
+    },
+
+    onChromeConnectionRemoved: function( connection ){
+      console.log( '[ExternalListeners] Chrome connection removed. CLEANUP!!!!' );
     },
 
     list: function( filter ){
@@ -34,29 +45,35 @@ define(['ExternalListener'], function(ExternalListener) {
 
         // listen for disconnects and remove from collection
         port.onDisconnect.addListener(function(){
+          console.log( '[ExternalListeners] Removing port on disconnect.', port.name );
           this.remove(externalListener);
         }.bind(this));
         
         // listen for external messages.  mainly for registration.
         port.onMessage.addListener(this.onExternalMessage.bind(this));
       
-        console.log( '[ExternalListeners] Added listener:', port.name+".", "Requesting permission.");
+        console.log( '[ExternalListeners] Added listener:', port.name+".");
 
       }.bind(this));
       console.log( "[ExternalListeners] Listening...");
     },
 
-    onExternalMessage: function( message ){
+    onExternalMessage: function( message, port ){
 
-      switch( message.event ){
+      switch( message.type ){
 
         case "external:register":
-          console.log( '[ExternalListeners] Registration request.' );
-          _.each( this.chromeConnections.models, function(chromeConnection){
-            if( chromeConnection.sendToPanel ){
-              console.log( '[ExternalListeners] Sending register request to', chromeConnection.id );
-              chromeConnection.sendToPanel(message);
-            }
+          console.log( '[ExternalListeners] Registration request.', port.name  );
+
+          // _.each( this.chromeConnections.models, function(chromeConnection){
+          //   if( chromeConnection.sendToPanel ){
+          //     console.log( '[ExternalListeners] Sending register request to', chromeConnection.id );
+          //     chromeConnection.sendToPanel(message);
+          //   }
+          // });
+          port.postMessage({
+            type: 'external:register:success',
+            name: 'xmpp-inspector'
           });
         break;
 
@@ -71,7 +88,11 @@ define(['ExternalListener'], function(ExternalListener) {
         var
         port = externalListener.get("port");
         if( port.postMessage ){
+          console.log( 'posting external stream event to listener:', externalListener.get('port').name );
+          event.type = 'external:data';
           port.postMessage(event);
+        }else{
+          console.log( 'could not post external event to listener' );
         }
       })
     },

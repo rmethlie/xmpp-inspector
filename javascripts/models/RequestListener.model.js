@@ -47,13 +47,6 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
           format: this.get("format")
         }
       });
-      
-      // for external listeners
-      this.trigger("stream:update",{
-        state: "beforeRequest",
-        info: info,
-        requestBody: content
-      })
     },
 
     onCompleted: function(info) {
@@ -65,12 +58,6 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
           state:"completed",
           info: info
         }
-      });
-
-      // for external listeners
-      this.trigger("stream:update",{
-        state: "completed",
-        info: info
       });
     },
 

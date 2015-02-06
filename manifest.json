@@ -16,5 +16,8 @@
   "background": {
     "page": "background.html",
     "persistent": true
+  },
+  "externally_connectable": {
+    "matches": ["https://streamshare.io/*"]
   }
 }
