@@ -95,6 +95,7 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
     webRequestManifest: function(listener){
       console.info( "webRequestManifest");
       return {
+        id      : listener.id, // need this for mapping the req/res objs
         scheme  : listener.get("scheme"),
         host    : listener.get("host"),
         path    : listener.get("path"),

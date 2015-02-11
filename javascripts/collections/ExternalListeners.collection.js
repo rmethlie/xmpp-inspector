@@ -2,38 +2,107 @@ define(['ExternalListener'], function(ExternalListener) {
   "use strict";
   return Backbone.Collection.extend({
     model: ExternalListener,
-    initialize: function( chromeConnections, options ){
+    initialize: function( streams, options ){
       console.log( "[ExternalListeners] Initialized.");
-      this.chromeConnections = options.chromeConnections;
-      this.chromeConnections.on({
-        'add'     : this.onChromeConnectionAdded.bind(this),
-        'remove'  : this.onChromeConnectionRemoved.bind(this)
-      });
-      this.listen();
+      this.sources = options.sources;
+      this._waitForSources();
+      this._waitForExternalListeners();
     },
 
-    onChromeConnectionAdded: function( connection ){
-      console.log( "[ExternalListeners] Detected new request listener.", connection );
-      connection.on({
-        'request:finished': this.onStreamEvent.bind(this)
+    _waitForSources: function(){
+      this.sources.on({
+        'add'     : this.onSourceAdded.bind(this),
+        'remove'  : this.onSourceRemoved.bind(this)
       });
     },
 
-    onChromeConnectionRemoved: function( connection ){
-      console.log( '[ExternalListeners] Chrome connection removed. CLEANUP!!!!' );
-    },
+    onSourceAdded: function( source ){
+      console.log( "[ExternalListeners] New streaming source detected.", source );
 
-    list: function( filter ){
-      // filter inspector rules based on 'filter' properties
-      filter = filter || {}
+      /*
+        Each request listener represents a URL pattern, but the external listener
+        may not know anything about URLs, so they are identified more generically
+        as 'channels'. 
+      */
+      source.requestListeners.on({
 
-      _.each( this.chromeConnections.models, function( chromeConnection ){
-        console.log( 'connection', chromeConnection );
+        // Channel (URL Pattern, AKA RequestListener) added.
+        'add': function( channel ){
+          console.log('[ExternalListeners] Channel added to connection.', channel );
+          this.sendToExternalListeners({
+            type: 'source:channel:added',
+            id: source.id,
+            channel: channel
+          });
+        }.bind(this),
+
+        // Channel removed.
+        'remove': function( channel ){
+          console.log('[ExternalListeners] Channel removed from connection.', channel );
+          this.sendToExternalListeners({
+            type: 'source:channel:removed',
+            id: source.id,
+            channel: channel
+          });
+        }.bind(this),
+
+        // Entire channels list modified.
+        'reset': function( channels ){
+          console.log('[ExternalListeners] Request listeners reset.', channels.length );
+          this.sendToExternalListeners({
+            type: 'source:channel:list',
+            id: source.id,
+            channels: channels.models || []
+          });
+        }.bind(this)
       });
 
+      // finally, listen for actual data.
+      source.on({
+        'request:finished': function( event ){
+          console.info( 'request:finished', event );
+          this.sendToExternalListeners({
+            type: 'source:channel:data',
+            id: source.id,
+            channel: event.data.channel,
+            data: event.data
+          });
+        }.bind(this)
+      })
+
+
+      this.sendToExternalListeners({
+        type: 'source:connected',
+        id: source.id,
+        channels: source.requestListeners.model || []
+      });
     },
 
-    listen: function(){
+    onSourceRemoved: function( source ){
+      console.log( '[ExternalListeners] Source disconnected.', source.id );
+      this.sendToExternalListeners({
+        type: 'source:disconnected',
+        id: source.id
+      });
+    },
+
+    _sourcesJSON: function(){
+      return _.map( this.sources.models, function( source ){
+        return {
+          id: source.id,
+          channels: source.requestListeners.models || []
+        }
+      });
+    },
+
+    distributeList: function( filter ){
+      this.sendToExternalListeners({
+        type: 'source:list',
+        list: this._sourcesJSON()
+      });
+    },
+
+    _waitForExternalListeners: function(){
       // For long-lived connections:
       chrome.runtime.onConnectExternal.addListener(function(port) {
         var
@@ -62,7 +131,7 @@ define(['ExternalListener'], function(ExternalListener) {
 
       switch( message.type ){
 
-        case "external:register":
+        case "adapter:register":
           console.log( '[ExternalListeners] Registration request.', port.name  );
 
           // _.each( this.chromeConnections.models, function(chromeConnection){
@@ -72,8 +141,15 @@ define(['ExternalListener'], function(ExternalListener) {
           //   }
           // });
           port.postMessage({
-            type: 'external:register:success',
+            type: 'adapter:register:success',
             name: 'xmpp-inspector'
+          });
+        break;
+
+        case 'source:list':
+          port.postMessage({
+            type: 'source:list',
+            list: this._sourcesJSON()
           });
         break;
 
@@ -82,14 +158,12 @@ define(['ExternalListener'], function(ExternalListener) {
       }
     },
 
-    onStreamEvent: function( event ){
-      console.log( "[ExternalListeners] Stream event.", event );
+    sendToExternalListeners: function( event ){
       _.each( this.models, function( externalListener ){
         var
-        port = externalListener.get("port");
-        if( port.postMessage ){
+        port;
+        if( (port = externalListener.get("port")) && port.postMessage ){
           console.log( 'posting external stream event to listener:', externalListener.get('port').name );
-          event.type = 'external:data';
           port.postMessage(event);
         }else{
           console.log( 'could not post external event to listener' );
@@ -97,10 +171,10 @@ define(['ExternalListener'], function(ExternalListener) {
       })
     },
 
-
-    register: function( listener ){
-
-
+    onStreamEvent: function( event ){
+      console.log( "[ExternalListeners] Stream event.", event );
+      event.type = 'stream:data';
+      this.sendToExternalListeners( event );
     }
   });
 });
