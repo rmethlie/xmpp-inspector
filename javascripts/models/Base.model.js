@@ -5,7 +5,11 @@ define(['backbone'], function(Backbone) {
 
     initialize: function(){
       console.log("[BaseModel] initialize");
-    }
+    },
+
+    getTimestamp: function(){
+      return Date.now();
+    },
 
   });
 });

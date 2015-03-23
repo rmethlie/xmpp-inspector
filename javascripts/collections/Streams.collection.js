@@ -79,7 +79,15 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
 
     handleBeforeRequest: function(data){
       var guid = Utils.guidGen();
-      this.networkEvents.add({id: guid, type:'beforeRequest', data: data, body: data.requestBody, format: data.format});
+      this.networkEvents.add({
+        id: guid, 
+        type:'beforeRequest', 
+        data: data, 
+        body: data.requestBody,
+        timestamp: data.timestamp,
+        format: data.format
+      });
+
       this.trigger("request:sent", {
         id: guid,
         body: data.requestBody,

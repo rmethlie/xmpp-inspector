@@ -63,7 +63,8 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
               type      :'requestFinished', 
               data      : packet, 
               body      : contents,
-              format    : this.get("format")
+              format    : this.get("format"),
+              timestamp : this.getTimestamp()
             });
           }.bind(this));
         }
