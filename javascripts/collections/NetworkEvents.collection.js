@@ -5,7 +5,8 @@ define(['backbone', 'NetworkEvent'], function(Backbone, NetworkEvent) {
     
     model: NetworkEvent,
     
-
+    comparator: 'timestamp',
+    
     initialize: function(){
       console.log("[NetworkEvents] initialize");
     },
