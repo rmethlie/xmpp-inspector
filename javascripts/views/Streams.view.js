@@ -1,4 +1,5 @@
 define(['BaseView',
+  'BaseCollection',
   'Streams',
   'text!templates/stream-data.template.html',
   'text!templates/stream-data-wrapper.template.html',
@@ -6,7 +7,7 @@ define(['BaseView',
   'lib/codemirror-searchable',
   'beautifier/beautify-html',
   'lib/utils'],
-  function(BaseView, Streams, streamDataTemplate, streamDataWrapperTemplate, CodeMirror, cmSearchable, format, Utils) {
+  function(BaseView, BaseCollection, Streams, streamDataTemplate, streamDataWrapperTemplate, CodeMirror, cmSearchable, format, Utils) {
   "use strict";
 
   return BaseView.extend({
@@ -44,7 +45,7 @@ define(['BaseView',
     },
 
     // map the line number in the data stream to the networkEvent stored in the model
-    networkEventMap: {},
+    networkEventMap: null,
 
     initialize: function(options){
       console.log("[StreamsView] initialize");
@@ -53,6 +54,8 @@ define(['BaseView',
         options = {};
 
       _.extend(this, cmSearchable);
+
+      this.networkEventMap = new BaseCollection();
 
       var patterns = options.patterns || [];
       this.inspectorView = options.inspectorView;
@@ -175,7 +178,7 @@ define(['BaseView',
         content = this.format(content, url, options);
 
         this.dataStream.replaceRange(content, {line: Infinity, ch: lastLine.charCount});
-        this.networkEventMap["line:" + lastLine.number] = data.id;
+        // this.networkEventMap["line:" + lastLine.number] = data.id;
       }
 
       if(scrollToBottom === true){
