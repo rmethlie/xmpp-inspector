@@ -34,7 +34,7 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
     initialize: function(){
       this.set("id", Utils.guidGen());
       this.on("change", function(val){
-        console.log("[PGD] responseListener change", this);
+        console.log("responseListener change", this);
       });
       // Create a bound version of this function to preserve 'this' context
       //    when executing on the response for a listener and to reference it 
