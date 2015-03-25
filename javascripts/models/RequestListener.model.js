@@ -39,7 +39,7 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
       if(info.requestBody)
         content = Utils.ArrayBufferToString(info.requestBody.raw[0].bytes);
       this.trigger("request:before", {
-        event: "stream:update",
+        event: "request:before",
         data:{
           state:"beforeRequest",
           info: info,
@@ -50,17 +50,17 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
       });
     },
 
-    onCompleted: function(info) {
+    // onCompleted: function(info) {
 
-      console.info( "oncompleted", info );
-      this.sendToResponseListener({
-        event: "stream:update",
-        data: {
-          state:"completed",
-          info: info
-        }
-      });
-    },
+    //   console.info( "oncompleted", info );
+    //   this.sendToResponseListener({
+    //     event: "stream:update",
+    //     data: {
+    //       state:"completed",
+    //       info: info
+    //     }
+    //   });
+    // },
 
     addListeners: function(){
       console.log("[StreamListener] addListeners");

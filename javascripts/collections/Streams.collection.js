@@ -32,7 +32,7 @@ define(['BaseModel', 'NetworkEvents', 'Stream', 'BaseCollection', 'lib/utils'],
       this._connection.onMessage.addListener(this._handleBackgroundEvent.bind(this));
 
       // Description: Handle the message sent from the background page
-      this.on("stream:update", function(data){
+      this.on("request:before", function(data){
         this.handleBeforeRequest(data);
       });
       

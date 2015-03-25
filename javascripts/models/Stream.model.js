@@ -39,9 +39,9 @@ define(['BaseModel', 'ResponseListener', 'lib/utils'], function(BaseModel, Respo
       });
 
       // Description: Handle the message sent from the background page
-      this.on("stream:update", function(data){
-        this.handleBeforeRequest(data);
-      });
+      // this.on("stream:update", function(data){
+      //   this.handleBeforeRequest(data);
+      // });
 
       this.listenTo(this.responseListener, "request:finished", function(response){
         this.trigger("request:finished", response);
@@ -66,10 +66,10 @@ define(['BaseModel', 'ResponseListener', 'lib/utils'], function(BaseModel, Respo
     //   this.trigger("request:finished", {id: response.id, body: response.body});
     // },
 
-    handleBeforeRequest: function(data){
-      var guid = Utils.guidGen();
-      this.trigger("request:sent", {id: guid, body: data.requestBody} );
-    },
+    // handleBeforeRequest: function(data){
+    //   var guid = Utils.guidGen();
+    //   this.trigger("request:sent", {id: guid, body: data.requestBody} );
+    // },
 
     webRequestManifest: function(){
       return {
