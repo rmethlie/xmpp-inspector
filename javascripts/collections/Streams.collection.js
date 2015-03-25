@@ -83,6 +83,7 @@ define(['BaseModel', 'NetworkEvents', 'Stream', 'BaseCollection', 'lib/utils'],
         body: data.requestBody,
         timestamp: data.timestamp,
         format: data.format
+        url: data.info.url
       });
 
       this.trigger("request:sent", {
