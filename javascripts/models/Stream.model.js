@@ -38,10 +38,10 @@ define(['BaseModel', 'ResponseListener', 'lib/utils'], function(BaseModel, Respo
         data: this.webRequestManifest() 
       });
 
-      // // Description: Handle the message sent from the background page
-      // this.on("stream:update", function(data){
-      //   this.handleBeforeRequest(data);
-      // });
+      // Description: Handle the message sent from the background page
+      this.on("stream:update", function(data){
+        this.handleBeforeRequest(data);
+      });
 
       this.listenTo(this.responseListener, "request:finished", function(response){
         this.trigger("request:finished", response);
