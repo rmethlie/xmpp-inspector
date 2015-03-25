@@ -219,12 +219,15 @@ define(['BaseView',
       }
     },
 
-    addSource: function(params){
-      if(!params)
-        params = {};
+    // addSource: function(params){
+    //   if(!params)
+    //     params = {};
 
-      this.streams.add(params);
-    },
+    //   this.streams.add(_.extend(
+    //     params,
+    //     {connection: this._connection}
+    //     ));
+    // },
 
     update: function(attributes){
       this.streams.sendToBackground(attributes);
