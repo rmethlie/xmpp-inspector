@@ -70,7 +70,13 @@ define(['BaseView',
       var _this = this;
 
       this.listenTo(this.streams.networkEvents, "add", function(packet){
-        var data = packet.toJSON();
+        var data = _.extend(
+          {
+            index   : this.streams.networkEvents.indexOf(packet),
+            length  : this.streams.networkEvents.length
+          },
+          packet.toJSON()
+        );
         var prefix = this.requestSentPrefix;
         if (typeof(prefix) == "function") {
           prefix = prefix(data);
@@ -140,6 +146,11 @@ define(['BaseView',
       
     },
 
+    getInsertLineInfo: function(data, options){
+      if(data.index === data.length - 1)
+        return this.getLastLineInfo();
+    },
+
     getLastLineInfo: function(){
       // note: lastLine() return value is one less than the number displayed in the gutter, must be 0 indexed,
       //  but the value still works for getting the line handler & content so no need to offset by one
@@ -155,12 +166,14 @@ define(['BaseView',
     },
 
     appendData: function(data, options){
+      console.log("[Streams.view] appendData", data);
       if(!options)
         options = {};
-      var content = data.body;
-      var url = options.url;
-      var scrollToBottom = false;
-      var lastLine = this.getLastLineInfo();
+      var content = data.body,
+          url = options.url,
+          scrollToBottom = false,
+          lastLine = this.getLastLineInfo(),
+          insertLine = this.getInsertLineInfo(data, options);
 
       // if the user is already at  the bottom of the stream scroll to the bottom after appending the new content
       if(this.isAtBottom()){
@@ -187,7 +200,6 @@ define(['BaseView',
         content = this.format(content, url, options);
 
         this.dataStream.replaceRange(content, {line: Infinity, ch: lastLine.charCount});
-        // this.networkEventMap["line:" + lastLine.number] = data.id;
       }
 
       if(scrollToBottom === true){
