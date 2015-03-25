@@ -65,7 +65,7 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
               url       : packet.request.url,
               body      : contents,
               format    : this.get("format"),
-              timestamp : this.getTimestamp()
+              timestamp : this.getTimestamp() - 2000
             });
           }.bind(this));
         }
