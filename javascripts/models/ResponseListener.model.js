@@ -62,6 +62,7 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
               streamId  : this.get("id"), 
               type      :'requestFinished', 
               data      : packet, 
+              url       : packet.request.url,
               body      : contents,
               format    : this.get("format"),
               timestamp : this.getTimestamp()

@@ -69,7 +69,8 @@ define(['BaseView',
     addlisteners: function(options){
       var _this = this;
 
-      this.listenTo(this.streams, "request:sent", function(data){
+      this.listenTo(this.streams.networkEvents, "add", function(packet){
+        var data = packet.toJSON();
         var prefix = this.requestSentPrefix;
         if (typeof(prefix) == "function") {
           prefix = prefix(data);
@@ -77,20 +78,28 @@ define(['BaseView',
         this.appendData(data, {prefix: prefix, format: data.format, url: data.url});
       }.bind(this));
 
-      this.listenTo(this.streams, "request:finished", function(data){
-        var prefix = this.responseReceivedPrefix;
-        var guid = Utils.guidGen();
+      // this.listenTo(this.streams.networkEvents, "request:sent", function(data){
+      //   var prefix = this.requestSentPrefix;
+      //   if (typeof(prefix) == "function") {
+      //     prefix = prefix(data);
+      //   }
+      //   this.appendData(data, {prefix: prefix, format: data.format, url: data.url});
+      // }.bind(this));
 
-        if (typeof(prefix) == "function") {
-          prefix = prefix({
-            id: guid,
-            body: data.body,
-            format: data.format,
-            url: data.data.request.url
-          });
-        }
-        this.appendData(data, {prefix: prefix, format: data.format, url: data.data.request.url });
-      }.bind(this));
+      // this.listenTo(this.streams, "request:finished", function(data){
+      //   var prefix = this.responseReceivedPrefix;
+      //   var guid = Utils.guidGen();
+
+      //   if (typeof(prefix) == "function") {
+      //     prefix = prefix({
+      //       id: guid,
+      //       body: data.body,
+      //       format: data.format,
+      //       url: data.data.request.url
+      //     });
+      //   }
+      //   this.appendData(data, {prefix: prefix, format: data.format, url: data.data.request.url });
+      // }.bind(this));
 
       this.listenTo(this.inspectorView, "search:submit", function(options){
         this.$el.addClass("searching");

@@ -82,7 +82,7 @@ define(['BaseModel', 'NetworkEvents', 'Stream', 'BaseCollection', 'lib/utils'],
         data: data, 
         body: data.requestBody,
         timestamp: data.timestamp,
-        format: data.format
+        format: data.format,
         url: data.info.url
       });
 
