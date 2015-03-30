@@ -29,11 +29,19 @@ define(['BaseModel', 'BaseCollection', 'RequestListener'], function(BaseModel, B
       this.id = port["name"];
     },
 
+    toJSON: function(){
+      return {
+        id: this.id,
+        channels: this.requestListeners.toJSON()
+      }
+    },
+
 
     onMessage: function(message) {
       console.log("[ChromeConnection] onMessage", message );
 
       switch(message.event){
+
         case "add:listener":
           console.log("add:listener", message.data );
           this.requestListeners.add( new RequestListener(message.data)); // manifest

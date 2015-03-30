@@ -31,7 +31,7 @@ define(['ExternalListener'], function(ExternalListener) {
           console.log('[ExternalListeners] Channel added to connection.', channel );
           this.sendToExternalListeners({
             type: 'source:channel:added',
-            id: source.id,
+            source: source.id,
             channel: channel
           });
         }.bind(this),
@@ -41,7 +41,7 @@ define(['ExternalListener'], function(ExternalListener) {
           console.log('[ExternalListeners] Channel removed from connection.', channel );
           this.sendToExternalListeners({
             type: 'source:channel:removed',
-            id: source.id,
+            source: source.id,
             channel: channel
           });
         }.bind(this),
@@ -51,7 +51,7 @@ define(['ExternalListener'], function(ExternalListener) {
           console.log('[ExternalListeners] Request listeners reset.', channels.length );
           this.sendToExternalListeners({
             type: 'source:channel:list',
-            id: source.id,
+            source: source.id,
             channels: channels.models || []
           });
         }.bind(this)
@@ -62,43 +62,37 @@ define(['ExternalListener'], function(ExternalListener) {
         'request:finished': function( event ){
           console.info( 'request:finished', event );
           this.sendToExternalListeners({
-            type: 'source:channel:data',
-            id: source.id,
-            channel: event.data.channel,
-            data: event.data
+            type: 'source:packet',
+            source: source.id,
+            packet: event.data
           });
         }.bind(this)
       })
 
 
       this.sendToExternalListeners({
-        type: 'source:connected',
-        id: source.id,
-        channels: source.requestListeners.model || []
+        type: 'source:added',
+        source: source,
+        channels: source.requestListeners.length ? source.requestListeners.models : []
       });
     },
 
     onSourceRemoved: function( source ){
       console.log( '[ExternalListeners] Source disconnected.', source.id );
       this.sendToExternalListeners({
-        type: 'source:disconnected',
+        type: 'source:removed',
         id: source.id
       });
     },
 
     _sourcesJSON: function(){
-      return _.map( this.sources.models, function( source ){
-        return {
-          id: source.id,
-          channels: source.requestListeners.models || []
-        }
-      });
+      return this.sources.length ? this.sources : [];
     },
 
     distributeList: function( filter ){
       this.sendToExternalListeners({
         type: 'source:list',
-        list: this._sourcesJSON()
+        sources: this._sourcesJSON()
       });
     },
 
@@ -114,7 +108,7 @@ define(['ExternalListener'], function(ExternalListener) {
 
         // listen for disconnects and remove from collection
         port.onDisconnect.addListener(function(){
-          console.log( '[ExternalListeners] Removing port on disconnect.', port.name );
+          console.log( '[ExternalListeners] Removing port on disconnect.' );
           this.remove(externalListener);
         }.bind(this));
         
@@ -124,6 +118,7 @@ define(['ExternalListener'], function(ExternalListener) {
         console.log( '[ExternalListeners] Added listener:', port.name+".");
 
       }.bind(this));
+
       console.log( "[ExternalListeners] Listening...");
     },
 
@@ -131,7 +126,7 @@ define(['ExternalListener'], function(ExternalListener) {
 
       switch( message.type ){
 
-        case "adapter:register":
+        case "browsertab:register":
           console.log( '[ExternalListeners] Registration request.', port.name  );
 
           // _.each( this.chromeConnections.models, function(chromeConnection){
@@ -141,15 +136,15 @@ define(['ExternalListener'], function(ExternalListener) {
           //   }
           // });
           port.postMessage({
-            type: 'adapter:register:success',
-            name: 'xmpp-inspector'
+            type: 'browsertab:register:success',
+            name: 'streams-inspector'
           });
         break;
 
         case 'source:list':
           port.postMessage({
             type: 'source:list',
-            list: this._sourcesJSON()
+            sources: this._sourcesJSON()
           });
         break;
 
@@ -169,12 +164,6 @@ define(['ExternalListener'], function(ExternalListener) {
           console.log( 'could not post external event to listener' );
         }
       })
-    },
-
-    onStreamEvent: function( event ){
-      console.log( "[ExternalListeners] Stream event.", event );
-      event.type = 'stream:data';
-      this.sendToExternalListeners( event );
     }
   });
 });

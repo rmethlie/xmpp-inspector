@@ -262,6 +262,7 @@ TEXTAREA.xml-contents{
   display: inline-block;
 }
 
+
 .toolbar .button.action:hover{
   color: #000;
 }
@@ -272,36 +273,6 @@ TEXTAREA.xml-contents{
   text-shadow: rgba(0, 0, 0, 0.2) 0 1px 0;
 }
 
-
-.register-external{
-
-  position: absolute;
-  top: 25px;
-  left: 50px;
-  height: 200px;
-  width: 400px;
-  border: solid #aaa 1px;
-  border-radius: 5px;
-  background: white;
-}
-
-.register-external .title{
-  font-size: 12pt;
-  font-family: Arial;
-  color: #555;
-}
-
-.register-external .choice{
-  padding: 15px;
-  text-align: center;
-  vertical-align: middle;
-}
-
-.register-external .choice .allow, .register-external .choice .deny{
-  color: blue;
-  text-decoration: underline;
-  font-size: 9pt;
-}
 
 
 

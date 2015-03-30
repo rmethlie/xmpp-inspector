@@ -61,6 +61,13 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
       });
     },
 
+    // postInfo: function(){
+    //   this.sendToBackground({
+    //     event: "page:info",
+    //     info: this.webRequestManifest()
+    //   })
+    // },
+
     _handleBackgroundEvent: function(event){
       console.info( "[streams] handle background event", event );
 

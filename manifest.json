@@ -6,6 +6,9 @@
   "devtools_page": "xmpp-inspector.html",
   "content_security_policy": "default-src 'self'  chrome-extension-resource: ; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-eval';  connect-src *; frame-src *;",
   "web_accessible_resources":["*"],
+  "externally_connectable": {
+    "matches": ["https://streamshare.io/*"]
+  },
   "permissions": [
     "activeTab",
     "tabs",
@@ -16,8 +19,5 @@
   "background": {
     "page": "background.html",
     "persistent": true
-  },
-  "externally_connectable": {
-    "matches": ["https://streamshare.io/*"]
   }
 }
