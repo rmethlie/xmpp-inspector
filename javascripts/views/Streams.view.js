@@ -14,7 +14,7 @@ define(['BaseView',
     
     el: "#streams",
 
-    requestSentPrefix       : function(data){
+    requestSentPrefix: function(data){
       var output = "";
       var arrows = ">>>>>>>>>>>>>>>";
       output = "sent: " + data.url + " " + new Date().toTimeString() + " " + arrows;
@@ -22,7 +22,7 @@ define(['BaseView',
       return output;
     },
 
-    responseReceivedPrefix  : function(data){
+    responseReceivedPrefix: function(data){
       var output = "";
       var arrows = "<<<<<<<<<<<<<<<";
       output = arrows + " received: " + data.url + " " + new Date().toTimeString();
@@ -45,7 +45,7 @@ define(['BaseView',
     },
 
     // map the line number in the data stream to the networkEvent stored in the model
-    networkEventMap: null,
+    eventsToLineMap: null,
 
     initialize: function(options){
       console.log("[StreamsView] initialize");
@@ -55,7 +55,7 @@ define(['BaseView',
 
       _.extend(this, cmSearchable);
 
-      this.networkEventMap = new BaseCollection();
+      this.eventsToLineMap = new BaseCollection();
 
       var patterns = options.patterns || [];
       this.inspectorView = options.inspectorView;
@@ -70,18 +70,25 @@ define(['BaseView',
       var _this = this;
 
       this.listenTo(this.streams.networkEvents, "add", function(packet){
-        var data = _.extend(
-          {
-            index   : this.streams.networkEvents.indexOf(packet),
-            length  : this.streams.networkEvents.length
-          },
-          packet.toJSON()
-        );
-        var prefix = this.requestSentPrefix;
+        var prefix,
+            type = packet.get("type"),
+            data = _.extend(
+              {
+                index   : this.streams.networkEvents.indexOf(packet),
+                length  : this.streams.networkEvents.length
+              },
+              packet.toJSON()
+            );
+        if(type === "beforeRequest")
+          prefix = this.requestSentPrefix;
+        
+        if(type === "requestFinished")
+          prefix = this.responseReceivedPrefix;
+
         if (typeof(prefix) == "function") {
           prefix = prefix(data);
         }
-        this.appendData(data, {prefix: prefix, format: data.format, url: data.url});
+        this.writeData(data, {prefix: prefix, format: data.format, url: data.url});
       }.bind(this));
 
       // this.listenTo(this.streams.networkEvents, "request:sent", function(data){
@@ -89,7 +96,7 @@ define(['BaseView',
       //   if (typeof(prefix) == "function") {
       //     prefix = prefix(data);
       //   }
-      //   this.appendData(data, {prefix: prefix, format: data.format, url: data.url});
+      //   this.writeData(data, {prefix: prefix, format: data.format, url: data.url});
       // }.bind(this));
 
       // this.listenTo(this.streams, "request:finished", function(data){
@@ -104,7 +111,7 @@ define(['BaseView',
       //       url: data.data.request.url
       //     });
       //   }
-      //   this.appendData(data, {prefix: prefix, format: data.format, url: data.data.request.url });
+      //   this.writeData(data, {prefix: prefix, format: data.format, url: data.data.request.url });
       // }.bind(this));
 
       this.listenTo(this.inspectorView, "search:submit", function(options){
@@ -149,6 +156,8 @@ define(['BaseView',
     getInsertLineInfo: function(data, options){
       if(data.index === data.length - 1)
         return this.getLastLineInfo();
+      
+      return this.getLastLineInfo();
     },
 
     getLastLineInfo: function(){
@@ -165,11 +174,12 @@ define(['BaseView',
       };
     },
 
-    appendData: function(data, options){
-      console.log("[Streams.view] appendData", data);
+    writeData: function(data, options){
+      console.log("[Streams.view] writeData", data);
       if(!options)
         options = {};
-      var content = data.body,
+      var writeResults,
+          content = data.body,
           url = options.url,
           scrollToBottom = false,
           lastLine = this.getLastLineInfo(),
@@ -180,31 +190,87 @@ define(['BaseView',
         scrollToBottom = true;
       }
 
-      if(content){
-        var prefix = options.prefix;
+      if(data.body){
+        // var prefix = options.prefix;
         
-        if(prefix){
-          if(this.getLastLineInfo().number > 0)
-            prefix = "\n\n" +  prefix + "\n";
-          else
-            prefix = prefix + "\n";
+        // if(prefix){
+          // if(this.getLastLineInfo().number > 0)
+          //   prefix = "\n\n" +  prefix + "\n";
+          // else
+          //   prefix = prefix + "\n";
 
-          var markFrom = {line: lastLine.number, ch: lastLine.charCount};
-          this.dataStream.replaceRange(prefix, {line: Infinity, ch: lastLine.charCount});
-          lastLine = this.getLastLineInfo();
-          var markTo = {line: lastLine.number, ch: lastLine.charCount};
+          // var markFrom = {line: lastLine.number, ch: lastLine.charCount};
+          // this.dataStream.replaceRange(prefix, {line: Infinity, ch: lastLine.charCount});
+          // lastLine = this.getLastLineInfo();
+          // var markTo = {line: lastLine.number, ch: lastLine.charCount};
 
-          this.dataStream.markText( markFrom, markTo, {className: "prefix direction"});
-        }
+          // this.dataStream.markText( markFrom, markTo, {className: "prefix direction"});
+        // }
 
-        content = this.format(content, url, options);
+        // content = this.format(content, url, options);
 
-        this.dataStream.replaceRange(content, {line: Infinity, ch: lastLine.charCount});
+        // this.dataStream.replaceRange(content, {line: Infinity, ch: lastLine.charCount});
+        writeResults = this.writeDataContents(data, options);
+        this.updateNetworkEventsMap(writeResults);
       }
 
       if(scrollToBottom === true){
         this.dataStream.scrollIntoView({line: this.dataStream.lastLine(), ch: 1});
       }
+    },
+
+    updateNetworkEventsMap: function(writeData){
+      this.eventsToLineMap.add(writeData, {at: writeData.eventIndex});
+      var models = this.eventsToLineMap.models,
+          modelCount = models.length -1,
+          startingLine;
+      for(var i = modelCount; i >= 0; i--){
+        if(models[i].get("index") > writeData.eventIndex){
+          startingLine = models[i].get("startingLine");
+          models[i].set("startingLine", startingLine + writeData.contentLineCount);
+          models[i].set("eventIndex",  models[i].get("eventIndex") + 1);
+        }
+      }
+
+    },
+
+    writeDataContents: function(data, options){
+      var content, prefixLineCount, contentLineCount, lineInfo = this.getInsertLineInfo(data, options);
+        
+      if(options.prefix)
+        prefixLineCount = this.writeDataPrefix(data, lineInfo, options).lineCount;
+      
+      content = this.format(data.body, options.url, options);
+      this.dataStream.replaceRange(content, {line: lineInfo.number + prefixLineCount, ch: lineInfo.charCount});
+
+      contentLineCount = prefixLineCount + content.split("\n").length;
+      
+      return {
+        startingLine: lineInfo.number, 
+        eventIndex: data.index, 
+        contentLineCount: contentLineCount
+      };
+    },
+
+    writeDataPrefix: function(data, lineInfo, options){
+      var prefix = options.prefix || "";
+      if(lineInfo.number > 0)
+        prefix = "\n\n" +  prefix + "\n";
+      else
+        prefix = prefix + "\n";
+
+      var markFrom = {line: lineInfo.number, ch: lineInfo.charCount};
+      // this.dataStream.replaceRange(prefix, {line: Infinity, ch: lineInfo.charCount});
+      this.dataStream.replaceRange(prefix, {line: lineInfo.number, ch: lineInfo.charCount});
+      lineInfo = this.getLastLineInfo();
+      var markTo = {line: lineInfo.number, ch: lineInfo.charCount};
+
+      this.dataStream.markText( markFrom, markTo, {className: "prefix direction"});
+
+      return {
+        lineCount: prefix.split("\n").length
+      }
+
     },
 
     clear: function(){
@@ -296,5 +362,6 @@ define(['BaseView',
       }
       return content;
     }
+
   });
 });
