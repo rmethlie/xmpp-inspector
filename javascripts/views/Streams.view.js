@@ -154,9 +154,24 @@ define(['BaseView',
     },
 
     getInsertLineInfo: function(data, options){
+      var lineMapTopIndex = this.eventsToLineMap.length - 1;
       if(data.index === data.length - 1)
         return this.getLastLineInfo();
       
+      for(var i = lineMapTopIndex; i >= 0; i--){
+        if(this.eventsToLineMap.at(i).get("eventIndex") < data.index){
+          // startingLine = this.eventsToLineMap.at(i).get("startingLine");
+          // this.eventsToLineMap.at(i).set("startingLine", startingLine + data.contentLineCount);
+          // this.eventsToLineMap.at(i).set("eventIndex",  this.eventsToLineMap.at(i).get("eventIndex") + 1);
+          // break;
+        } 
+      }
+
+      // return {
+      //   number    : lastLineNumber,
+      //   handler   : handler,
+      //   charCount : handler.text.length
+      // };
       return this.getLastLineInfo();
     },
 
@@ -222,15 +237,13 @@ define(['BaseView',
     updateNetworkEventsMap: function(writeData){
       this.eventsToLineMap.add(writeData, {at: writeData.eventIndex});
       var models = this.eventsToLineMap.models,
-          modelCount = models.length -1,
+          modelCount = models.length,
           startingLine;
-      for(var i = modelCount; i >= 0; i--){
-        if(models[i].get("index") > writeData.eventIndex){
-          startingLine = models[i].get("startingLine");
-          models[i].set("startingLine", startingLine + writeData.contentLineCount);
-          models[i].set("eventIndex",  models[i].get("eventIndex") + 1);
-        }
-      }
+      // for(var i = writeData.eventIndex + 1; i < modelCount ; i++){
+      //   startingLine = models[i].get("startingLine");
+      //   models[i].set("startingLine", startingLine + writeData.contentLineCount);
+      //   models[i].set("eventIndex",  models[i].get("eventIndex") + 1);
+      // }
 
     },
 
