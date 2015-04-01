@@ -154,15 +154,18 @@ define(['BaseView',
     },
 
     getInsertLineInfo: function(data, options){
+      var mapEntry, lineInfo;
       if(this.isMostRecentEvent(data))
         return this.getLastLineInfo();
       
-      var mapEntry = this.eventsToLineMap.at(data.index);
+      mapEntry = this.eventsToLineMap.at(data.index);
+      lineInfo = this.getLine(mapEntry.get("number"));
+
       if (mapEntry){
         return {
-          number    : mapEntry.get("number"),
-          handler   : mapEntry.get("handler"),
-          charCount : mapEntry.get("handler").text.length
+          number    : lineInfo.number,
+          handler   : lineInfo.handler,
+          charCount : lineInfo.handler.text.length
         };
       } else{
         return {
@@ -216,33 +219,41 @@ define(['BaseView',
       var models = this.eventsToLineMap.models,
           modelCount = models.length,
           startingLine;
-      // for(var i = writeData.eventIndex + 1; i < modelCount ; i++){
-      //   startingLine = models[i].get("startingLine");
-      //   models[i].set("startingLine", startingLine + writeData.contentLineCount);
-      //   models[i].set("eventIndex",  models[i].get("eventIndex") + 1);
-      // }
+
+      for(var i = writeData.eventIndex + 1; i < modelCount ; i++){
+        startingLine = models[i].get("number");
+        models[i].set("number", startingLine + writeData.contentLineCount);
+        models[i].set("eventIndex",  models[i].get("eventIndex") + 1);
+        models[i].set("handler",  this.getLine(startingLine));
+      }
 
     },
 
     writeDataContents: function(data, options){
       var content, prefixInfo, contentLineCount, lineInfo = this.getInsertLineInfo(data, options);
         
-      // if(options.prefix)
-      prefixInfo = this.writeDataPrefix(data, lineInfo, options);
-      
+      prefixInfo = this.writeDataPrefix(data, lineInfo, options);      
       content = this.format(data.body, options.url, options);
-      if(!this.isMostRecentEvent(data))
+      // if this is not being added to the bottom and does not 
+      // have any additional lines for a visual buffer add them now
+      if(
+          (
+            !this.isMostRecentEvent(data) && 
+            content.substr(content.length - 1).indexOf("\n") !== 0
+          )
+          || prefixInfo.startingLineNumber === 0
+        )
         content += "\n\n";
-      this.dataStream.replaceRange(content, {line: prefixInfo.endingLineNumber + 1, ch: lineInfo.charCount});
-
+      
+      this.dataStream.replaceRange(content, {line: prefixInfo.endingLineNumber + 1, ch: 0});
       contentLineCount = prefixInfo.lineCount + content.split("\n").length;
       
       return _.extend({
-          startingLine: lineInfo.number, 
+          // startingLine: lineInfo.number, 
           eventIndex: data.index, 
           contentLineCount: contentLineCount
         }, 
-        lineInfo
+        {number: lineInfo.number}
       );
     },
 
@@ -264,8 +275,8 @@ define(['BaseView',
       // this increase the number of reported lines by one
       endingLine = startingLine + lineCount - 1;
 
-      var markFrom = {line: startingLine, ch: startingLineLength};
-      this.dataStream.replaceRange(prefix, {line: startingLine, ch: startingLineLength});
+      var markFrom = {line: startingLine, ch: 0};
+      this.dataStream.replaceRange(prefix, {line: startingLine, ch: 0});
       lineInfo = this.getLine(endingLine);
       var markTo = {line: endingLine, ch: this.getLineLength(endingLine)};
 
