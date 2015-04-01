@@ -153,6 +153,10 @@ define(['BaseView',
       
     },
 
+    isMostRecentEvent: function(data){
+      return data.index === data.length - 1;
+    },
+
     getLine: function(num){
       if(typeof num === 'undefined')
         return null;
@@ -173,17 +177,23 @@ define(['BaseView',
     },
 
     getInsertLineInfo: function(data, options){
-      if(data.index === data.length - 1)
+      if(this.isMostRecentEvent(data))
         return this.getLastLineInfo();
       
       var mapEntry = this.eventsToLineMap.at(data.index);
-      
-      return {
-        number    : mapEntry.get("number"),
-        handler   : mapEntry.get("handler"),
-        charCount : mapEntry.get("handler").text.length
-      };
-
+      if (mapEntry){
+        return {
+          number    : mapEntry.get("number"),
+          handler   : mapEntry.get("handler"),
+          charCount : mapEntry.get("handler").text.length
+        };
+      } else{
+        return {
+          number    : 0,
+          handler   : null,
+          charCount : 0
+        };
+      }
       // get the line info for the current line from the map that is at my current index
       // use that line info to get my starting line
       // later, after the write we will update the map to reflect the new data
@@ -277,15 +287,17 @@ define(['BaseView',
     },
 
     writeDataContents: function(data, options){
-      var content, prefixLineCount, contentLineCount, lineInfo = this.getInsertLineInfo(data, options);
+      var content, prefixInfo, contentLineCount, lineInfo = this.getInsertLineInfo(data, options);
         
-      if(options.prefix)
-        prefixLineCount = this.writeDataPrefix(data, lineInfo, options).lineCount;
+      // if(options.prefix)
+      prefixInfo = this.writeDataPrefix(data, lineInfo, options);
       
       content = this.format(data.body, options.url, options);
-      this.dataStream.replaceRange(content, {line: lineInfo.number + prefixLineCount, ch: lineInfo.charCount});
+      if(!this.isMostRecentEvent(data))
+        content += "\n\n";
+      this.dataStream.replaceRange(content, {line: prefixInfo.endingLineNumber + 1, ch: lineInfo.charCount});
 
-      contentLineCount = prefixLineCount + content.split("\n").length;
+      contentLineCount = prefixInfo.lineCount + content.split("\n").length;
       
       return _.extend({
           startingLine: lineInfo.number, 
@@ -307,9 +319,11 @@ define(['BaseView',
       else
         prefix = prefix + "\n";
 
-      lineCount = prefix.split("\n").length
+      lineCount = prefix.split("\n").length - 1
       startingLine = lineInfo.number;
       startingLineLength = lineInfo.charCount
+      // the content always ends with a blank line "\n"
+      // this increase the number of reported lines by one
       endingLine = startingLine + lineCount - 1;
 
       var markFrom = {line: startingLine, ch: startingLineLength};
@@ -321,8 +335,10 @@ define(['BaseView',
       this.dataStream.markText(markFrom, markTo, {className: "prefix direction"});
 
       return {
-        lineCount: prefix.split("\n").length
-      }
+        startingLineNumber: startingLine,
+        endingLineNumber: endingLine,
+        lineCount: lineCount
+      };
 
     },
 
