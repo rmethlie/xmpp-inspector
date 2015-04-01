@@ -253,9 +253,7 @@ define(['BaseView',
           startingLineLength,
           endingLine,
           prefix = options.prefix || "";
-      // if(lineInfo.number > 0)
-      //   prefix = "\n\n" +  prefix + "\n";
-      // else
+          
       prefix = prefix + "\n";
 
       lineCount = prefix.split("\n").length - 1
