@@ -91,29 +91,6 @@ define(['BaseView',
         this.writeData(data, {prefix: prefix, format: data.format, url: data.url});
       }.bind(this));
 
-      // this.listenTo(this.streams.networkEvents, "request:sent", function(data){
-      //   var prefix = this.requestSentPrefix;
-      //   if (typeof(prefix) == "function") {
-      //     prefix = prefix(data);
-      //   }
-      //   this.writeData(data, {prefix: prefix, format: data.format, url: data.url});
-      // }.bind(this));
-
-      // this.listenTo(this.streams, "request:finished", function(data){
-      //   var prefix = this.responseReceivedPrefix;
-      //   var guid = Utils.guidGen();
-
-      //   if (typeof(prefix) == "function") {
-      //     prefix = prefix({
-      //       id: guid,
-      //       body: data.body,
-      //       format: data.format,
-      //       url: data.data.request.url
-      //     });
-      //   }
-      //   this.writeData(data, {prefix: prefix, format: data.format, url: data.data.request.url });
-      // }.bind(this));
-
       this.listenTo(this.inspectorView, "search:submit", function(options){
         this.$el.addClass("searching");
         var query = options.query;
@@ -194,26 +171,6 @@ define(['BaseView',
           charCount : 0
         };
       }
-      // get the line info for the current line from the map that is at my current index
-      // use that line info to get my starting line
-      // later, after the write we will update the map to reflect the new data
-
-      // for(var i = lineMapTopIndex; i >= 0; i--){
-
-      //   // if(this.eventsToLineMap.at(i).get("eventIndex") < data.index){
-      //     // startingLine = this.eventsToLineMap.at(i).get("startingLine");
-      //     // this.eventsToLineMap.at(i).set("startingLine", startingLine + data.contentLineCount);
-      //     // this.eventsToLineMap.at(i).set("eventIndex",  this.eventsToLineMap.at(i).get("eventIndex") + 1);
-      //     // break;
-      //   // } 
-      // }
-
-      // return {
-      //   number    : lastLineNumber,
-      //   handler   : handler,
-      //   charCount : handler.text.length
-      // };
-      // return this.getLastLineInfo();
     },
 
     getLastLineInfo: function(){
@@ -245,25 +202,6 @@ define(['BaseView',
       }
 
       if(data.body){
-        // var prefix = options.prefix;
-        
-        // if(prefix){
-          // if(this.getLastLineInfo().number > 0)
-          //   prefix = "\n\n" +  prefix + "\n";
-          // else
-          //   prefix = prefix + "\n";
-
-          // var markFrom = {line: lastLine.number, ch: lastLine.charCount};
-          // this.dataStream.replaceRange(prefix, {line: Infinity, ch: lastLine.charCount});
-          // lastLine = this.getLastLineInfo();
-          // var markTo = {line: lastLine.number, ch: lastLine.charCount};
-
-          // this.dataStream.markText( markFrom, markTo, {className: "prefix direction"});
-        // }
-
-        // content = this.format(content, url, options);
-
-        // this.dataStream.replaceRange(content, {line: Infinity, ch: lastLine.charCount});
         writeResults = this.writeDataContents(data, options);
         this.updateNetworkEventsMap(writeResults);
       }
@@ -327,7 +265,6 @@ define(['BaseView',
       endingLine = startingLine + lineCount - 1;
 
       var markFrom = {line: startingLine, ch: startingLineLength};
-      // this.dataStream.replaceRange(prefix, {line: Infinity, ch: lineInfo.charCount});
       this.dataStream.replaceRange(prefix, {line: startingLine, ch: startingLineLength});
       lineInfo = this.getLine(endingLine);
       var markTo = {line: endingLine, ch: this.getLineLength(endingLine)};
@@ -374,16 +311,6 @@ define(['BaseView',
           this.$el.toggleClass("toolbar-expanded");
       }
     },
-
-    // addSource: function(params){
-    //   if(!params)
-    //     params = {};
-
-    //   this.streams.add(_.extend(
-    //     params,
-    //     {connection: this._connection}
-    //     ));
-    // },
 
     update: function(attributes){
       this.streams.sendToBackground(attributes);
