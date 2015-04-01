@@ -153,26 +153,57 @@ define(['BaseView',
       
     },
 
+    getLine: function(num){
+      if(typeof num === 'undefined')
+        return null;
+      
+      var handle = this.dataStream.getLineHandle(num);
+      // this.dataStream.getLineNumber returns the current 
+      // position of that line (or null when it is no longer 
+      // in the document).
+      return {
+        number    : this.dataStream.getLineNumber(handle),
+        handler   : handle,
+        charCount : handle.text.length
+      };
+    },
+    
+    getLineLength: function(num){
+      return this.getLine(num).charCount;
+    },
+
     getInsertLineInfo: function(data, options){
-      var lineMapTopIndex = this.eventsToLineMap.length - 1;
       if(data.index === data.length - 1)
         return this.getLastLineInfo();
       
-      for(var i = lineMapTopIndex; i >= 0; i--){
-        if(this.eventsToLineMap.at(i).get("eventIndex") < data.index){
-          // startingLine = this.eventsToLineMap.at(i).get("startingLine");
-          // this.eventsToLineMap.at(i).set("startingLine", startingLine + data.contentLineCount);
-          // this.eventsToLineMap.at(i).set("eventIndex",  this.eventsToLineMap.at(i).get("eventIndex") + 1);
-          // break;
-        } 
-      }
+      var mapEntry = this.eventsToLineMap.at(data.index);
+      
+      return {
+        number    : mapEntry.get("number"),
+        handler   : mapEntry.get("handler"),
+        charCount : mapEntry.get("handler").text.length
+      };
+
+      // get the line info for the current line from the map that is at my current index
+      // use that line info to get my starting line
+      // later, after the write we will update the map to reflect the new data
+
+      // for(var i = lineMapTopIndex; i >= 0; i--){
+
+      //   // if(this.eventsToLineMap.at(i).get("eventIndex") < data.index){
+      //     // startingLine = this.eventsToLineMap.at(i).get("startingLine");
+      //     // this.eventsToLineMap.at(i).set("startingLine", startingLine + data.contentLineCount);
+      //     // this.eventsToLineMap.at(i).set("eventIndex",  this.eventsToLineMap.at(i).get("eventIndex") + 1);
+      //     // break;
+      //   // } 
+      // }
 
       // return {
       //   number    : lastLineNumber,
       //   handler   : handler,
       //   charCount : handler.text.length
       // };
-      return this.getLastLineInfo();
+      // return this.getLastLineInfo();
     },
 
     getLastLineInfo: function(){
@@ -196,9 +227,7 @@ define(['BaseView',
       var writeResults,
           content = data.body,
           url = options.url,
-          scrollToBottom = false,
-          lastLine = this.getLastLineInfo(),
-          insertLine = this.getInsertLineInfo(data, options);
+          scrollToBottom = false;
 
       // if the user is already at  the bottom of the stream scroll to the bottom after appending the new content
       if(this.isAtBottom()){
@@ -258,27 +287,38 @@ define(['BaseView',
 
       contentLineCount = prefixLineCount + content.split("\n").length;
       
-      return {
-        startingLine: lineInfo.number, 
-        eventIndex: data.index, 
-        contentLineCount: contentLineCount
-      };
+      return _.extend({
+          startingLine: lineInfo.number, 
+          eventIndex: data.index, 
+          contentLineCount: contentLineCount
+        }, 
+        lineInfo
+      );
     },
 
     writeDataPrefix: function(data, lineInfo, options){
-      var prefix = options.prefix || "";
+      var lineCount, 
+          startingLine,
+          startingLineLength,
+          endingLine,
+          prefix = options.prefix || "";
       if(lineInfo.number > 0)
         prefix = "\n\n" +  prefix + "\n";
       else
         prefix = prefix + "\n";
 
-      var markFrom = {line: lineInfo.number, ch: lineInfo.charCount};
-      // this.dataStream.replaceRange(prefix, {line: Infinity, ch: lineInfo.charCount});
-      this.dataStream.replaceRange(prefix, {line: lineInfo.number, ch: lineInfo.charCount});
-      lineInfo = this.getLastLineInfo();
-      var markTo = {line: lineInfo.number, ch: lineInfo.charCount};
+      lineCount = prefix.split("\n").length
+      startingLine = lineInfo.number;
+      startingLineLength = lineInfo.charCount
+      endingLine = startingLine + lineCount - 1;
 
-      this.dataStream.markText( markFrom, markTo, {className: "prefix direction"});
+      var markFrom = {line: startingLine, ch: startingLineLength};
+      // this.dataStream.replaceRange(prefix, {line: Infinity, ch: lineInfo.charCount});
+      this.dataStream.replaceRange(prefix, {line: startingLine, ch: startingLineLength});
+      lineInfo = this.getLine(endingLine);
+      var markTo = {line: endingLine, ch: this.getLineLength(endingLine)};
+
+      this.dataStream.markText(markFrom, markTo, {className: "prefix direction"});
 
       return {
         lineCount: prefix.split("\n").length
