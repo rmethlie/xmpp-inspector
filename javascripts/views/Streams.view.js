@@ -233,17 +233,7 @@ define(['BaseView',
       var content, prefixInfo, contentLineCount, lineInfo = this.getInsertLineInfo(data, options);
         
       prefixInfo = this.writeDataPrefix(data, lineInfo, options);      
-      content = this.format(data.body, options.url, options);
-      // if this is not being added to the bottom and does not 
-      // have any additional lines for a visual buffer add them now
-      if(
-          (
-            !this.isMostRecentEvent(data) && 
-            content.substr(content.length - 1).indexOf("\n") !== 0
-          )
-          || prefixInfo.startingLineNumber === 0
-        )
-        content += "\n\n";
+      content = this.format(data.body, options.url, options) + "\n\n";
       
       this.dataStream.replaceRange(content, {line: prefixInfo.endingLineNumber + 1, ch: 0});
       contentLineCount = prefixInfo.lineCount + content.split("\n").length;
@@ -263,10 +253,10 @@ define(['BaseView',
           startingLineLength,
           endingLine,
           prefix = options.prefix || "";
-      if(lineInfo.number > 0)
-        prefix = "\n\n" +  prefix + "\n";
-      else
-        prefix = prefix + "\n";
+      // if(lineInfo.number > 0)
+      //   prefix = "\n\n" +  prefix + "\n";
+      // else
+      prefix = prefix + "\n";
 
       lineCount = prefix.split("\n").length - 1
       startingLine = lineInfo.number;
