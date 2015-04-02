@@ -40,18 +40,6 @@ define(['BaseModel', 'NetworkEvents', 'Stream', 'BaseCollection', 'lib/utils'],
         this.handleRequestFinished(response);
       });
 
-      // this.on("add", function(stream){
-      //   console.log("add stream", stream);
-      //   this.sendToBackground({
-      //     event: "add:listener",
-      //     data: this.webRequestManifest(stream)
-      //   });
-      // });
-
-      // this.on("reset", function(listener){
-      //   console.log("reset", listener);
-      // });
-
       this.on("remove", function(stream, collection, options){
         console.log("remove responseListener", stream);
         stream.stopListening();
