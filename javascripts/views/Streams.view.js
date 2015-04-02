@@ -222,7 +222,7 @@ define(['BaseView',
 
       for(var i = writeData.eventIndex + 1; i < modelCount ; i++){
         startingLine = models[i].get("number");
-        models[i].set("number", startingLine + writeData.contentLineCount);
+        models[i].set("number", startingLine + writeData.contentLineCount - 1);
         models[i].set("eventIndex",  models[i].get("eventIndex") + 1);
         models[i].set("handler",  this.getLine(startingLine));
       }
