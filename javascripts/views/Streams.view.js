@@ -159,9 +159,9 @@ define(['BaseView',
         return this.getLastLineInfo();
       
       mapEntry = this.eventsToLineMap.at(data.index);
-      lineInfo = this.getLine(mapEntry.get("number"));
 
       if (mapEntry){
+        lineInfo = this.getLine(mapEntry.get("number"));
         return {
           number    : lineInfo.number,
           handler   : lineInfo.handler,
