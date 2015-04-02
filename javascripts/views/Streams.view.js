@@ -294,7 +294,7 @@ define(['BaseView',
         content = stream.getValue();
       }
 
-      this.model.sendToBackground({event: "copy:text", data: content});
+      this.streams.sendToBackground({event: "copy:text", data: content});
     },
 
     toggleForSubbar: function(state){

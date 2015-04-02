@@ -58,6 +58,16 @@ define(['BaseModel', 'NetworkEvents', 'Stream', 'BaseCollection', 'lib/utils'],
       });
     },
 
+    sendToBackground: function( data ){
+      if( this._connection && this._connection.postMessage ){
+        try{
+          this._connection.postMessage(data);
+        }catch( e ){
+          console.error(e.stack);
+        }
+      }
+    },
+
     _handleBackgroundEvent: function(event){
       console.info( "[streams] handle background event", event );
 
