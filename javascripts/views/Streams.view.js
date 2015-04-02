@@ -233,9 +233,9 @@ define(['BaseView',
       var content, prefixInfo, contentLineCount, lineInfo = this.getInsertLineInfo(data, options);
         
       prefixInfo = this.writeDataPrefix(data, lineInfo, options);      
-      content = this.format(data.body, options.url, options) + "\n\n";
+      content = this.format(data.body, options.url, options) + "\n";
       
-      this.dataStream.replaceRange(content, {line: prefixInfo.endingLineNumber + 1, ch: 0});
+      this.dataStream.replaceRange(content, {line: prefixInfo.endingLineNumber, ch: this.getLine(prefixInfo.endingLineNumber).charcount});
       contentLineCount = prefixInfo.lineCount + content.split("\n").length;
       
       return _.extend({
@@ -253,7 +253,7 @@ define(['BaseView',
           startingLineLength,
           endingLine,
           prefix = options.prefix || "";
-          
+
       prefix = prefix + "\n";
 
       lineCount = prefix.split("\n").length - 1
@@ -340,7 +340,7 @@ define(['BaseView',
       var startModeDelimiter = "start:" + mode  + " ";
       var endModeDelimiter = "end:" + mode  + " ";
       
-      content = startModeDelimiter + "\n" + content + "\n" + endModeDelimiter + "\n";
+      content = "\n" + startModeDelimiter + "\n" + content + "\n" + endModeDelimiter + "\n";
 
       return content;
     },
