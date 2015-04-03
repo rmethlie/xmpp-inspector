@@ -90,10 +90,6 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
 
     handleRequestFinished: function(response){
       this.networkEvents.add(response);
-      this.sendToBackground({
-        event: 'request:finished',
-        data: response
-      });
     },
 
     handleBeforeRequest: function(data){
