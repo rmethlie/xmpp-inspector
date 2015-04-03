@@ -35,6 +35,16 @@ require.config({
         ExternalListener: "models/ExternalListener.model",
         ChromeConnection: "models/ChromeConnection.model",
         Bookmarks: "collections/Bookmarks.collection",
-        Bookmark: "models/Bookmark.model"
+        Bookmark: "models/Bookmark.model",
+        ContextMenu: 'models/ContextMenu.model',
+        Context: 'models/Context.model',
+        StreamShareContext: 'collections/StreamShareContext.collection',
+        PageContext: 'models/PageContext.model',
+        SelectionContext: 'models/SelectionContext.model',
+        LinkContext: 'models/LinkContext.model'
+        // EditableContext: 'models/EditableContext.model',
+        // ImageContext: 'models/ImageContext.model',
+        // VideoContext: 'models/VideoContext.model',
+        // AudioContext: 'models/AudioContext.model'
     }
 });
