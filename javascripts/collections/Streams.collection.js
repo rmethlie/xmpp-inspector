@@ -59,6 +59,14 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
           data: this.webRequestManifest(listener)
         });
       });
+
+      this.networkEvents.on( 'add', function( networkEvent ){
+        console.log( 'net event added', networkEvent);
+        this.sendToBackground({
+          event: 'add:networkevent',
+          data: networkEvent
+        });
+      }, this );
     },
 
     // postInfo: function(){

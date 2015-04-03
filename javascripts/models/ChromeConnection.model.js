@@ -70,6 +70,10 @@ define(['BaseModel', 'BaseCollection', 'RequestListener'], function(BaseModel, B
         case 'request:finished':
           this.trigger('request:finished', message );
           break;
+
+        case 'add:networkevent': 
+          this.trigger('add:networkevent', message.data);
+          break;
       }
     },
 
@@ -95,7 +99,7 @@ define(['BaseModel', 'BaseCollection', 'RequestListener'], function(BaseModel, B
       var port = this.get("port");
       if( port.postMessage ){
         port.postMessage(message);
-        console.info( "postmessage", this.attributes, message );
+        // console.info( "postmessage", this.attributes, message );
       } else {
         console.error("could not send message to response listener" );
       }

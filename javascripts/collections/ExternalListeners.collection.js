@@ -58,13 +58,16 @@ define(['ExternalListener'], function(ExternalListener) {
       });
 
       // finally, listen for actual data.
+      // Since the nature of the streams inspector is to capture HTTP traffic,
+      // but a 'stream' is generic data, we will have to do a bit of translation
+      // here from a 'networkevent' to a 'packet' as things mature.
       source.on({
-        'request:finished': function( event ){
-          console.info( 'request:finished', event );
+        'add:networkevent': function( event ){
+          console.info( 'add:networkevent', event );
           this.sendToExternalListeners({
             type: 'source:packet',
             source: source.id,
-            packet: event.data
+            packet: event
           });
         }.bind(this)
       })
