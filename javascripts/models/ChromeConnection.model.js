@@ -17,7 +17,7 @@ define(['BaseModel', 'BaseCollection', 'RequestListener'], function(BaseModel, B
     setPort: function( port ){
       // handle messages
       port.onMessage.addListener( function( message ){
-        console.info( "RAW Message", message );
+        // console.info( "RAW Message", message );
         if( typeof message.event === "undefined" ){
           //todo: map the intended attribute update to the listener
           this.set( message );
@@ -65,6 +65,15 @@ define(['BaseModel', 'BaseCollection', 'RequestListener'], function(BaseModel, B
       this.listenTo(this.requestListeners, "request:before", function(payload){
         this.sendToPanel(payload);
       });
+    },
+
+    removeListeners: function(){
+      this.stopListening( this.requestListeners );
+    },
+
+    cleanup: function(){
+      this.removeListeners();
+      // anything else..?
     },
 
     sendToPanel: function( message ){
