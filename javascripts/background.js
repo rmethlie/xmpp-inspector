@@ -1,6 +1,9 @@
 
 require(["config"], function() {
-  require(['ChromeConnections'], function(ChromeConnections) {
-      var chromeConnections = new ChromeConnections();
+  require(['ChromeConnections','ExternalListeners'], function(ChromeConnections,ExternalListeners) {
+      var 
+      chromeConnections = new ChromeConnections(),
+      // pass in connections as 'sources' for external listeners
+      externalListeners = new ExternalListeners([],{sources:chromeConnections});
   });
 });
