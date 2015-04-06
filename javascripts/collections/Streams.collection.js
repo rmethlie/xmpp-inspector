@@ -112,7 +112,6 @@ define(['BaseModel', 'NetworkEvents', 'Stream', 'BaseCollection', 'lib/utils'],
       });
     },
 
-<<<<<<< HEAD
     // webRequestManifest: function(listener){
     //   console.info( "webRequestManifest");
     //   return {
@@ -135,31 +134,6 @@ define(['BaseModel', 'NetworkEvents', 'Stream', 'BaseCollection', 'lib/utils'],
     //     }
     //   }
     // },
-=======
-    webRequestManifest: function(listener){
-      console.info( "webRequestManifest");
-      return {
-        id      : listener.id, // need this for mapping the req/res objs
-        scheme  : listener.get("scheme"),
-        host    : listener.get("host"),
-        path    : listener.get("path"),
-        format  : listener.get("format"),
-        types   : ["xmlhttprequest"],
-        tabId   : this.tabId,
-        name    : this.backgroundConnectionName
-      };
-    },
-
-    sendToBackground: function(data){
-      if( this._connection && this._connection.postMessage ){
-        try{
-          this._connection.postMessage(data);
-        }catch( e ){
-          console.error(e.stack);
-        }
-      }
-    },
->>>>>>> master
 
     updateStream: function(params){
       // find the stream
