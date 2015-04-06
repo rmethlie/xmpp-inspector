@@ -9,7 +9,7 @@ define(['backbone', 'NetworkEvent'], function(Backbone, NetworkEvent) {
     
     initialize: function(){
       console.log("[NetworkEvents] initialize");
-    },
+    }
 
   });
 });

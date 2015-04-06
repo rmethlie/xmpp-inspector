@@ -58,8 +58,8 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
           packet.getContent( function(contents){
             var guid = Utils.guidGen();
             this.trigger("request:finished", {
+              channel   : this.get('id'),
               id        : guid, 
-              streamId  : this.get("id"), 
               type      :'requestFinished', 
               data      : packet, 
               url       : packet.request.url,

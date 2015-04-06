@@ -20,6 +20,8 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
 
     initialize: function(){
       console.log("[RequestListener] init");
+      // need a unique id so external listeners can track
+      this.id = Utils.guidGen();
       this.addListeners();
     },
 

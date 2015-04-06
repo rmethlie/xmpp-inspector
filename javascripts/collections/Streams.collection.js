@@ -40,10 +40,23 @@ define(['BaseModel', 'NetworkEvents', 'Stream', 'BaseCollection', 'lib/utils'],
         this.handleRequestFinished(response);
       });
 
-      this.on("remove", function(stream, collection, options){
-        console.log("remove responseListener", stream);
-        stream.stopListening();
+      this.on("remove", function(listener, collection, options){
+        console.log("remove responseListener", listener);
+        listener.stopListening();
+        this.sendToBackground({
+          event: "remove:listener",
+          data: this.webRequestManifest(listener)
+        });
       });
+
+      this.networkEvents.on( 'add', function( networkEvent ){
+        console.log( 'net event added', networkEvent);
+        this.sendToBackground({
+          event: 'add:networkevent',
+          data: networkEvent
+        });
+      }, this );
+    
     },
 
     sendToBackground: function( data ){
@@ -55,6 +68,13 @@ define(['BaseModel', 'NetworkEvents', 'Stream', 'BaseCollection', 'lib/utils'],
         }
       }
     },
+
+    // postInfo: function(){
+    //   this.sendToBackground({
+    //     event: "page:info",
+    //     info: this.webRequestManifest()
+    //   })
+    // },
 
     _handleBackgroundEvent: function(event){
       console.info( "[streams] handle background event", event );
@@ -92,6 +112,7 @@ define(['BaseModel', 'NetworkEvents', 'Stream', 'BaseCollection', 'lib/utils'],
       });
     },
 
+<<<<<<< HEAD
     // webRequestManifest: function(listener){
     //   console.info( "webRequestManifest");
     //   return {
@@ -114,6 +135,31 @@ define(['BaseModel', 'NetworkEvents', 'Stream', 'BaseCollection', 'lib/utils'],
     //     }
     //   }
     // },
+=======
+    webRequestManifest: function(listener){
+      console.info( "webRequestManifest");
+      return {
+        id      : listener.id, // need this for mapping the req/res objs
+        scheme  : listener.get("scheme"),
+        host    : listener.get("host"),
+        path    : listener.get("path"),
+        format  : listener.get("format"),
+        types   : ["xmlhttprequest"],
+        tabId   : this.tabId,
+        name    : this.backgroundConnectionName
+      };
+    },
+
+    sendToBackground: function(data){
+      if( this._connection && this._connection.postMessage ){
+        try{
+          this._connection.postMessage(data);
+        }catch( e ){
+          console.error(e.stack);
+        }
+      }
+    },
+>>>>>>> master
 
     updateStream: function(params){
       // find the stream
