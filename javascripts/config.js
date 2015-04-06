@@ -31,6 +31,8 @@ require.config({
         Panel: "models/Panel.model",
         StreamContainer: "lib/codemirror-container",
         BackgroundPage: "models/BackgroundPage.model",
+        ExternalListeners: "collections/ExternalListeners.collection",
+        ExternalListener: "models/ExternalListener.model",
         ChromeConnection: "models/ChromeConnection.model",
         Bookmarks: "collections/Bookmarks.collection",
         Bookmark: "models/Bookmark.model"

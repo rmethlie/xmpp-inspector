@@ -59,7 +59,22 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
           data: this.webRequestManifest(listener)
         });
       });
+
+      this.networkEvents.on( 'add', function( networkEvent ){
+        console.log( 'net event added', networkEvent);
+        this.sendToBackground({
+          event: 'add:networkevent',
+          data: networkEvent
+        });
+      }, this );
     },
+
+    // postInfo: function(){
+    //   this.sendToBackground({
+    //     event: "page:info",
+    //     info: this.webRequestManifest()
+    //   })
+    // },
 
     _handleBackgroundEvent: function(event){
       console.info( "[streams] handle background event", event );
@@ -99,6 +114,7 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
     webRequestManifest: function(listener){
       console.info( "webRequestManifest");
       return {
+        id      : listener.id, // need this for mapping the req/res objs
         scheme  : listener.get("scheme"),
         host    : listener.get("host"),
         path    : listener.get("path"),

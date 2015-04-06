@@ -17,7 +17,22 @@ define(['BaseCollection', 'ChromeConnection', 'RequestListener', 'lib/utils'], f
       chrome.runtime.onConnect.addListener(function(port) {
         console.log("[ChromeConnections] Recvd 'onConnect' event");  
         if( !this.findWhere({id: port.name}) ) {
-          this.add({id: port.name, port: port});
+          port.onDisconnect.addListener(function( port ){
+            var
+            chromeConnection = this.remove(port.name);
+            if( chromeConnection ){
+              chromeConnection.cleanup();
+              console.log( '[ChromeConnections] Removed disconnected chrome connection.', chromeConnection.id );
+            }else{
+              console.warn( '[ChromeConnections] Could not find chrome connection to remove.', port.name );
+            }
+          }.bind(this));
+          
+          port = this.add({id: port.name, port: port},{silent:true});
+          // because the name does not change, there is no new event if the
+          // same port connects twice.  therefore, components awaiting the
+          // add event will not re-init port.
+          this.trigger('add',port);
         }
       }.bind(this));
 
