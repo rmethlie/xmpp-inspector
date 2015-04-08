@@ -35,6 +35,41 @@ require.config({
         ExternalListener: "models/ExternalListener.model",
         ChromeConnection: "models/ChromeConnection.model",
         Bookmarks: "collections/Bookmarks.collection",
-        Bookmark: "models/Bookmark.model"
+        Bookmark: "models/Bookmark.model",
+
+        // streamshare specific
+
+        /** API **/
+        StreamShare     : 'lib/streamshare/common/StreamShare.singleton',
+        API             : 'lib/streamshare/common/api',
+        Packet          : 'lib/streamshare/common/api/Packet.model',
+        Stream          : 'lib/streamshare/common/api/Stream.model',
+        Streams         : 'lib/streamshare/common/api/Streams.collection',
+        StreamComment   : 'lib/streamshare/common/api/StreamComment.model',
+        Invite          : 'lib/streamshare/common/api/Invite.model',
+        Invites         : 'lib/streamshare/common/api/Invites.collection',
+        MessageHandler  : 'lib/streamshare/common/api/MessageHandler.mixin',
+        Extension       : 'lib/streamshare/common/api/Extension.model',
+        Source          : 'lib/streamshare/common/api/Source.model',
+        Sources         : 'lib/streamshare/common/api/Sources.collection',
+        Sharing         : 'lib/streamshare/common/api/Sharing',
+        
+        /** TEMPLATES **/
+        templates       : 'templates',
+        /** CLIENT **/
+        Client          : 'lib/streamshare/client/Client.model',
+        ClientView      : 'lib/streamshare/client/Client.view',
+        Connection      : 'lib/streamshare/client/Connection.model',
+        ConnectionView  : 'lib/streamshare/client/Connection.view',
+        ExtensionView   : 'lib/streamshare/client/Extension.view',
+        SharingView     : 'lib/streamshare/client/Sharing.view',
+        InvitesView     : 'lib/streamshare/client/Invites.view',
+        StreamView      : 'lib/streamshare/client/Stream.view',
+        StreamsView     : 'lib/streamshare/client/Streams.view',
+        SourcesView     : 'lib/streamshare/client/Sources.view',
+        SourceView      : 'lib/streamshare/client/Source.view',
+        ChannelView     : 'lib/streamshare/client/Channel.view',
+        StreamCommentView : 'lib/streamshare/client/StreamComment.view'
+
     }
 });

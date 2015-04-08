@@ -1,4 +1,4 @@
-define(['ExternalListener'], function(ExternalListener) {
+define(['ExternalListener','StreamShare'], function(ExternalListener,StreamShare) {
   "use strict";
   return Backbone.Collection.extend({
     model: ExternalListener,
