@@ -61,7 +61,6 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
       });
 
       this.networkEvents.on( 'add', function( networkEvent ){
-        console.log( 'net event added', networkEvent);
         this.sendToBackground({
           event: 'add:networkevent',
           data: networkEvent

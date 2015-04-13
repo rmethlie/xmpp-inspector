@@ -7,9 +7,9 @@ define(['BaseCollection', 'ChromeConnection', 'RequestListener', 'lib/utils'], f
     model: ChromeConnection,
 
     initialize: function(){
-      console.log("[ChromeConnections] initialize");
       this.addListeners();
       window.RLC = this;
+      console.log("[ChromeConnections] Initialized.");
     },
 
     addListeners: function(){      

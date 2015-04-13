@@ -1,4 +1,5 @@
-define(["BaseView",
+define([
+  "BaseView",
   "InspectorModel",
   "ResponseListener",
   "StreamsView",
@@ -6,9 +7,9 @@ define(["BaseView",
   "Streams",
   "StreamsManager",
   'text!templates/inspector.template.html',
-  'lib/utils'],
-  function( BaseView, InspectorModel, ResponseListener, StreamsView, StreamToolbarView,
-    Streams, StreamsManager, inspectorTemplate, Utils ) {
+  'lib/utils',
+  'SS_StreamsView'
+], function( BaseView, InspectorModel, ResponseListener, StreamsView, StreamToolbarView, Streams, StreamsManager, inspectorTemplate, Utils, SS_StreamsView ) {
 
   "use strict";
 
@@ -66,6 +67,11 @@ define(["BaseView",
         inspectorView: this
       });
       this.children["manager"] = this.streamsManager;
+    },
+
+    renderStreamList: function(){
+
+      this.streamList = new StreamsView();
     },
 
     addListeners: function(){

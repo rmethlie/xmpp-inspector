@@ -2,36 +2,36 @@ define(['ExternalListener','StreamShare'], function(ExternalListener,StreamShare
   "use strict";
   return Backbone.Collection.extend({
     model: ExternalListener,
-    initialize: function( streams, options ){
+    initialize: function( listeners, options ){
       console.log( "[ExternalListeners] Initialized.");
-      this.sources = options.sources;
-      this._waitForSources();
+      this.connections = options.connections;
+      this._waitForConnections();
       this._waitForExternalListeners();
     },
 
-    _waitForSources: function(){
-      this.sources.on({
-        'add'     : this.onSourceAdded.bind(this),
-        'remove'  : this.onSourceRemoved.bind(this)
+    _waitForConnections: function(){
+      this.connections.on({
+        'add'     : this.onConnectionAdded.bind(this),
+        'remove'  : this.onConnectionRemoved.bind(this)
       });
     },
 
-    onSourceAdded: function( source ){
-      console.log( "[ExternalListeners] New streaming source detected.", source );
+    onConnectionAdded: function( connection ){
+      console.log( "[ExternalListeners] New streaming source detected.", connection );
 
       /*
         Each request listener represents a URL pattern, but the external listener
         may not know anything about URLs, so they are identified more generically
         as 'channels'. 
       */
-      source.requestListeners.on({
+      connection.requestListeners.on({
 
         // Channel (URL Pattern, AKA RequestListener) added.
         'add': function( channel ){
           console.log('[ExternalListeners] Channel added to connection.', channel );
           this.sendToExternalListeners({
             type: 'source:channel:added',
-            source: source.id,
+            source: connection.id,
             channel: channel
           });
         }.bind(this),
@@ -41,7 +41,7 @@ define(['ExternalListener','StreamShare'], function(ExternalListener,StreamShare
           console.log('[ExternalListeners] Channel removed from connection.', channel );
           this.sendToExternalListeners({
             type: 'source:channel:removed',
-            source: source.id,
+            source: connection.id,
             channel: channel
           });
         }.bind(this),
@@ -51,7 +51,7 @@ define(['ExternalListener','StreamShare'], function(ExternalListener,StreamShare
           console.log('[ExternalListeners] Request listeners reset.', channels.length );
           this.sendToExternalListeners({
             type: 'source:channel:list',
-            source: source.id,
+            source: connection.id,
             channels: channels.models || []
           });
         }.bind(this)
@@ -61,12 +61,12 @@ define(['ExternalListener','StreamShare'], function(ExternalListener,StreamShare
       // Since the nature of the streams inspector is to capture HTTP traffic,
       // but a 'stream' is generic data, we will have to do a bit of translation
       // here from a 'networkevent' to a 'packet' as things mature.
-      source.on({
+      connection.on({
         'add:networkevent': function( event ){
           console.info( 'add:networkevent', event );
           this.sendToExternalListeners({
             type: 'source:packet',
-            source: source.id,
+            source: connection.id,
             packet: event
           });
         }.bind(this)
@@ -75,12 +75,12 @@ define(['ExternalListener','StreamShare'], function(ExternalListener,StreamShare
 
       this.sendToExternalListeners({
         type: 'source:added',
-        source: source,
-        channels: source.requestListeners.length ? source.requestListeners.models : []
+        source: connection,
+        channels: connection.requestListeners.length ? connection.requestListeners.models : []
       });
     },
 
-    onSourceRemoved: function( source ){
+    onConnectionRemoved: function( source ){
       console.log( '[ExternalListeners] Source disconnected.', source.id );
       this.sendToExternalListeners({
         type: 'source:removed',
@@ -88,14 +88,14 @@ define(['ExternalListener','StreamShare'], function(ExternalListener,StreamShare
       });
     },
 
-    _sourcesJSON: function(){
+    _connectionsJSON: function(){
       return this.sources.length ? this.sources : [];
     },
 
     distributeList: function( filter ){
       this.sendToExternalListeners({
         type: 'source:list',
-        sources: this._sourcesJSON()
+        sources: this._connectionsJSON()
       });
     },
 
@@ -147,7 +147,7 @@ define(['ExternalListener','StreamShare'], function(ExternalListener,StreamShare
         case 'source:list':
           port.postMessage({
             type: 'source:list',
-            sources: this._sourcesJSON()
+            sources: this._connectionsJSON()
           });
         break;
 
