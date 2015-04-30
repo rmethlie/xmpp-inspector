@@ -40,29 +40,33 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
       //  for details.
       if(info.requestBody)
         content = Utils.ArrayBufferToString(info.requestBody.raw[0].bytes);
+      var time = this.getTimestamp();
+      setTimeout(function(){
+
       this.trigger("request:before", {
-        event: "stream:update",
+        event: "request:before",
         data:{
           state:"beforeRequest",
           info: info,
           requestBody: content,
           format: this.get("format"),
-          timestamp: this.getTimestamp()
+          timestamp: time
         }
       });
+      }.bind(this), 5000);
     },
 
-    onCompleted: function(info) {
+    // onCompleted: function(info) {
 
-      console.info( "oncompleted", info );
-      this.sendToResponseListener({
-        event: "stream:update",
-        data: {
-          state:"completed",
-          info: info
-        }
-      });
-    },
+    //   console.info( "oncompleted", info );
+    //   this.sendToResponseListener({
+    //     event: "stream:update",
+    //     data: {
+    //       state:"completed",
+    //       info: info
+    //     }
+    //   });
+    // },
 
     addListeners: function(){
       console.log("[StreamListener] addListeners");

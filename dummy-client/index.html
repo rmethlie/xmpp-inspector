@@ -18,6 +18,7 @@
   <div id="output"></div>
   <script type="text/javascript" src="jquery-1.11.0.min.js"></script>
   <script type="text/javascript">
+  window.requestCount = 0;
   $(document).ready(function(){
 
   });
@@ -26,12 +27,13 @@
         url: "/nhttp-bind/",
         type: "POST",
         processData: false,
-        data: "<data>This is my POST data</data>",
+        data: "<data>"+window.requestCount+" - This is my POST data</data>",
         success: function(){
           var timestamp = new Date().getTime();
           $("#output").html("updated: " + timestamp);
         }
       });
+    window.requestCount++;
   }
 
   function getJSON(){

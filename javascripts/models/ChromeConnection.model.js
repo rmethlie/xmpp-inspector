@@ -1,4 +1,5 @@
-define(['BaseModel', 'BaseCollection', 'RequestListener'], function(BaseModel, BaseCollection, RequestListener) {
+define(['BaseModel', 'BaseCollection', 'RequestListener', 'lib/utils'], 
+  function(BaseModel, BaseCollection, RequestListener, Utils) {
   "use strict";
 
   // Description: A Packet instance represents the state of a request at 

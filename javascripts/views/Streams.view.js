@@ -1,4 +1,5 @@
 define(['BaseView',
+  'BaseCollection',
   'Streams',
   'text!templates/stream-data.template.html',
   'text!templates/stream-data-wrapper.template.html',
@@ -6,14 +7,14 @@ define(['BaseView',
   'lib/codemirror-searchable',
   'beautifier/beautify-html',
   'lib/utils'],
-  function(BaseView, Streams, streamDataTemplate, streamDataWrapperTemplate, CodeMirror, cmSearchable, format, Utils) {
+  function(BaseView, BaseCollection, Streams, streamDataTemplate, streamDataWrapperTemplate, CodeMirror, cmSearchable, format, Utils) {
   "use strict";
 
   return BaseView.extend({
     
     el: "#streams",
 
-    requestSentPrefix       : function(data){
+    requestSentPrefix: function(data){
       var output = "";
       var arrows = ">>>>>>>>>>>>>>>";
       output = "sent: " + data.url + " " + new Date().toTimeString() + " " + arrows;
@@ -21,7 +22,7 @@ define(['BaseView',
       return output;
     },
 
-    responseReceivedPrefix  : function(data){
+    responseReceivedPrefix: function(data){
       var output = "";
       var arrows = "<<<<<<<<<<<<<<<";
       output = arrows + " received: " + data.url + " " + new Date().toTimeString();
@@ -44,7 +45,7 @@ define(['BaseView',
     },
 
     // map the line number in the data stream to the networkEvent stored in the model
-    networkEventMap: {},
+    eventsToLineMap: null,
 
     initialize: function(options){
       console.log("[StreamsView] initialize");
@@ -53,6 +54,8 @@ define(['BaseView',
         options = {};
 
       _.extend(this, cmSearchable);
+
+      this.eventsToLineMap = new BaseCollection();
 
       var patterns = options.patterns || [];
       this.inspectorView = options.inspectorView;
@@ -66,27 +69,26 @@ define(['BaseView',
     addlisteners: function(options){
       var _this = this;
 
-      this.listenTo(this.streams, "request:sent", function(data){
-        var prefix = this.requestSentPrefix;
+      this.listenTo(this.streams.networkEvents, "add", function(packet){
+        var prefix,
+            type = packet.get("type"),
+            data = _.extend(
+              {
+                index   : this.streams.networkEvents.indexOf(packet),
+                length  : this.streams.networkEvents.length
+              },
+              packet.toJSON()
+            );
+        if(type === "beforeRequest")
+          prefix = this.requestSentPrefix;
+        
+        if(type === "requestFinished")
+          prefix = this.responseReceivedPrefix;
+
         if (typeof(prefix) == "function") {
           prefix = prefix(data);
         }
-        this.appendData(data, {prefix: prefix, format: data.format, url: data.url});
-      }.bind(this));
-
-      this.listenTo(this.streams, "request:finished", function(data){
-        var prefix = this.responseReceivedPrefix;
-        var guid = Utils.guidGen();
-
-        if (typeof(prefix) == "function") {
-          prefix = prefix({
-            id: guid,
-            body: data.body,
-            format: data.format,
-            url: data.data.request.url
-          });
-        }
-        this.appendData(data, {prefix: prefix, format: data.format, url: data.data.request.url });
+        this.writeData(data, {prefix: prefix, format: data.format, url: data.url});
       }.bind(this));
 
       this.listenTo(this.inspectorView, "search:submit", function(options){
@@ -128,6 +130,52 @@ define(['BaseView',
       
     },
 
+    isMostRecentEvent: function(data){
+      return data.index === data.length - 1;
+    },
+
+    getLine: function(num){
+      if(typeof num === 'undefined')
+        return null;
+      
+      var handle = this.dataStream.getLineHandle(num);
+      // this.dataStream.getLineNumber returns the current 
+      // position of that line (or null when it is no longer 
+      // in the document).
+      return {
+        number    : this.dataStream.getLineNumber(handle),
+        handler   : handle,
+        charCount : handle.text.length
+      };
+    },
+    
+    getLineLength: function(num){
+      return this.getLine(num).charCount;
+    },
+
+    getInsertLineInfo: function(data, options){
+      var mapEntry, lineInfo;
+      if(this.isMostRecentEvent(data))
+        return this.getLastLineInfo();
+      
+      mapEntry = this.eventsToLineMap.at(data.index);
+
+      if (mapEntry){
+        lineInfo = this.getLine(mapEntry.get("number"));
+        return {
+          number    : lineInfo.number,
+          handler   : lineInfo.handler,
+          charCount : lineInfo.handler.text.length
+        };
+      } else{
+        return {
+          number    : 0,
+          handler   : null,
+          charCount : 0
+        };
+      }
+    },
+
     getLastLineInfo: function(){
       // note: lastLine() return value is one less than the number displayed in the gutter, must be 0 indexed,
       //  but the value still works for getting the line handler & content so no need to offset by one
@@ -142,45 +190,92 @@ define(['BaseView',
       };
     },
 
-    appendData: function(data, options){
+    writeData: function(data, options){
+      console.log("[Streams.view] writeData", data);
       if(!options)
         options = {};
-      var content = data.body;
-      var url = options.url;
-      var scrollToBottom = false;
-      var lastLine = this.getLastLineInfo();
+      var writeResults,
+          content = data.body,
+          url = options.url,
+          scrollToBottom = false;
 
       // if the user is already at  the bottom of the stream scroll to the bottom after appending the new content
       if(this.isAtBottom()){
         scrollToBottom = true;
       }
 
-      if(content){
-        var prefix = options.prefix;
-        
-        if(prefix){
-          if(this.getLastLineInfo().number > 0)
-            prefix = "\n\n" +  prefix + "\n";
-          else
-            prefix = prefix + "\n";
-
-          var markFrom = {line: lastLine.number, ch: lastLine.charCount};
-          this.dataStream.replaceRange(prefix, {line: Infinity, ch: lastLine.charCount});
-          lastLine = this.getLastLineInfo();
-          var markTo = {line: lastLine.number, ch: lastLine.charCount};
-
-          this.dataStream.markText( markFrom, markTo, {className: "prefix direction"});
-        }
-
-        content = this.format(content, url, options);
-
-        this.dataStream.replaceRange(content, {line: Infinity, ch: lastLine.charCount});
-        this.networkEventMap["line:" + lastLine.number] = data.id;
+      if(data.body){
+        writeResults = this.writeDataContents(data, options);
+        this.updateNetworkEventsMap(writeResults);
       }
 
       if(scrollToBottom === true){
         this.dataStream.scrollIntoView({line: this.dataStream.lastLine(), ch: 1});
       }
+    },
+
+    updateNetworkEventsMap: function(writeData){
+      this.eventsToLineMap.add(writeData, {at: writeData.eventIndex});
+      var models = this.eventsToLineMap.models,
+          modelCount = models.length,
+          startingLine;
+
+      for(var i = writeData.eventIndex + 1; i < modelCount ; i++){
+        startingLine = models[i].get("number");
+        models[i].set("number", startingLine + writeData.contentLineCount - 1);
+        models[i].set("eventIndex",  models[i].get("eventIndex") + 1);
+        models[i].set("handler",  this.getLine(startingLine));
+      }
+
+    },
+
+    writeDataContents: function(data, options){
+      var content, prefixInfo, contentLineCount, lineInfo = this.getInsertLineInfo(data, options);
+        
+      prefixInfo = this.writeDataPrefix(data, lineInfo, options);      
+      content = this.format(data.body, options.url, options) + "\n";
+      
+      this.dataStream.replaceRange(content, {line: prefixInfo.endingLineNumber, ch: this.getLine(prefixInfo.endingLineNumber).charcount});
+      contentLineCount = prefixInfo.lineCount + content.split("\n").length;
+      
+      return _.extend({
+          // startingLine: lineInfo.number, 
+          eventIndex: data.index, 
+          contentLineCount: contentLineCount
+        }, 
+        {number: lineInfo.number}
+      );
+    },
+
+    writeDataPrefix: function(data, lineInfo, options){
+      var lineCount, 
+          startingLine,
+          startingLineLength,
+          endingLine,
+          prefix = options.prefix || "";
+
+      prefix = prefix + "\n";
+
+      lineCount = prefix.split("\n").length - 1
+      startingLine = lineInfo.number;
+      startingLineLength = lineInfo.charCount
+      // the content always ends with a blank line "\n"
+      // this increase the number of reported lines by one
+      endingLine = startingLine + lineCount - 1;
+
+      var markFrom = {line: startingLine, ch: 0};
+      this.dataStream.replaceRange(prefix, {line: startingLine, ch: 0});
+      lineInfo = this.getLine(endingLine);
+      var markTo = {line: endingLine, ch: this.getLineLength(endingLine)};
+
+      this.dataStream.markText(markFrom, markTo, {className: "prefix direction"});
+
+      return {
+        startingLineNumber: startingLine,
+        endingLineNumber: endingLine,
+        lineCount: lineCount
+      };
+
     },
 
     clear: function(){
@@ -199,7 +294,7 @@ define(['BaseView',
         content = stream.getValue();
       }
 
-      this.model.sendToBackground({event: "copy:text", data: content});
+      this.streams.sendToBackground({event: "copy:text", data: content});
     },
 
     toggleForSubbar: function(state){
@@ -214,13 +309,6 @@ define(['BaseView',
         default:
           this.$el.toggleClass("toolbar-expanded");
       }
-    },
-
-    addSource: function(params){
-      if(!params)
-        params = {};
-
-      this.streams.add(params);
     },
 
     update: function(attributes){
@@ -252,7 +340,7 @@ define(['BaseView',
       var startModeDelimiter = "start:" + mode  + " ";
       var endModeDelimiter = "end:" + mode  + " ";
       
-      content = startModeDelimiter + "\n" + content + "\n" + endModeDelimiter + "\n";
+      content = "\n" + startModeDelimiter + "\n" + content + "\n" + endModeDelimiter + "\n";
 
       return content;
     },
@@ -269,5 +357,6 @@ define(['BaseView',
       }
       return content;
     }
+
   });
 });

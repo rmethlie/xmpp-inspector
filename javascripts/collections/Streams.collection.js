@@ -1,5 +1,5 @@
-define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', 'BaseCollection', 'lib/utils'],
-  function(BaseModel, NetworkEvents, ResponseListener, ResponseListeners, BaseCollection, Utils) {
+define(['BaseModel', 'NetworkEvents', 'Stream', 'BaseCollection', 'lib/utils'],
+  function(BaseModel, NetworkEvents, Stream, BaseCollection, Utils) {
   "use strict";
 
   var inspectedTabId = chrome.devtools.inspectedWindow.tabId;
@@ -13,7 +13,8 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
 
     _connection: null,  //connection to background page
     
-    model: ResponseListener,
+    // model: ResponseListener,
+    model: Stream,
     
     networkEvents: null,
 
@@ -31,24 +32,12 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
       this._connection.onMessage.addListener(this._handleBackgroundEvent.bind(this));
 
       // Description: Handle the message sent from the background page
-      this.on("stream:update", function(data){
+      this.on("request:before", function(data){
         this.handleBeforeRequest(data);
       });
       
       this.on("request:finished", function(response){
         this.handleRequestFinished(response);
-      });
-
-      this.on("add", function(listener){
-        console.log("add responseListener", listener);
-        this.sendToBackground({
-          event: "add:listener",
-          data: this.webRequestManifest(listener)
-        });
-      });
-
-      this.on("reset", function(listener){
-        console.log("reset", listener);
       });
 
       this.on("remove", function(listener, collection, options){
@@ -67,6 +56,17 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
           data: networkEvent
         });
       }, this );
+    
+    },
+
+    sendToBackground: function( data ){
+      if( this._connection && this._connection.postMessage ){
+        try{
+          this._connection.postMessage(data);
+        }catch( e ){
+          console.error(e.stack);
+        }
+      }
     },
 
     // postInfo: function(){
@@ -100,7 +100,8 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
         data: data, 
         body: data.requestBody,
         timestamp: data.timestamp,
-        format: data.format
+        format: data.format,
+        url: data.info.url
       });
 
       this.trigger("request:sent", {
@@ -111,29 +112,28 @@ define(['BaseModel', 'NetworkEvents', 'ResponseListener', 'ResponseListeners', '
       });
     },
 
-    webRequestManifest: function(listener){
-      console.info( "webRequestManifest");
-      return {
-        id      : listener.id, // need this for mapping the req/res objs
-        scheme  : listener.get("scheme"),
-        host    : listener.get("host"),
-        path    : listener.get("path"),
-        format  : listener.get("format"),
-        types   : ["xmlhttprequest"],
-        tabId   : this.tabId,
-        name    : this.backgroundConnectionName
-      };
-    },
+    // webRequestManifest: function(listener){
+    //   console.info( "webRequestManifest");
+    //   return {
+    //     scheme  : listener.get("scheme"),
+    //     host    : listener.get("host"),
+    //     path    : listener.get("path"),
+    //     format  : listener.get("format"),
+    //     types   : ["xmlhttprequest"],
+    //     tabId   : this.tabId,
+    //     name    : this.backgroundConnectionName
+    //   };
+    // },
 
-    sendToBackground: function(data){
-      if( this._connection && this._connection.postMessage ){
-        try{
-          this._connection.postMessage(data);
-        }catch( e ){
-          console.error(e.stack);
-        }
-      }
-    },
+    // sendToBackground: function(data){
+    //   if( this._connection && this._connection.postMessage ){
+    //     try{
+    //       this._connection.postMessage(data);
+    //     }catch( e ){
+    //       console.error(e.stack);
+    //     }
+    //   }
+    // },
 
     updateStream: function(params){
       // find the stream
