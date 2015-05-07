@@ -41,8 +41,6 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
       if(info.requestBody)
         content = Utils.ArrayBufferToString(info.requestBody.raw[0].bytes);
       var time = this.getTimestamp();
-      setTimeout(function(){
-
       this.trigger("request:before", {
         event: "request:before",
         data:{
@@ -53,7 +51,6 @@ define(['BaseModel', 'lib/utils'], function(BaseModel, Utils) {
           timestamp: time
         }
       });
-      }.bind(this), 5000);
     },
 
     // onCompleted: function(info) {
