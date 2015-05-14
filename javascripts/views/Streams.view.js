@@ -17,7 +17,8 @@ define(['BaseView',
     requestSentPrefix: function(data){
       var output = "";
       var arrows = ">>>>>>>>>>>>>>>";
-      output = "sent: " + data.url + " " + new Date().toTimeString() + " " + arrows;
+      var time = data.timestamp ? new Date(data.timestamp).toTimeString() : new Date().toTimeString();
+      output = "sent: " + data.url + " " + time + " " + arrows;
 
       return output;
     },
@@ -25,7 +26,8 @@ define(['BaseView',
     responseReceivedPrefix: function(data){
       var output = "";
       var arrows = "<<<<<<<<<<<<<<<";
-      output = arrows + " received: " + data.url + " " + new Date().toTimeString();
+      var time = data.timestamp ? new Date(data.timestamp).toTimeString() : new Date().toTimeString();
+      output = arrows + " received: " + data.url + " " + time;
 
       return output;
     },
